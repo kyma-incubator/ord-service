@@ -3,15 +3,8 @@ APP_PATH = components/ord-service
 BUILDPACK = eu.gcr.io/kyma-project/test-infra/pr/buildpack-java:PR-3076
 SCRIPTS_DIR = $(realpath $(shell pwd)/../..)/scripts
 export COMPONENT_DIR = $(realpath $(shell pwd))
-export SKIP_STEP_MESSAGE = "Do nothing for Go modules project"
 
 include $(SCRIPTS_DIR)/generic_make_go.mk
-
-release:
-	@echo ${SKIP_STEP_MESSAGE}
-
-errcheck-local:
-	@echo ${SKIP_STEP_MESSAGE}
 
 test-local:
 	./scripts/install_dependencies.sh
@@ -19,14 +12,7 @@ test-local:
 
 resolve-local:
 	./scripts/install_dependencies.sh
-	./scripts/build.sh -DskipTests
-
-ensure-local:
-	./scripts/install_dependencies.sh
-	./scripts/build.sh -DskipTests
-
-dep-status-local:
-	@echo ${SKIP_STEP_MESSAGE}
+	./scripts/build.sh
 
 build-local:
 	./scripts/build.sh -DskipTests
