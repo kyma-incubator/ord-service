@@ -1,6 +1,6 @@
 APP_NAME = compass-ord-service
 APP_PATH = components/ord-service
-BUILDPACK = eu.gcr.io/kyma-project/test-infra/pr/buildpack-java:PR-3076
+BUILDPACK = eu.gcr.io/kyma-project/test-infra/buildpack-java:v20210105-9ce011db
 SCRIPTS_DIR = $(realpath $(shell pwd)/../..)/scripts
 export COMPONENT_DIR = $(realpath $(shell pwd))
 

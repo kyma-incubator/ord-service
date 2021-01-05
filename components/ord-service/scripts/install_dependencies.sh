@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 OLINGO_JPA_LIB_DIR="$COMPONENT_DIR/olingo-jpa-processor-v4"
-OLINGO_VERSION_TAG="0.3.8"
+OLINGO_VERSION_TAG=$(sed -n '/jpa-processor/{s/.*<jpa-processor>//;s/-SNAPSHOT<\/jpa-processor.*//;p;}' $COMPONENT_DIR/pom.xml | head -1)
 
 source "$COMPONENT_DIR/scripts/commons.sh"
 

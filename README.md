@@ -1,9 +1,9 @@
-# ORD Service
+# Open Resource Discovery Service
 
 
 ## Overview
 
-The ORD Service provides discovery of Packages, APIs and their specs of applications registered in Compass.
+The Open Resource Discovery Service provides discovery of Packages, APIs, Events and their specs of applications registered in Compass.
 
 ## Prerequisites
 
@@ -27,7 +27,7 @@ are configured to work with a local Director out of the box.
 
 ## Usage
 
-Generally the ORD Service provides read-only access to Packages, APIs and their specs for applications
+Generally the ORD Service provides read-only access to Packages, APIs, Events and their specs for applications
 registered in Compass. In this sense a typical usage of the ORD Service would be to
 deploy a both a Director installation and ORD Service, register some applications with Packages and APIs
 in Compass and then discover those resources through the ORD Service.

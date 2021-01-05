@@ -1,7 +1,7 @@
 FROM maven:3.6.3-jdk-8-slim AS builder
 
-ENV BASE_APP_DIR /go/src/github.com/kyma-incubator/compass/components/ord-service
-ENV COMPONENT_DIR /go/src/github.com/kyma-incubator/compass/components/ord-service
+ENV BASE_APP_DIR /go/src/github.com/kyma-incubator/ord-service/components/ord-service
+ENV COMPONENT_DIR /go/src/github.com/kyma-incubator/ord-service/components/ord-service
 WORKDIR ${BASE_APP_DIR}
 
 RUN apt-get update && apt-get install -y git
