@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+COMPONENT_DIR=${COMPONENT_DIR:-"$(pwd)/$(dirname $0)/../"}
+
 OPTS=$1
 
 source "$COMPONENT_DIR/scripts/commons.sh"

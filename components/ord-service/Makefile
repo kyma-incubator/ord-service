@@ -7,12 +7,10 @@ export COMPONENT_DIR = $(realpath $(shell pwd))
 include $(SCRIPTS_DIR)/generic_make_go.mk
 
 test-local:
-	./scripts/install_dependencies.sh
-	./scripts/build.sh
+	./run.sh --no-start
 
 resolve-local:
-	./scripts/install_dependencies.sh
-	./scripts/build.sh
+	./run.sh --no-start
 
 build-local:
 	./scripts/build.sh -DskipTests
