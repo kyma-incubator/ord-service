@@ -1,5 +1,6 @@
 package com.sap.cloud.cmp.ord.service.filter;
 
+import org.apache.commons.codec.binary.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,8 @@ import java.io.IOException;
 @Order(Integer.MIN_VALUE)
 public class ResponseFormatFilter implements Filter {
 
+    private static final String ACCEPT_HEADER = "Accept";
+
     @Value("${server.default_response_type}")
     private String defaultResponseType;
 
@@ -25,6 +28,14 @@ public class ResponseFormatFilter implements Filter {
         @Override
         public String getQueryString() {
             String query = super.getQueryString();
+            String acceptHeader = super.getHeader(ACCEPT_HEADER);
+
+            boolean acceptsEverything = StringUtils.equals(acceptHeader, "*/*");
+
+            if (!acceptsEverything) {
+                return query;
+            }
+
             if (query == null) {
                 return "$format=" + defaultResponseType;
             }
