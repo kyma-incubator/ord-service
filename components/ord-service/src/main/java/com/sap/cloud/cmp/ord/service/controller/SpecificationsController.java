@@ -1,8 +1,6 @@
 package com.sap.cloud.cmp.ord.service.controller;
 
-
 import java.io.IOException;
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -22,7 +20,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
-public class SpecificationsController {
+public class SpecificationsController extends com.sap.cloud.cmp.ord.service.controller.Controller {
+
+    private final String NOT_FOUND_MESSAGE = "Not Found";
 
     @Autowired
     private ApiSpecRepository apiSpecRepository;
@@ -31,27 +31,42 @@ public class SpecificationsController {
     private EventSpecRepository eventSpecRepository;
 
 
-    @RequestMapping(value = "/${odata.jpa.request_mapping_path}/api/{id}/specification", method = { RequestMethod.GET }, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/${odata.jpa.request_mapping_path}/api/{id}/specification", method = {RequestMethod.GET}, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getApiSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) {
-        String tenantHeader = request.getHeader("Tenant");
-        APISpecificationEntity apiSpec = apiSpecRepository.getByApiDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantHeader));
-        if (apiSpec == null) {
-            response.setStatus(404);
-            return "Not Found";
+    public String getApiSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) throws IOException {
+        APISpecificationEntity apiSpec = new APISpecificationEntity();
+
+        try {
+            String tenantID = extractInternalTenantIdFromIDToken(request);
+
+            apiSpec = apiSpecRepository.getByApiDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantID));
+            if (apiSpec == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return NOT_FOUND_MESSAGE;
+            }
+        } catch (IllegalArgumentException e) {
+            super.handleErrorResponse(response, e);
         }
         return apiSpec.getSpecData();
     }
 
-    @RequestMapping(value = "/${odata.jpa.request_mapping_path}/event/{id}/specification", method = { RequestMethod.GET }, produces = MediaType.TEXT_PLAIN_VALUE)
+    @RequestMapping(value = "/${odata.jpa.request_mapping_path}/event/{id}/specification", method = {RequestMethod.GET}, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
     public String getEventSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) throws IOException {
-        String tenantHeader = request.getHeader("Tenant");
-        EventSpecificationEntity eventSpec = eventSpecRepository.getByEventDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantHeader));
-        if (eventSpec == null) {
-            response.setStatus(404);
-            return "Not Found";
+        EventSpecificationEntity eventSpec = new EventSpecificationEntity();
+
+        try {
+            String tenantID = super.extractInternalTenantIdFromIDToken(request);
+
+            eventSpec = eventSpecRepository.getByEventDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantID));
+            if (eventSpec == null) {
+                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return NOT_FOUND_MESSAGE;
+            }
+        } catch (IllegalArgumentException e) {
+            super.handleErrorResponse(response, e);
         }
         return eventSpec.getSpecData();
     }
 }
+
