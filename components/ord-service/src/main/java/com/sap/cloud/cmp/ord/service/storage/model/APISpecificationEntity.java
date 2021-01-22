@@ -10,7 +10,7 @@ import java.util.UUID;
 /**
  * Once we introduce ORD Aggregator APIDefinitions should be fetched as Specifications.
  * Therefore Compass should support multiple specs per API.
- * In order to achive that we will create a new specifications table which will unify api/event specifications.
+ * In order to achieve that we will create a new specifications table which will unify api/event specifications.
  */
 @Entity(name = "apiSpecification")
 @Table(name = "api_definitions")
