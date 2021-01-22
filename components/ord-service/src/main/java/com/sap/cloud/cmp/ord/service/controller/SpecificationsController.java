@@ -1,6 +1,7 @@
 package com.sap.cloud.cmp.ord.service.controller;
 
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,14 +36,22 @@ public class SpecificationsController {
     public String getApiSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) {
         String tenantHeader = request.getHeader("Tenant");
         APISpecificationEntity apiSpec = apiSpecRepository.getByApiDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantHeader));
+        if (apiSpec == null) {
+            response.setStatus(404);
+            return "Not Found";
+        }
         return apiSpec.getSpecData();
     }
 
     @RequestMapping(value = "/${odata.jpa.request_mapping_path}/event/{id}/specification", method = { RequestMethod.GET }, produces = MediaType.TEXT_PLAIN_VALUE)
     @ResponseBody
-    public String getEventSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) {
+    public String getEventSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) throws IOException {
         String tenantHeader = request.getHeader("Tenant");
         EventSpecificationEntity eventSpec = eventSpecRepository.getByEventDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantHeader));
+        if (eventSpec == null) {
+            response.setStatus(404);
+            return "Not Found";
+        }
         return eventSpec.getSpecData();
     }
 }
