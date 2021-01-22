@@ -21,11 +21,12 @@ public class PackageEntity {
     @NotNull
     private String ordId;
 
-    @Column(name = "name", length = 256)
+    @Column(name = "title", length = 256)
     @NotNull
     private String title;
 
     @Column(name = "short_description", length = 255)
+    @NotNull
     private String shortDescription;
 
     @Column(name = "description", length = Integer.MAX_VALUE)

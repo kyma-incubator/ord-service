@@ -47,6 +47,12 @@ public class EventEntity {
     @NotNull
     private UUID partOfPackage;
 
+    @Column(name = "bundle_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    @NotNull
+    private UUID partOfConsumptionBundle;
+
     @ElementCollection
     @CollectionTable(name="links", joinColumns=@JoinColumn(name="event_definition_id"))
     private List<Link> links;
@@ -80,4 +86,8 @@ public class EventEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
     private PackageEntity packageEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bundle_id", insertable = false, updatable = false)
+    private BundleEntity bundleEntity;
 }
