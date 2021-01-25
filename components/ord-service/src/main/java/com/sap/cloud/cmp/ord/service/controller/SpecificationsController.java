@@ -37,10 +37,9 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
     @ResponseBody
     public String getApiSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) throws IOException {
         APISpecificationEntity apiSpec = new APISpecificationEntity();
+        String tenantID = extractInternalTenantIdFromIDToken(request);
 
         try {
-            String tenantID = extractInternalTenantIdFromIDToken(request);
-
             apiSpec = apiSpecRepository.getByApiDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantID));
             if (apiSpec == null) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);
@@ -56,10 +55,9 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
     @ResponseBody
     public String getEventSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) throws IOException {
         EventSpecificationEntity eventSpec = new EventSpecificationEntity();
+        String tenantID = super.extractInternalTenantIdFromIDToken(request);
 
         try {
-            String tenantID = super.extractInternalTenantIdFromIDToken(request);
-
             eventSpec = eventSpecRepository.getByEventDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantID));
             if (eventSpec == null) {
                 response.setStatus(HttpServletResponse.SC_NOT_FOUND);

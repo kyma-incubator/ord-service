@@ -10,14 +10,15 @@ import java.util.Base64;
 
 public abstract class Controller {
 
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     private final String TENANT_KEY = "tenant";
     private final String AUTHORIZATION_HEADER = "Authorization";
     private final String INVALID_TENANT_ID_ERROR_CODE = "INVALID_TENANT_ID";
     private final String JWT_TOKEN_SPLIT_PARTS = "\\.";
     private final int PAYLOAD = 1;
-    private String BAD_REQUEST_JSON_RESPONSE = "{ \"message\" : \"%s\", \"error\" : \"%s\"}";
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private String BAD_REQUEST_JSON_RESPONSE = "{ \"message\" : \"%s\", \"error\" : \"%s\"}";
 
     String extractInternalTenantIdFromIDToken(final HttpServletRequest request) throws IOException {
         final String idToken = request.getHeader(AUTHORIZATION_HEADER);
