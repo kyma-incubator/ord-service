@@ -13,6 +13,8 @@ import com.sap.olingo.jpa.processor.core.api.JPAODataGetHandler;
 
 import org.apache.olingo.commons.api.ex.ODataException;
 import org.apache.olingo.server.api.debug.DefaultDebugSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,26 +28,31 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
     @Autowired
     private JPAODataCRUDContextAccess serviceContext;
 
+    private static final Logger logger = LoggerFactory.getLogger(ODataController.class);
+
     @RequestMapping(value = "**", method = {RequestMethod.GET})
     public void handleODataRequest(HttpServletRequest request, HttpServletResponse response) throws ODataException, IOException {
         final JPAODataGetHandler handler = new JPAODataGetHandler(serviceContext);
         handler.getJPAODataRequestContext().setDebugSupport(new DefaultDebugSupport()); // Use query parameter odata-debug=json to activate.
 
-        try {
+        // try {
             handler.getJPAODataRequestContext().setClaimsProvider(createClaims(request));
             handler.process(request, response);
-        } catch (IllegalArgumentException e) {
-            super.handleErrorResponse(response, e);
-        }
+        // } catch (IllegalArgumentException e) {
+        //     super.handleErrorResponse(response, e);
+        // }
     }
 
     private JPAODataClaimsProvider createClaims(final HttpServletRequest request) throws IOException {
         final JPAODataClaimsProvider claims = new JPAODataClaimsProvider();
 
         String tenantID = super.extractInternalTenantIdFromIDToken(request);
-
-        final JPAClaimsPair<UUID> user = new JPAClaimsPair<>(UUID.fromString(tenantID));
-        claims.add("tenant_id", user);
+        if (!tenantID.isEmpty()) {
+            final JPAClaimsPair<UUID> user = new JPAClaimsPair<>(UUID.fromString(tenantID));
+            claims.add("tenant_id", user);
+        } else {
+            logger.warn("Could not determine tenant claim");
+        }
 
         return claims;
     }

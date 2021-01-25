@@ -35,9 +35,6 @@ public abstract class Controller {
 
             JsonNode parent = mapper.readTree(idTokenDecoded);
             tenantID = parent.path(TENANT_KEY).asText();
-            if (tenantID.isEmpty()) {
-                throw new IllegalArgumentException("Missing or invalid tenantID");
-            }
         }
         return tenantID;
     }
