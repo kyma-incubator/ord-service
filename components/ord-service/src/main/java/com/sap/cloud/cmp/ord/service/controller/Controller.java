@@ -12,7 +12,7 @@ public abstract class Controller {
 
     private final String TENANT_KEY = "tenant";
     private final String AUTHORIZATION_HEADER = "Authorization";
-    private final String APPLICATION_JSON = "application/json";
+    private final String INVALID_TENANT_ID_ERROR_CODE = "INVALID_TENANT_ID";
     private final String JWT_TOKEN_SPLIT_PARTS = "\\.";
     private final int PAYLOAD = 1;
     private String BAD_REQUEST_JSON_RESPONSE = "{ \"message\" : \"%s\", \"error\" : \"%s\"}";
@@ -39,10 +39,10 @@ public abstract class Controller {
         return tenantID;
     }
 
-    void handleErrorResponse(HttpServletResponse response, Exception e) throws IOException {
+    void handleErrorResponse(HttpServletResponse response, String errorMessage, String contentType) throws IOException {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        response.setContentType(APPLICATION_JSON);
+        response.setContentType(contentType);
 
-        response.getWriter().print(String.format(BAD_REQUEST_JSON_RESPONSE, e.getMessage(), "invalid tenant_id"));
+        response.getWriter().print(String.format(BAD_REQUEST_JSON_RESPONSE, errorMessage, INVALID_TENANT_ID_ERROR_CODE));
     }
 }

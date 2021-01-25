@@ -23,6 +23,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SpecificationsController extends com.sap.cloud.cmp.ord.service.controller.Controller {
 
     private final String NOT_FOUND_MESSAGE = "Not Found";
+    private final String CONTENT_TYPE_PLAIN_TEXT = "text/plain";
+    private final String INVALID_TENANT_ID_ERROR_MESSAGE = "Missing or invalid tenantID.";
 
     @Autowired
     private ApiSpecRepository apiSpecRepository;
@@ -45,7 +47,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
                 return NOT_FOUND_MESSAGE;
             }
         } catch (IllegalArgumentException e) {
-            super.handleErrorResponse(response, e);
+            super.handleErrorResponse(response, INVALID_TENANT_ID_ERROR_MESSAGE, CONTENT_TYPE_PLAIN_TEXT);
         }
         return apiSpec.getSpecData();
     }
@@ -64,7 +66,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
                 return NOT_FOUND_MESSAGE;
             }
         } catch (IllegalArgumentException e) {
-            super.handleErrorResponse(response, e);
+            super.handleErrorResponse(response, INVALID_TENANT_ID_ERROR_MESSAGE, CONTENT_TYPE_PLAIN_TEXT);
         }
         return eventSpec.getSpecData();
     }

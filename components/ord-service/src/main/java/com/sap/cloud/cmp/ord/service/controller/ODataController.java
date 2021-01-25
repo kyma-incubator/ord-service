@@ -35,12 +35,8 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
         final JPAODataGetHandler handler = new JPAODataGetHandler(serviceContext);
         handler.getJPAODataRequestContext().setDebugSupport(new DefaultDebugSupport()); // Use query parameter odata-debug=json to activate.
 
-        // try {
-            handler.getJPAODataRequestContext().setClaimsProvider(createClaims(request));
-            handler.process(request, response);
-        // } catch (IllegalArgumentException e) {
-        //     super.handleErrorResponse(response, e);
-        // }
+        handler.getJPAODataRequestContext().setClaimsProvider(createClaims(request));
+        handler.process(request, response);
     }
 
     private JPAODataClaimsProvider createClaims(final HttpServletRequest request) throws IOException {
@@ -53,7 +49,6 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
         } else {
             logger.warn("Could not determine tenant claim");
         }
-
         return claims;
     }
 }
