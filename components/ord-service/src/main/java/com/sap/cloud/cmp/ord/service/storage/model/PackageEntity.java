@@ -53,6 +53,13 @@ public class PackageEntity {
     @Column(name = "version")
     private String version;
 
+    @EdmProtectedBy(name = "tenant_id")
+    @EdmIgnore
+    @Column(name = "tenant_id", length = 256)
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
+
     @ElementCollection
     @CollectionTable(name = "package_links", joinColumns = @JoinColumn(name = "package_id"))
     private List<PackageLink> packageLinks;
@@ -88,11 +95,4 @@ public class PackageEntity {
 
     @OneToMany(mappedBy = "packageEntity", fetch = FetchType.LAZY)
     private Set<EventEntity> events;
-
-    @EdmProtectedBy(name = "tenant_id")
-    @EdmIgnore
-    @Column(name = "tenant_id", length = 256)
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID tenant;
 }
