@@ -38,7 +38,8 @@ public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
     protected EclipseLinkJpaConfiguration(DataSource dataSource, JpaProperties properties,
                                           ObjectProvider<JtaTransactionManager> jtaTransactionManager,
                                           ObjectProvider<TransactionManagerCustomizers> transactionManagerCustomizers) {
-        super(dataSource, properties, jtaTransactionManager, transactionManagerCustomizers);
+        super(dataSource, properties, jtaTransactionManager);
+        this.transactionManager(transactionManagerCustomizers);
     }
 
     @Override
