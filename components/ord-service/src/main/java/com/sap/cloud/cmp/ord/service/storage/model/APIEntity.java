@@ -44,6 +44,12 @@ public class APIEntity {
     @NotNull
     private UUID partOfPackage;
 
+    @Column(name = "bundle_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    @NotNull
+    private UUID partOfConsumptionBundle;
+
     @Column(name = "api_protocol")
     private String apiProtocol;
 
@@ -61,7 +67,6 @@ public class APIEntity {
     @ElementCollection
     @CollectionTable(name = "countries", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> countries;
-
 
     @ElementCollection
     @CollectionTable(name="api_resource_definitions", joinColumns=@JoinColumn(name="api_definition_id"))
@@ -100,4 +105,8 @@ public class APIEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
     private PackageEntity packageEntity;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "bundle_id", insertable = false, updatable = false)
+    private BundleEntity bundleEntity;
 }
