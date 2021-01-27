@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class SpecificationsController extends com.sap.cloud.cmp.ord.service.controller.Controller {
 
     private final String NOT_FOUND_MESSAGE = "Not Found";
-    private final String INVALID_TENANT_ID_ERROR_MESSAGE = "Missing or invalid tenantID.";
+    private final String INVALID_TENANT_ID_ERROR_MESSAGE = "Missing or invalid tenantID";
 
     @Autowired
     private ApiSpecRepository apiSpecRepository;
@@ -45,7 +45,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
                 return NOT_FOUND_MESSAGE;
             }
         } catch (IllegalArgumentException e) {
-            super.handleErrorResponse(response, INVALID_TENANT_ID_ERROR_MESSAGE, MediaType.TEXT_PLAIN_VALUE);
+            handleErrorResponse(response, INVALID_TENANT_ID_ERROR_MESSAGE);
         }
         return apiSpec.getSpecData();
     }
@@ -63,9 +63,16 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
                 return NOT_FOUND_MESSAGE;
             }
         } catch (IllegalArgumentException e) {
-            super.handleErrorResponse(response, INVALID_TENANT_ID_ERROR_MESSAGE, MediaType.TEXT_PLAIN_VALUE);
+            handleErrorResponse(response, INVALID_TENANT_ID_ERROR_MESSAGE);
         }
         return eventSpec.getSpecData();
+    }
+
+    private void handleErrorResponse(HttpServletResponse response, String errorMessage) throws IOException {
+        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+        response.setContentType(MediaType.TEXT_PLAIN_VALUE);
+
+        response.getWriter().print(errorMessage);
     }
 }
 
