@@ -19,6 +19,10 @@ server:
   self_url: http://localhost:8080
   port: 8080
   default_response_type: "xml"
+  servlet:
+    encoding:
+      force-response: true
+      charset: UTF-8
 spring:
   autoconfigure:
     exclude:
@@ -34,9 +38,6 @@ spring:
   servlet:
     multipart:
       enabled: false
-#springdoc:
-#  api-docs:
-#    path: "/${static.api.request_mapping_path}}/api-docs"
 management:
   endpoints:
     enabled-by-default: false
