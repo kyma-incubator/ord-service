@@ -35,9 +35,14 @@ spring:
     multipart:
       enabled: false
 springfox:
+  custom-base-path: "/open-resource-discovery-docs"
   documentation:
     swagger-ui:
-      baseUrl: "/${static.request_mapping_path}"
+      baseUrl: "${springfox.custom-base-path}"
+    open-api:
+      v3:
+        path: "${springfox.custom-base-path}/api-docs"
+
 management:
   endpoints:
     enabled-by-default: false

@@ -2,15 +2,12 @@ package com.sap.cloud.cmp.ord.service.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Utf8;
 import com.sap.cloud.cmp.ord.service.filter.aggregator.JsonArrayElementsAggregator;
 import com.sap.cloud.cmp.ord.service.filter.wrappers.JsonResponseWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import sun.text.normalizer.UTF16;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
