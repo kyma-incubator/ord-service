@@ -10,10 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.ResponseBody;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.UUID;
-@EnableSwagger2
+
 @Controller
 public class SpecificationsController {
 

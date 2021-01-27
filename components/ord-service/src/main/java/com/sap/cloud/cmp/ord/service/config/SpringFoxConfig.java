@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.Contact;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
@@ -23,15 +24,19 @@ public class SpringFoxConfig {
 
 	@Bean
 	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2)
+		return new Docket(DocumentationType.OAS_30)
 				.select()
 				.apis(RequestHandlerSelectors.any())
 				.paths(PathSelectors.regex(String.format("/%s.*",path)))
 				.build()
-				.apiInfo(metaData());
+				.apiInfo(apiInfo());
 	}
-	private ApiInfo metaData(){
-		ApiInfo apiInfo = new ApiInfo("ORD service", "ORD service description", version, "", new Contact("", "", ""), "", "",  new ArrayList());
-		return apiInfo;
+
+	private ApiInfo apiInfo() {
+		return new ApiInfoBuilder()
+				.version(version)
+				.title("ORD Service")
+				.description("REST API for ORD Service")
+				.build();
 	}
 }
