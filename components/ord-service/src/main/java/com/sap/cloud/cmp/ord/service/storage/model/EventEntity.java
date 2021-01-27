@@ -8,7 +8,6 @@ import org.eclipse.persistence.annotations.TypeConverter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "event")

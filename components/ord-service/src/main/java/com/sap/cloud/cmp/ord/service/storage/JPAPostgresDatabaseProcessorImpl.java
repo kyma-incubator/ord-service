@@ -12,7 +12,6 @@ import javax.persistence.criteria.Expression;
 import javax.persistence.criteria.From;
 
 import com.sap.olingo.jpa.processor.core.database.JPAAbstractDatabaseProcessor;
-import com.sap.olingo.jpa.processor.core.query.ExpressionUtil;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriResource;
@@ -21,7 +20,6 @@ import org.apache.olingo.server.api.uri.queryoption.SearchOption;
 
 import com.sap.olingo.jpa.metadata.core.edm.mapper.api.JPADataBaseFunction;
 import com.sap.olingo.jpa.metadata.core.edm.mapper.api.JPAEntityType;
-import com.sap.olingo.jpa.processor.core.exception.ODataJPADBAdaptorException;
 import com.sap.olingo.jpa.processor.core.exception.ODataJPAProcessorException;
 
 /**

@@ -16,7 +16,7 @@ public abstract class Controller {
     private final String AUTHORIZATION_HEADER = "Authorization";
     private final String INVALID_TENANT_ID_ERROR_CODE = "INVALID_TENANT_ID";
     private final String JWT_TOKEN_SPLIT_PARTS = "\\.";
-    private final int PAYLOAD = 1;
+    private final int PAYLOAD_INDEX = 1;
 
     private String BAD_REQUEST_JSON_RESPONSE = "{ \"message\" : \"%s\", \"error\" : \"%s\"}";
 
@@ -29,7 +29,7 @@ public abstract class Controller {
             String idTokenStripped = idToken.substring(idToken.indexOf(" ") + 1);
 
             String[] splitIDToken = idTokenStripped.split(JWT_TOKEN_SPLIT_PARTS);
-            String base64EncodedPayload = splitIDToken[PAYLOAD];
+            String base64EncodedPayload = splitIDToken[PAYLOAD_INDEX];
 
             byte[] idTokenBytes = Base64.getDecoder().decode(base64EncodedPayload);
             String idTokenDecoded = new String(idTokenBytes);

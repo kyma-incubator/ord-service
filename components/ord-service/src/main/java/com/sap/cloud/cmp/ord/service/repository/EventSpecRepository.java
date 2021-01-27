@@ -8,5 +8,5 @@ import java.util.UUID;
 
 @Repository
 public interface EventSpecRepository extends JpaRepository<EventSpecificationEntity, UUID> {
-    public EventSpecificationEntity getByEventDefinitionIdAndTenant(UUID id, UUID tenant);
+    EventSpecificationEntity getByEventDefinitionIdAndTenant(UUID id, UUID tenant);
 }
