@@ -29,7 +29,8 @@ public class SpringFoxConfig {
 				.apis(RequestHandlerSelectors.any())
 				.paths(PathSelectors.regex(String.format("/%s.*",path)))
 				.build()
-				.apiInfo(apiInfo());
+				.apiInfo(apiInfo())
+				.useDefaultResponseMessages(false);
 	}
 
 	private ApiInfo apiInfo() {
