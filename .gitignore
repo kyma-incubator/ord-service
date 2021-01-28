@@ -53,3 +53,10 @@ local/tmp/
 
 # Installer temporary files
 /temp-*
+components/ord-service/.classpath
+components/ord-service/.factorypath
+components/ord-service/.project
+components/ord-service/.settings/org.eclipse.core.resources.prefs
+components/ord-service/.settings/org.eclipse.jdt.apt.core.prefs
+components/ord-service/.settings/org.eclipse.jdt.core.prefs
+components/ord-service/.settings/org.eclipse.m2e.core.prefs
