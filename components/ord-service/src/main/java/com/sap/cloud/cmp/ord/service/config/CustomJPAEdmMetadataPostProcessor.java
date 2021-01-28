@@ -5,9 +5,7 @@ import com.sap.olingo.jpa.metadata.core.edm.mapper.exception.ODataJPAModelExcept
 import com.sap.olingo.jpa.metadata.core.edm.mapper.extention.*;
 import org.apache.olingo.commons.api.edm.provider.CsdlAnnotation;
 import org.apache.olingo.commons.api.edm.provider.annotation.CsdlConstantExpression;
-import org.apache.olingo.commons.api.edm.provider.annotation.CsdlExpression;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 public class CustomJPAEdmMetadataPostProcessor extends JPAEdmMetadataPostProcessor {

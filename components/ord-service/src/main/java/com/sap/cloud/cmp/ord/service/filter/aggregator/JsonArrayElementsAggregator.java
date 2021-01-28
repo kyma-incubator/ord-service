@@ -8,8 +8,8 @@ import java.util.*;
 
 public class JsonArrayElementsAggregator {
 
-    private static final String[] subresources = new String[]{"value" /*This is the key returned when you list objects*/,"products", "packages","apis","events"};
-    private static final String[] arrays = new String[]{"tags", "countries","lineOfBusiness","industry"};
+    private static final String[] subresources = new String[]{"value" /*This is the key returned when you list objects*/, "products", "packages", "apis", "events"};
+    private static final String[] arrays = new String[]{"tags", "countries", "lineOfBusiness", "industry"};
 
     private ObjectMapper mapper;
 
@@ -67,7 +67,7 @@ public class JsonArrayElementsAggregator {
         }
         List<String> result = new ArrayList<>();
         Iterator<JsonNode> it = array.elements();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             JsonNode el = it.next();
             JsonNode value = el.get("value");
             if (value != null) {
@@ -81,9 +81,9 @@ public class JsonArrayElementsAggregator {
         if (labels == null || !labels.isArray()) {
             return labels;
         }
-        Map<String,List<String>> result = new HashMap<>();
+        Map<String, List<String>> result = new HashMap<>();
         Iterator<JsonNode> it = labels.elements();
-        while(it.hasNext()) {
+        while (it.hasNext()) {
             JsonNode el = it.next();
             JsonNode key = el.get("key");
             JsonNode value = el.get("value");

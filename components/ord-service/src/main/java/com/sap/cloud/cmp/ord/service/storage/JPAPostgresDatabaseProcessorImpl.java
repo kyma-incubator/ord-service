@@ -1,34 +1,31 @@
 package com.sap.cloud.cmp.ord.service.storage;
 
-import static com.sap.olingo.jpa.processor.core.exception.ODataJPAProcessorException.MessageKeys.NOT_SUPPORTED_FUNC_WITH_NAVI;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.EntityManager;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Expression;
-import javax.persistence.criteria.From;
-
+import com.sap.olingo.jpa.metadata.core.edm.mapper.api.JPADataBaseFunction;
+import com.sap.olingo.jpa.metadata.core.edm.mapper.api.JPAEntityType;
 import com.sap.olingo.jpa.processor.core.database.JPAAbstractDatabaseProcessor;
+import com.sap.olingo.jpa.processor.core.exception.ODataJPAProcessorException;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceKind;
 import org.apache.olingo.server.api.uri.queryoption.SearchOption;
 
-import com.sap.olingo.jpa.metadata.core.edm.mapper.api.JPADataBaseFunction;
-import com.sap.olingo.jpa.metadata.core.edm.mapper.api.JPAEntityType;
-import com.sap.olingo.jpa.processor.core.exception.ODataJPAProcessorException;
+import javax.persistence.EntityManager;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Expression;
+import javax.persistence.criteria.From;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.sap.olingo.jpa.processor.core.exception.ODataJPAProcessorException.MessageKeys.NOT_SUPPORTED_FUNC_WITH_NAVI;
 
 /**
  * Copy template of a database processor for PostgreSQL
- *
- *
+ * <p>
+ * <p>
  * If `search` OData query is required - this is the go-to way to implement a Database Processor which supports it.
  * In this instance - this is a simple Database Processor which allows for searching among the titles of entities.
- *
  */
 public class JPAPostgresDatabaseProcessorImpl extends JPAAbstractDatabaseProcessor { // NOSONAR
     private static final String SELECT_BASE_PATTERN = "SELECT * FROM $FUNCTIONNAME$($PARAMETER$)";

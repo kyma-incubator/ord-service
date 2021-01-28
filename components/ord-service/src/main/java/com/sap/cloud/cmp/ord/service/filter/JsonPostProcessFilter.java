@@ -26,7 +26,7 @@ public class JsonPostProcessFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        if(!((HttpServletRequest) request).getServletPath().startsWith("/"+odataPath)) {
+        if (!((HttpServletRequest) request).getServletPath().startsWith("/" + odataPath)) {
             filterChain.doFilter(request, response);
             return;
         }
