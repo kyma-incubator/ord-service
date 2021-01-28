@@ -28,7 +28,7 @@ RUN ./run.sh --skip-deps --no-start --skip-tests && \
     VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -DforceStdout -q) && \
     mkdir /app && mv ./target/ord-service-$VERSION.jar /app/ord-service.jar
 
-FROM openjdk:8
+FROM openjdk:8-jre-slim
 LABEL source = git@github.com:kyma-incubator/compass.git
 WORKDIR /app
 
@@ -42,7 +42,7 @@ COPY --from=builder /app/ord-service.jar /app/
 # Install curl & CA certs
 #
 
-RUN apt-get install -y curl ca-certificates
+RUN apt-get update && apt-get install -y curl ca-certificates && rm -rf /var/lib/apt/lists/*
 
 #
 # Run app
