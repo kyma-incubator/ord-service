@@ -32,6 +32,10 @@ registered in Compass. In this sense a typical usage of the ORD Service would be
 deploy a both a Director installation and ORD Service, register some applications with Packages and APIs
 in Compass and then discover those resources through the ORD Service.
 
+In order to call the APIs of the service, send the following headers:
+
+`Tenant: <tenant-id>`
+
 ## Development
 
 The ORD Service implementation is located in this repo (`kyma-incubator/ord-service`). The helm installation charts
