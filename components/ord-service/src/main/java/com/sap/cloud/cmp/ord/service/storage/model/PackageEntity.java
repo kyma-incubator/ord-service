@@ -1,29 +1,15 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
+import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.TypeConverter;
+
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.SecondaryTable;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-
-import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
-import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
-
-import org.eclipse.persistence.annotations.Convert;
-import org.eclipse.persistence.annotations.TypeConverter;
 
 @Entity(name = "package")
 @Table(name = "packages")

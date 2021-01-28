@@ -26,6 +26,9 @@ public class ODataJPAConfiguration {
     @Value("${odata.jpa.request_mapping_path}")
     private String requestMappingPath;
 
+    @Value("${odata.api.version}")
+    private String odataApiVersion;
+
     @Bean
     public JPAODataCRUDContextAccess sessionContext(final EntityManagerFactory emf, final JPAEdmMetadataPostProcessor jpaEdmMetadataPostProcessor, final ErrorProcessor errorProcessor) throws ODataException {
 
@@ -42,7 +45,7 @@ public class ODataJPAConfiguration {
 
     @Bean
     public JPAEdmMetadataPostProcessor jpaEdmMetadataPostProcessor() {
-        return new CustomJPAEdmMetadataPostProcessor();
+        return new CustomJPAEdmMetadataPostProcessor(this.odataApiVersion);
     }
 
     @Bean

@@ -15,7 +15,7 @@ public class JsonArrayElementsAggregatorTest {
         JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
 
         String content = "{\"@odata.context\":\"$metadata#apis\",\"value\":[{\"ordId\":\"test-id\"}]}";
-        String expectedContent  = "{\"@odata.context\":\"$metadata#apis\",\"value\":[{\"ordId\":\"test-id\"}]}";
+        String expectedContent = "{\"@odata.context\":\"$metadata#apis\",\"value\":[{\"ordId\":\"test-id\"}]}";
 
         JsonNode jsonTree = mapper.readTree(content);
         aggregator.aggregate(jsonTree);
@@ -29,7 +29,7 @@ public class JsonArrayElementsAggregatorTest {
         JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
 
         String content = "{\"@odata.context\":\"$metadata#apis\",\"value\":[{\"unknownArray\":[{\"value\":\"automotive\"},{\"value\":\"finance\"}]}]}";
-        String expectedContent  = "{\"@odata.context\":\"$metadata#apis\",\"value\":[{\"unknownArray\":[{\"value\":\"automotive\"},{\"value\":\"finance\"}]}]}";
+        String expectedContent = "{\"@odata.context\":\"$metadata#apis\",\"value\":[{\"unknownArray\":[{\"value\":\"automotive\"},{\"value\":\"finance\"}]}]}";
 
         JsonNode jsonTree = mapper.readTree(content);
         aggregator.aggregate(jsonTree);

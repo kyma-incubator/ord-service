@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "api")
-@Table(name="api_definitions")
+@Table(name = "api_definitions")
 public class APIEntity {
     @javax.persistence.Id
     @Column(name = "id")
@@ -69,15 +69,15 @@ public class APIEntity {
     private List<ArrayElement> countries;
 
     @ElementCollection
-    @CollectionTable(name="api_resource_definitions", joinColumns=@JoinColumn(name="api_definition_id"))
+    @CollectionTable(name = "api_resource_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<APIDefinition> apiDefinitions;
 
     @ElementCollection
-    @CollectionTable(name="links", joinColumns=@JoinColumn(name="api_definition_id"))
+    @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Link> links;
 
     @ElementCollection
-    @CollectionTable(name="api_resource_links", joinColumns=@JoinColumn(name="api_definition_id"))
+    @CollectionTable(name = "api_resource_links", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<APIResourceLink> apiResourceLinks;
 
     @Column(name = "release_status")
@@ -91,7 +91,7 @@ public class APIEntity {
     private String successor;
 
     @ElementCollection
-    @CollectionTable(name="changelog_entries", joinColumns=@JoinColumn(name="api_definition_id"))
+    @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ChangelogEntry> changelogEntries;
 
     @Column(name = "target_url", length = 256)
