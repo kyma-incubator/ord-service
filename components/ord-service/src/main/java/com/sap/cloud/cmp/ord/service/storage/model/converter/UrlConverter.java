@@ -20,7 +20,7 @@ public class UrlConverter implements AttributeConverter<String, String> {
 
     @Override
     public String convertToEntityAttribute(String s) {
-        return env.getProperty("server.self_url") + "/" + env.getProperty("odata.jpa.request_mapping_path") + s;
+        return env.getProperty("server.self_url") + "/" + env.getProperty("static.request_mapping_path") + s;
     }
 
     @Autowired

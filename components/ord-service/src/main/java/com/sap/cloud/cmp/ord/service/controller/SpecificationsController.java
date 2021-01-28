@@ -56,20 +56,24 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
             @ApiResponse(responseCode = "401", description="Unauthorized", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(name = "example",value = UNAUTHORIZED_MSG),schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "404", description="Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example",value = "Not Found"),schema = @Schema(implementation = String.class)))
     })
-    public String getApiSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) throws IOException {
-        APISpecificationEntity apiSpec = new APISpecificationEntity();
-        String tenantID = extractInternalTenantIdFromIDToken(request);
+    public void getApiSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) throws IOException {
+        String tenantID = super.extractInternalTenantIdFromIDToken(request);
+        if (tenantID == null || tenantID.isEmpty()){
+            respond(response, HttpServletResponse.SC_BAD_REQUEST, INVALID_TENANT_ID_ERROR_MESSAGE);
+            return;
+        }
 
         try {
-            apiSpec = apiSpecRepository.getByApiDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantID));
+            APISpecificationEntity apiSpec = apiSpecRepository.getByApiDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantID));
             if (apiSpec == null) {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                return NOT_FOUND_MESSAGE;
+                respond(response,HttpServletResponse.SC_NOT_FOUND, NOT_FOUND_MESSAGE);
+                return;
             }
+
+            respond(response, HttpServletResponse.SC_OK, apiSpec.getSpecData());
         } catch (IllegalArgumentException e) {
-            handleErrorResponse(response, INVALID_TENANT_ID_ERROR_MESSAGE);
+            respond(response, HttpServletResponse.SC_BAD_REQUEST, INVALID_TENANT_ID_ERROR_MESSAGE);
         }
-        return apiSpec.getSpecData();
     }
 
     @RequestMapping(value = "/${static.request_mapping_path}/event/{id}/specification", method = { RequestMethod.GET }, produces = MediaType.TEXT_PLAIN_VALUE)
@@ -81,28 +85,31 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
             @ApiResponse(responseCode = "401", description="Unauthorized", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(name = "example",value = UNAUTHORIZED_MSG),schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "404", description="Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example",value = "Not Found"),schema = @Schema(implementation = String.class)))
     })
-    public String getEventSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) throws IOException {
-        EventSpecificationEntity eventSpec = new EventSpecificationEntity();
+    public void getEventSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String id) throws IOException {
         String tenantID = super.extractInternalTenantIdFromIDToken(request);
+        if (tenantID == null || tenantID.isEmpty()){
+            respond(response, HttpServletResponse.SC_BAD_REQUEST, INVALID_TENANT_ID_ERROR_MESSAGE);
+            return;
+        }
 
         try {
-            eventSpec = eventSpecRepository.getByEventDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantID));
+            EventSpecificationEntity eventSpec = eventSpecRepository.getByEventDefinitionIdAndTenant(UUID.fromString(id), UUID.fromString(tenantID));
             if (eventSpec == null) {
-                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                return NOT_FOUND_MESSAGE;
+                respond(response,HttpServletResponse.SC_NOT_FOUND, NOT_FOUND_MESSAGE);
+                return;
             }
+
+            respond(response, HttpServletResponse.SC_OK, eventSpec.getSpecData());
         } catch (IllegalArgumentException e) {
-            handleErrorResponse(response, INVALID_TENANT_ID_ERROR_MESSAGE);
+            respond(response, HttpServletResponse.SC_BAD_REQUEST, INVALID_TENANT_ID_ERROR_MESSAGE);
         }
-        return eventSpec.getSpecData();
     }
 
-
-    private void handleErrorResponse(HttpServletResponse response, String errorMessage) throws IOException {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    private void respond(HttpServletResponse response, int statusCode, String body) throws IOException {
+        response.setStatus(statusCode);
         response.setContentType(MediaType.TEXT_PLAIN_VALUE);
 
-        response.getWriter().print(errorMessage);
+        response.getWriter().print(body);
     }
 }
 
