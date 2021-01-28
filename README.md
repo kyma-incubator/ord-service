@@ -21,18 +21,24 @@ configuration file: `components/ord-service/src/main/resources/application.yaml`
 After having deployed a DB the ORD Service can be deployed by simply running the following script:
 `./components/ord-service/run.sh`
 
-A suggested workflow is to run a local installation of Director with it's dedicated `run.sh` script
+A suggested workflow is to run a local installation of Director with its dedicated `run.sh` script
 and then running the ORD Service `run.sh` script. The default values of the ORD Service
 are configured to work with a local Director out of the box.
+
+In order to call the ORD service APIs in this local setup, send the following header:
+
+```json
+"authorization": "Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzY29wZXMiOiJhcHBsaWNhdGlvbjpyZWFkIGF1dG9tYXRpY19zY2VuYXJpb19hc3NpZ25tZW50OndyaXRlIGF1dG9tYXRpY19zY2VuYXJpb19hc3NpZ25tZW50OnJlYWQgaGVhbHRoX2NoZWNrczpyZWFkIGFwcGxpY2F0aW9uOndyaXRlIHJ1bnRpbWU6d3JpdGUgbGFiZWxfZGVmaW5pdGlvbjp3cml0ZSBsYWJlbF9kZWZpbml0aW9uOnJlYWQgcnVudGltZTpyZWFkIHRlbmFudDpyZWFkIiwidGVuYW50IjoiM2U2NGViYWUtMzhiNS00NmEwLWIxZWQtOWNjZWUxNTNhMGFlIn0."
+```
 
 ## Usage
 
 Generally the ORD Service provides read-only access to Packages, APIs, Events and their specs for applications
 registered in Compass. In this sense a typical usage of the ORD Service would be to
-deploy a both a Director installation and ORD Service, register some applications with Packages and APIs
+deploy both a Director installation and ORD Service, register some applications with Packages and APIs
 in Compass and then discover those resources through the ORD Service.
 
-In order to call the APIs of the service, send the following headers:
+In order to call the APIs of the ORD service, send the following headers:
 
 `Tenant: <tenant-id>`
 
