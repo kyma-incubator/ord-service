@@ -1,8 +1,6 @@
 package com.sap.cloud.cmp.ord.service.config;
 
 import com.sap.olingo.jpa.metadata.api.JPAEdmMetadataPostProcessor;
-import com.sap.olingo.jpa.metadata.core.edm.mapper.api.JPAEdmNameBuilder;
-import com.sap.olingo.jpa.processor.core.api.JPAErrorProcessor;
 import com.sap.olingo.jpa.processor.core.api.JPAErrorProcessorWrapper;
 import com.sap.olingo.jpa.processor.core.api.JPAODataCRUDContextAccess;
 import com.sap.olingo.jpa.processor.core.api.JPAODataServiceContext;
