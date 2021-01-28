@@ -1,12 +1,11 @@
 package com.sap.cloud.cmp.ord.service.config;
 
-import javax.servlet.http.HttpServletResponse;
-
 import com.sap.olingo.jpa.processor.core.api.JPAErrorProcessor;
 import com.sap.olingo.jpa.processor.core.exception.ODataJPAQueryException;
-
 import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataServerError;
+
+import javax.servlet.http.HttpServletResponse;
 
 public class CustomErrorProcessor implements JPAErrorProcessor {
 

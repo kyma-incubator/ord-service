@@ -46,7 +46,7 @@ public class EventEntity {
     private UUID tenant;
 
     @ElementCollection
-    @CollectionTable(name="changelog_entries", joinColumns=@JoinColumn(name="event_definition_id"))
+    @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ChangelogEntry> changelogEntries;
 
     @Column(name = "package_id")
@@ -62,7 +62,7 @@ public class EventEntity {
     private UUID partOfConsumptionBundle;
 
     @ElementCollection
-    @CollectionTable(name="links", joinColumns=@JoinColumn(name="event_definition_id"))
+    @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<Link> links;
 
     @ElementCollection
@@ -84,7 +84,7 @@ public class EventEntity {
     private String successor;
 
     @ElementCollection
-    @CollectionTable(name="event_resource_definitions", joinColumns=@JoinColumn(name="event_definition_id"))
+    @CollectionTable(name = "event_resource_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<EventDefinition> eventDefinitions;
 
     @ElementCollection

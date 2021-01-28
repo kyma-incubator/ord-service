@@ -3,10 +3,18 @@ logging:
     org:
       springframework: INFO
 odata:
+  api:
+    version: "0.1.0-alpha.1"
+    path_prefix: "v0"
   jpa:
     punit_name: "com.sap.cloud.cmp.ord.service" # used in persistance.xml for Java EE, but in Spring (like here) only used as namespace of the OData service
-    request_mapping_path: "open-resource-discovery"
+    request_mapping_path: "open-resource-discovery-service/${odata.api.path_prefix}"
     root_packages: "com.sap.cloud.cmp.ord.service"
+static:
+  api:
+    version: "0.1.0-alpha.1"
+    path_prefix: "v0"
+  request_mapping_path: "open-resource-discovery-static/${static.api.path_prefix}"
 server:
   self_url: http://localhost:8080
   port: 8080
@@ -26,6 +34,15 @@ spring:
   servlet:
     multipart:
       enabled: false
+springfox:
+  custom-base-path: "/open-resource-discovery-docs"
+  documentation:
+    swagger-ui:
+      baseUrl: "${springfox.custom-base-path}"
+    open-api:
+      v3:
+        path: "${springfox.custom-base-path}/api-docs"
+
 management:
   endpoints:
     enabled-by-default: false

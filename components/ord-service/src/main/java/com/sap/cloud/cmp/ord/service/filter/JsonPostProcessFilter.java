@@ -4,14 +4,19 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.cloud.cmp.ord.service.filter.aggregator.JsonArrayElementsAggregator;
 import com.sap.cloud.cmp.ord.service.filter.wrappers.JsonResponseWrapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
 public class JsonPostProcessFilter implements Filter {
+
+    @Value("${odata.jpa.request_mapping_path}")
+    private String odataPath;
 
     private final static String COMPACT_QUERY_PARAM = "compact";
 
@@ -21,6 +26,11 @@ public class JsonPostProcessFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
+        if (!((HttpServletRequest) request).getServletPath().startsWith("/" + odataPath)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         JsonResponseWrapper capturingResponseWrapper = new JsonResponseWrapper((HttpServletResponse) response);
 
         filterChain.doFilter(request, capturingResponseWrapper);
@@ -42,5 +52,4 @@ public class JsonPostProcessFilter implements Filter {
         response.setContentLength(content.length());
         response.getWriter().write(content);
     }
-
 }
