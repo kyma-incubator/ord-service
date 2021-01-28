@@ -72,7 +72,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
 
             respond(response, HttpServletResponse.SC_OK, apiSpec.getSpecData());
         } catch (IllegalArgumentException e) {
-            respond(response, HttpServletResponse.SC_BAD_REQUEST, INVALID_TENANT_ID_ERROR_MESSAGE);
+            respond(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         }
     }
 
@@ -101,7 +101,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
 
             respond(response, HttpServletResponse.SC_OK, eventSpec.getSpecData());
         } catch (IllegalArgumentException e) {
-            respond(response, HttpServletResponse.SC_BAD_REQUEST, INVALID_TENANT_ID_ERROR_MESSAGE);
+            respond(response, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
         }
     }
 
