@@ -42,7 +42,7 @@ COPY --from=builder /app/ord-service.jar /app/
 # Install curl & CA certs
 #
 
-RUN apt-get install -y curl ca-certificates
+RUN apk --no-cache add curl ca-certificates
 
 #
 # Run app
