@@ -13,7 +13,6 @@ import java.util.UUID;
 
 @Entity(name = "package")
 @Table(name = "packages")
-@SecondaryTable(name = "providers", pkJoinColumns = @PrimaryKeyJoinColumn(name = "package_id", referencedColumnName = "id"))
 public class PackageEntity {
     @javax.persistence.Id
     @Column(name = "id")
@@ -32,6 +31,13 @@ public class PackageEntity {
     @Column(name = "short_description", length = 255)
     @NotNull
     private String shortDescription;
+
+    @Column(name = "policy_level", length = 256)
+    @NotNull
+    private String policyLevel;
+
+    @Column(name = "custom_policy_level", length = 256)
+    private String customPolicyLevel;
 
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
@@ -57,12 +63,12 @@ public class PackageEntity {
     @Column(name = "licence_type", length = 256)
     private String licenceType;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "name", column = @Column(name = "name", table = "providers")),
-            @AttributeOverride(name = "department", column = @Column(name = "department", table = "providers")),
-    })
-    private Provider provider;
+    @Column(name = "vendor")
+    private String vendorReference;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor", insertable = false, updatable = false)
+    private VendorEntity vendor;
 
     @ElementCollection
     @CollectionTable(name = "tags", joinColumns = @JoinColumn(name = "package_id"))
@@ -73,12 +79,27 @@ public class PackageEntity {
     private List<ArrayElement> countries;
 
     @ElementCollection
+    @CollectionTable(name = "line_of_businesses", joinColumns = @JoinColumn(name = "package_id"))
+    private List<ArrayElement> lineOfBusiness;
+
+    @ElementCollection
+    @CollectionTable(name = "industries", joinColumns = @JoinColumn(name = "package_id"))
+    private List<ArrayElement> industry;
+
+    @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "package_id"))
     private List<Label> labels;
 
-    @OneToMany(mappedBy = "packageEntity", fetch = FetchType.LAZY)
+    @ManyToMany
+    @JoinTable(
+            name = "package_product",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "package_id"))
+    private Set<ProductEntity> products;
+
+    @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)
     private Set<APIEntity> apis;
 
-    @OneToMany(mappedBy = "packageEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)
     private Set<EventEntity> events;
 }

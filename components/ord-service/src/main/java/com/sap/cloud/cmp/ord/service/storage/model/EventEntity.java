@@ -1,5 +1,6 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmAlias;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 import org.eclipse.persistence.annotations.Convert;
@@ -8,6 +9,7 @@ import org.eclipse.persistence.annotations.TypeConverter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "event")
@@ -31,6 +33,12 @@ public class EventEntity {
 
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
+
+    @Column(name = "visibility")
+    private String visibility;
+
+    @Column(name = "disabled")
+    private boolean disabled;
 
     @Column(name = "version_value")
     private String version;
@@ -73,6 +81,14 @@ public class EventEntity {
     @CollectionTable(name = "countries", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ArrayElement> countries;
 
+    @ElementCollection
+    @CollectionTable(name = "line_of_businesses", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> lineOfBusiness;
+
+    @ElementCollection
+    @CollectionTable(name = "industries", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> industry;
+
     @Column(name = "release_status")
     @NotNull
     private String releaseStatus;
@@ -93,9 +109,16 @@ public class EventEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
-    private PackageEntity packageEntity;
+    private PackageEntity pkg;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bundle_id", insertable = false, updatable = false)
-    private BundleEntity bundleEntity;
+    private BundleEntity consumptionBundle;
+
+    @ManyToMany
+    @JoinTable(
+            name = "event_product",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "event_api_definiton_id"))
+    private Set<ProductEntity> products;
 }

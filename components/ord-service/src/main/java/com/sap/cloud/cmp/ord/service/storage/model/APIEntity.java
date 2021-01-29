@@ -1,5 +1,6 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmAlias;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 import org.eclipse.persistence.annotations.Convert;
@@ -8,6 +9,7 @@ import org.eclipse.persistence.annotations.TypeConverter;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "api")
@@ -34,6 +36,12 @@ public class APIEntity {
 
     @Column(name = "version_value")
     private String version;
+
+    @Column(name = "visibility")
+    private String visibility;
+
+    @Column(name = "disabled")
+    private boolean disabled;
 
     @Column(name = "system_instance_aware")
     private boolean systemInstanceAware;
@@ -77,6 +85,14 @@ public class APIEntity {
     private List<Link> links;
 
     @ElementCollection
+    @CollectionTable(name = "line_of_businesses", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> lineOfBusiness;
+
+    @ElementCollection
+    @CollectionTable(name = "industries", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> industry;
+
+    @ElementCollection
     @CollectionTable(name = "api_resource_links", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<APIResourceLink> apiResourceLinks;
 
@@ -104,9 +120,16 @@ public class APIEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
-    private PackageEntity packageEntity;
+    private PackageEntity pkg;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bundle_id", insertable = false, updatable = false)
-    private BundleEntity bundleEntity;
+    private BundleEntity consumptionBundle;
+
+    @ManyToMany
+    @JoinTable(
+            name = "api_product",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "api_definiton_id"))
+    private Set<ProductEntity> products;
 }
