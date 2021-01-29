@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "bundle")
+@Entity(name = "consumptionBundle")
 @Table(name = "bundles")
 public class BundleEntity {
     @javax.persistence.Id
@@ -50,12 +50,22 @@ public class BundleEntity {
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "credential_request_strategies", joinColumns = @JoinColumn(name = "bundle_id"))
-    private List<CredentialsRequestStrategy> credentialsRequestStrategies;
+    @CollectionTable(name = "credential_exchange_strategies", joinColumns = @JoinColumn(name = "bundle_id"))
+    private List<CredentialExchangeStrategy> credentialExchangeStrategies;
 
-    @OneToMany(mappedBy = "bundleEntity", fetch = FetchType.LAZY)
+    @EdmIgnore
+    @Column(name = "app_id", length = 256)
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID appId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    private SystemInstanceEntity systemInstance;
+
+    @OneToMany(mappedBy = "consumptionBundle", fetch = FetchType.LAZY)
     private Set<APIEntity> apis;
 
-    @OneToMany(mappedBy = "bundleEntity", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "consumptionBundle", fetch = FetchType.LAZY)
     private Set<EventEntity> events;
 }
