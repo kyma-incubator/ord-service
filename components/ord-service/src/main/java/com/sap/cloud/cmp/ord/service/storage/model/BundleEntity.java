@@ -53,6 +53,16 @@ public class BundleEntity {
     @CollectionTable(name = "credential_exchange_strategies", joinColumns = @JoinColumn(name = "bundle_id"))
     private List<CredentialExchangeStrategy> credentialExchangeStrategies;
 
+    @EdmIgnore
+    @Column(name = "app_id", length = 256)
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID appId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    private SystemInstanceEntity systemInstance;
+
     @OneToMany(mappedBy = "consumptionBundle", fetch = FetchType.LAZY)
     private Set<APIEntity> apis;
 

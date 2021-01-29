@@ -5,6 +5,7 @@ import org.eclipse.persistence.annotations.TypeConverter;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "systemInstance")
@@ -24,6 +25,21 @@ public class SystemInstanceEntity {
 
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
+
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<PackageEntity> packages;
+
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<PackageEntity> consumptionBundles;
+
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<PackageEntity> products;
+
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<PackageEntity> tombstones;
+
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<PackageEntity> vendors;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "application_id"))

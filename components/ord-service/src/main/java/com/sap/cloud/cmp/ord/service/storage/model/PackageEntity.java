@@ -64,11 +64,22 @@ public class PackageEntity {
     private String licenceType;
 
     @Column(name = "vendor")
+    @EdmIgnore
     private String vendorReference;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor", insertable = false, updatable = false)
     private VendorEntity vendor;
+
+    @EdmIgnore
+    @Column(name = "app_id", length = 256)
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID appId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    private SystemInstanceEntity systemInstance;
 
     @ElementCollection
     @CollectionTable(name = "tags", joinColumns = @JoinColumn(name = "package_id"))
