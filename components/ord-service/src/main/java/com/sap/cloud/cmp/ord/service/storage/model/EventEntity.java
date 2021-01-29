@@ -1,6 +1,5 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
-import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmAlias;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 import org.eclipse.persistence.annotations.Convert;
