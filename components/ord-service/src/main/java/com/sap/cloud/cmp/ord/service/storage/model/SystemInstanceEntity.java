@@ -30,16 +30,16 @@ public class SystemInstanceEntity {
     private Set<PackageEntity> packages;
 
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
-    private Set<PackageEntity> consumptionBundles;
+    private Set<BundleEntity> consumptionBundles;
 
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
-    private Set<PackageEntity> products;
+    private Set<ProductEntity> products;
 
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
-    private Set<PackageEntity> tombstones;
+    private Set<TombstoneEntity> tombstones;
 
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
-    private Set<PackageEntity> vendors;
+    private Set<VendorEntity> vendors;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "application_id"))
