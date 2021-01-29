@@ -82,11 +82,11 @@ public class EventEntity {
     private List<ArrayElement> countries;
 
     @ElementCollection
-    @CollectionTable(name = "line_of_businesses", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "line_of_businesses", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ArrayElement> lineOfBusiness;
 
     @ElementCollection
-    @CollectionTable(name = "industries", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "industries", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ArrayElement> industry;
 
     @Column(name = "release_status")
@@ -119,6 +119,6 @@ public class EventEntity {
     @JoinTable(
             name = "event_product",
             joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "event_api_definiton_id"))
+            inverseJoinColumns = @JoinColumn(name = "event_definition_id"))
     private Set<ProductEntity> products;
 }
