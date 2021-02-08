@@ -15,7 +15,7 @@ public class UrlConverterTest {
     @Value("${server.self_url}")
     private String serverUrl;
 
-    @Value("${odata.jpa.request_mapping_path}")
+    @Value("${static.request_mapping_path}")
     private String requestMappingPath;
 
 
