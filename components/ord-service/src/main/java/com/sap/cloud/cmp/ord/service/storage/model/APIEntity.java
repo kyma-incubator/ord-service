@@ -131,4 +131,13 @@ public class APIEntity {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "api_definiton_id"))
     private Set<ProductEntity> products;
+
+    @Column(name = "implementation_standard")
+    private String implementationStandard;
+
+    @Column(name = "custom_implementation_standard")
+    private String customImplementationStandard;
+
+    @Column(name = "custom_implementation_standard_description")
+    private String customImplementationStandardDescription;
 }
