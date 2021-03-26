@@ -109,9 +109,9 @@ public class APIEntity {
     @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ChangelogEntry> changelogEntries;
 
-    @Column(name = "target_url", length = 256)
-    @NotNull
-    private String entryPoint;
+    @ElementCollection
+    @CollectionTable(name = "target_urls", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> entryPoints;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "api_definition_id"))
