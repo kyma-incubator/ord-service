@@ -56,7 +56,7 @@ public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
         map.put(PersistenceUnitProperties.CACHE_SHARED_DEFAULT, "false");
         // You can also tweak your application performance by configuring your database connection pool.
         // https://www.eclipse.org/eclipselink/documentation/2.7/jpa/extensions/persistenceproperties_ref.htm#connectionpool
-        map.put(PersistenceUnitProperties.CONNECTION_POOL_MAX, 50);
+        map.put(PersistenceUnitProperties.CONNECTION_POOL_MAX, 15);
         return map;
     }
 
