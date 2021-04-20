@@ -63,9 +63,9 @@ public class BundleEntity {
     @JoinColumn(name = "app_id", insertable = false, updatable = false)
     private SystemInstanceEntity systemInstance;
 
-    @OneToMany(mappedBy = "consumptionBundle", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "consumptionBundles", fetch = FetchType.LAZY)
     private Set<APIEntity> apis;
 
-    @OneToMany(mappedBy = "consumptionBundle", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "consumptionBundles", fetch = FetchType.LAZY)
     private Set<EventEntity> events;
 }

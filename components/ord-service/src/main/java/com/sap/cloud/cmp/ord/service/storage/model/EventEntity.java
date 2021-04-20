@@ -62,11 +62,9 @@ public class EventEntity {
     @NotNull
     private UUID partOfPackage;
 
-    @Column(name = "bundle_id")
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    @NotNull
-    private UUID partOfConsumptionBundle;
+    @ElementCollection
+    @CollectionTable(name = "event_bundle_reference", joinColumns = @JoinColumn(name = "event_definition_id"))
+    private List<ConsumptionBundleReference> partOfConsumptionBundles;
 
     @ElementCollection
     @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "event_definition_id"))
@@ -110,9 +108,12 @@ public class EventEntity {
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
     private PackageEntity pkg;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bundle_id", insertable = false, updatable = false)
-    private BundleEntity consumptionBundle;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "bundle_references",
+            joinColumns = @JoinColumn(name = "event_def_id"),
+            inverseJoinColumns = @JoinColumn(name = "bundle_id"))
+    private Set<BundleEntity> consumptionBundles;
 
     @ManyToMany
     @JoinTable(
