@@ -6,7 +6,7 @@ import javax.persistence.Embeddable;
 @Embeddable
 public class ConsumptionBundleReference {
     @Column(name = "bundle_id", length = 256)
-    private String ordId;
+    private String bundleID;
 
     @Column(name = "default_entry_point", length = 256)
     private String defaultEntryPoint;
