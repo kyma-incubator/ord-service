@@ -6,8 +6,7 @@ import javax.validation.constraints.NotNull;
 
 @Embeddable
 public class ExtensibleEntity {
-    @Column(name = "supported", nullable = false)
-    @NotNull
+    @Column(name = "supported")
     private String supported;
 
     @Column(name = "description")
