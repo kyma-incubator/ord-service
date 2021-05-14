@@ -31,6 +31,10 @@ spring:
     host: localhost
     db_name: compass
     username: postgres
+    hikari:
+      minimumIdle: 1
+      idleTimeout: 60000
+      maximumPoolSize: 5
   servlet:
     multipart:
       enabled: false
