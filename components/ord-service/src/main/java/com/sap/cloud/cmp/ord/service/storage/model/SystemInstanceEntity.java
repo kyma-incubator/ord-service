@@ -53,4 +53,8 @@ public class SystemInstanceEntity {
     @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "application_id"))
     private List<Label> labels;
+
+    @ElementCollection
+    @CollectionTable(name = "correlation_ids", joinColumns = @JoinColumn(name = "application_id"))
+    private List<ArrayElement> correlationIds;
 }

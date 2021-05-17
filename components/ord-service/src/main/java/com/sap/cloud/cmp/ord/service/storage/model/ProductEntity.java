@@ -49,8 +49,9 @@ public class ProductEntity {
     @Column(name = "parent", length = 256)
     private String parent;
 
-    @Column(name = "sap_ppms_object_id", length = 256)
-    private String sapPpmsObjectId;
+    @ElementCollection
+    @CollectionTable(name = "correlation_ids", joinColumns = @JoinColumn(name = "product_id"))
+    private List<ArrayElement> correlationIds;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "product_id"))

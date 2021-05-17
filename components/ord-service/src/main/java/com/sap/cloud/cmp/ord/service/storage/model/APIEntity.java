@@ -51,11 +51,9 @@ public class APIEntity {
     @NotNull
     private UUID partOfPackage;
 
-    @Column(name = "bundle_id")
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    @NotNull
-    private UUID partOfConsumptionBundle;
+    @ElementCollection
+    @CollectionTable(name = "api_bundle_reference", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ConsumptionBundleReference> partOfConsumptionBundles;
 
     @Column(name = "api_protocol")
     private String apiProtocol;
@@ -109,9 +107,9 @@ public class APIEntity {
     @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ChangelogEntry> changelogEntries;
 
-    @Column(name = "target_url", length = 256)
-    @NotNull
-    private String entryPoint;
+    @ElementCollection
+    @CollectionTable(name = "target_urls", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> entryPoints;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "api_definition_id"))
@@ -121,9 +119,12 @@ public class APIEntity {
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
     private PackageEntity pkg;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "bundle_id", insertable = false, updatable = false)
-    private BundleEntity consumptionBundle;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "bundle_references",
+            joinColumns = @JoinColumn(name = "api_def_id"),
+            inverseJoinColumns = @JoinColumn(name = "bundle_id"))
+    private Set<BundleEntity> consumptionBundles;
 
     @ManyToMany
     @JoinTable(
@@ -131,4 +132,13 @@ public class APIEntity {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "api_definiton_id"))
     private Set<ProductEntity> products;
+
+    @Column(name = "implementation_standard")
+    private String implementationStandard;
+
+    @Column(name = "custom_implementation_standard")
+    private String customImplementationStandard;
+
+    @Column(name = "custom_implementation_standard_description")
+    private String customImplementationStandardDescription;
 }
