@@ -116,7 +116,7 @@ public class APIEntity {
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "extensible", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "api_definition_extensible", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ExtensibleEntity> extensibleEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
