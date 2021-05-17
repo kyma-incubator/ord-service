@@ -104,6 +104,10 @@ public class EventEntity {
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<Label> labels;
 
+    @ElementCollection
+    @CollectionTable(name = "event_api_definitions_extensible", joinColumns = @JoinColumn(name = "event_definition_id"))
+    private List<ExtensibleEntity> extensibleEntity;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
     private PackageEntity pkg;
