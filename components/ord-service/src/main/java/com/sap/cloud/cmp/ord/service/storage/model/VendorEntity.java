@@ -23,8 +23,9 @@ public class VendorEntity {
     @NotNull
     private String title;
 
-    @Column(name = "sap_partner")
-    private boolean sapPartner;
+    @ElementCollection
+    @CollectionTable(name = "partners", joinColumns = @JoinColumn(name = "vendor_id"))
+    private List<ArrayElement> partners;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "vendor_id"))
