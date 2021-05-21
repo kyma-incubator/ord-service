@@ -93,8 +93,9 @@ public class EventEntity {
     @Column(name = "sunset_date")
     private String sunsetDate;
 
-    @Column(name = "successor")
-    private String successor;
+    @ElementCollection
+    @CollectionTable(name = "event_api_definition_successors", joinColumns = @JoinColumn(name = "event_definition_id"))
+    private List<ArrayElement> successors;
 
     @ElementCollection
     @CollectionTable(name = "event_resource_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))

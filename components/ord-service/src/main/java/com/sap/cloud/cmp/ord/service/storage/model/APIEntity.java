@@ -100,8 +100,9 @@ public class APIEntity {
     @Column(name = "sunset_date")
     private String sunsetDate;
 
-    @Column(name = "successor")
-    private String successor;
+    @ElementCollection
+    @CollectionTable(name = "api_definition_successors", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> successors;
 
     @ElementCollection
     @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "api_definition_id"))
