@@ -47,7 +47,7 @@ Tenant: <tenant-id>
 ## Development
 
 The ORD Service implementation is located in this repo (`kyma-incubator/ord-service`). The helm installation charts
-are in the `kyma-incubator/compass` repository however. This means that after introducing new chnages
+are in the `kyma-incubator/compass` repository however. This means that after introducing new changes
 in `kyma-incubator/ord-service` we should not forget to increase the `chart/compass/values.yaml` ORD Service version
 as well.
 
