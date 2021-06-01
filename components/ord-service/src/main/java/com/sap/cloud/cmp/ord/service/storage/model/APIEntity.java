@@ -118,7 +118,7 @@ public class APIEntity {
 
     @ElementCollection
     @CollectionTable(name = "api_definition_extensible", joinColumns = @JoinColumn(name = "api_definition_id"))
-    private List<ExtensibleEntity> extensibleEntity;
+    private List<ExtensibleEntity> extensible;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
