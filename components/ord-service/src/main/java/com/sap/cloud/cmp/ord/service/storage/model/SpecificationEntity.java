@@ -25,10 +25,16 @@ public class SpecificationEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID apiDefinitionId;
 
+    @Column(name = "api_spec_format")
+    private String apiSpecFormat;
+
     @Column(name = "event_def_id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID eventDefinitionId;
+
+    @Column(name = "event_spec_format")
+    private String eventSpecFormat;
 
     @Column(name = "spec_data", length = Integer.MAX_VALUE)
     private String specData;
@@ -42,5 +48,28 @@ public class SpecificationEntity {
 
     public String getSpecData() {
         return specData;
+    }
+
+    public String getApiSpecFormat() {
+        return convertSpecFormat(this.apiSpecFormat);
+    }
+
+    public String getEventSpecFormat() {
+        return convertSpecFormat(this.eventSpecFormat);
+    }
+
+    private String convertSpecFormat(String format) {
+        switch (format) {
+            case "JSON":
+                format = "application/json";
+                break;
+            case "YAML":
+                format = "text/yaml";
+                break;
+            case "XML":
+                format = "application/xml";
+                break;
+        }
+        return format;
     }
 }
