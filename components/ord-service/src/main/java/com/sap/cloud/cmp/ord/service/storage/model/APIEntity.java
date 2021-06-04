@@ -75,7 +75,7 @@ public class APIEntity {
 
     @ElementCollection
     @CollectionTable(name = "api_resource_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
-    private List<APIDefinition> apiDefinitions;
+    private List<APIDefinition> resourceDefinitions;
 
     @ElementCollection
     @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "api_definition_id"))
@@ -134,8 +134,8 @@ public class APIEntity {
     @ManyToMany
     @JoinTable(
             name = "api_product",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "api_definiton_id"))
+            joinColumns = @JoinColumn(name = "api_definition_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<ProductEntity> products;
 
     @Column(name = "implementation_standard")

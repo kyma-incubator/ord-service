@@ -99,7 +99,7 @@ public class EventEntity {
 
     @ElementCollection
     @CollectionTable(name = "event_resource_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
-    private List<EventDefinition> eventDefinitions;
+    private List<EventDefinition> resourceDefinitions;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "event_definition_id"))
@@ -123,7 +123,7 @@ public class EventEntity {
     @ManyToMany
     @JoinTable(
             name = "event_product",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "event_definition_id"))
+            joinColumns = @JoinColumn(name = "event_definition_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<ProductEntity> products;
 }
