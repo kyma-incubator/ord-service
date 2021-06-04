@@ -61,7 +61,7 @@ public class PackageEntity {
     private List<Link> links;
 
     @Column(name = "licence_type", length = 256)
-    private String licenceType;
+    private String licenseType;
 
     @Column(name = "vendor")
     @EdmIgnore
@@ -104,8 +104,8 @@ public class PackageEntity {
     @ManyToMany
     @JoinTable(
             name = "package_product",
-            joinColumns = @JoinColumn(name = "product_id"),
-            inverseJoinColumns = @JoinColumn(name = "package_id"))
+            joinColumns = @JoinColumn(name = "package_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<ProductEntity> products;
 
     @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)
