@@ -134,8 +134,8 @@ public class APIEntity {
     @ManyToMany
     @JoinTable(
             name = "api_product",
-            joinColumns = @JoinColumn(name = "api_definition_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
+            joinColumns = {@JoinColumn(name = "api_definition_id", referencedColumnName= "id"),@JoinColumn(name = "app_id", referencedColumnName= "app_id")},
+            inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName= "ord_id"), @JoinColumn(name = "app_id", referencedColumnName= "app_id")})
     private Set<ProductEntity> products;
 
     @Column(name = "implementation_standard")

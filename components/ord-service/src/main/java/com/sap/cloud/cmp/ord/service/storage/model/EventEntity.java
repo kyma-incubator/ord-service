@@ -123,7 +123,7 @@ public class EventEntity {
     @ManyToMany
     @JoinTable(
             name = "event_product",
-            joinColumns = @JoinColumn(name = "event_definition_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
+            joinColumns = {@JoinColumn(name = "event_definition_id", referencedColumnName= "id"),@JoinColumn(name = "app_id", referencedColumnName= "app_id")},
+            inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName= "ord_id"), @JoinColumn(name = "app_id", referencedColumnName= "app_id")})
     private Set<ProductEntity> products;
 }
