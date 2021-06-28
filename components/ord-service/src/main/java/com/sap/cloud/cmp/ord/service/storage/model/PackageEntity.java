@@ -68,7 +68,10 @@ public class PackageEntity {
     private String vendorReference;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vendor", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "vendor", referencedColumnName= "ord_id", insertable = false, updatable = false),
+            @JoinColumn(name = "app_id", referencedColumnName= "app_id", insertable = false, updatable = false)
+    })
     private VendorEntity vendor;
 
     @EdmIgnore
@@ -104,8 +107,8 @@ public class PackageEntity {
     @ManyToMany
     @JoinTable(
             name = "package_product",
-            joinColumns = @JoinColumn(name = "package_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id"))
+            joinColumns = {@JoinColumn(name = "package_id", referencedColumnName= "id"),@JoinColumn(name = "app_id", referencedColumnName= "app_id")},
+            inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName= "ord_id"), @JoinColumn(name = "app_id", referencedColumnName= "app_id")})
     private Set<ProductEntity> products;
 
     @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)

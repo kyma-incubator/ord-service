@@ -14,6 +14,11 @@ import java.util.UUID;
 @Entity(name = "product")
 @Table(name = "products")
 public class ProductEntity {
+    @Column(name = "id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID Id;
+
     @javax.persistence.Id
     @Column(name = "ord_id", length = 256)
     @NotNull
@@ -33,7 +38,10 @@ public class ProductEntity {
     private String vendorReference;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vendor", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "vendor", referencedColumnName= "ord_id", insertable = false, updatable = false),
+            @JoinColumn(name = "app_id", referencedColumnName= "app_id", insertable = false, updatable = false)
+    })
     private VendorEntity vendor;
 
     @EdmIgnore
@@ -50,11 +58,11 @@ public class ProductEntity {
     private String parent;
 
     @ElementCollection
-    @CollectionTable(name = "correlation_ids", joinColumns = @JoinColumn(name = "product_id"))
+    @CollectionTable(name = "correlation_ids", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
     private List<ArrayElement> correlationIds;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "product_id"))
+    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
     private List<Label> labels;
 
     @ManyToMany(mappedBy = "products")

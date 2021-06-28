@@ -14,6 +14,11 @@ import java.util.UUID;
 @Entity(name = "vendor")
 @Table(name = "vendors")
 public class VendorEntity {
+    @Column(name = "id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID Id;
+
     @javax.persistence.Id
     @Column(name = "ord_id", length = 256)
     @NotNull
@@ -24,11 +29,11 @@ public class VendorEntity {
     private String title;
 
     @ElementCollection
-    @CollectionTable(name = "partners", joinColumns = @JoinColumn(name = "vendor_id"))
+    @CollectionTable(name = "partners", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
     private List<ArrayElement> partners;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "vendor_id"))
+    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
     private List<Label> labels;
 
     @OneToMany(mappedBy = "vendor", fetch = FetchType.LAZY)

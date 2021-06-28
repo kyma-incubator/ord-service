@@ -12,6 +12,11 @@ import java.util.UUID;
 @Entity(name = "tombstone")
 @Table(name = "tombstones")
 public class TombstoneEntity {
+    @Column(name = "id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID Id;
+
     @javax.persistence.Id
     @Column(name = "ord_id", length = 256)
     @NotNull
