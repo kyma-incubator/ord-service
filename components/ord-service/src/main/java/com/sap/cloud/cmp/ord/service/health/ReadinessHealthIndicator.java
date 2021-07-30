@@ -9,11 +9,10 @@ import org.springframework.stereotype.Component;
 
 import java.math.BigInteger;
 
-@Component("readiness")
+@Component("customReadinessProbe")
 public class ReadinessHealthIndicator implements HealthIndicator {
     private boolean isHealthy = false;
     private String version;
-    private boolean schemaIsCompatible = false;
 
     @Autowired
     private SchemaRepository schemaRepository;
@@ -24,11 +23,11 @@ public class ReadinessHealthIndicator implements HealthIndicator {
 
     @Override
     public Health health() {
-        if (!schemaIsCompatible) {
-            SchemaEntity schema = schemaRepository.get();
-            BigInteger currentVersion = schema.getVersion();
 
-            schemaIsCompatible = version.equals(currentVersion.toString());
+        if (!isHealthy) {
+            SchemaEntity schema = schemaRepository.getByVersionNotNull();
+            BigInteger currentVersion = schema.getVersion();
+            isHealthy = version.equals(currentVersion.toString());
         }
 
         return isHealthy ? Health.up().build() : Health.down().build();

@@ -52,8 +52,9 @@ management:
     enabled-by-default: false
   endpoint:
     health:
+      show-details: always
       enabled: true
       group:
         readiness:
-          include: "db,readiness"
+          include: "customReadinessProbe,db"
 

@@ -8,5 +8,5 @@ import java.math.BigInteger;
 
 @Repository
 public interface SchemaRepository extends JpaRepository<SchemaEntity, BigInteger> {
-    SchemaEntity get();
+    SchemaEntity getByVersionNotNull();
 }
