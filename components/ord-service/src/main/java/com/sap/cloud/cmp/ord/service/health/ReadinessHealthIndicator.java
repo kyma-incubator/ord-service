@@ -7,8 +7,6 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
-import java.math.BigInteger;
-
 @Component("customReadinessProbe")
 public class ReadinessHealthIndicator implements HealthIndicator {
     private boolean isHealthy = false;
@@ -26,8 +24,8 @@ public class ReadinessHealthIndicator implements HealthIndicator {
 
         if (!isHealthy) {
             SchemaEntity schema = schemaRepository.getByVersionNotNull();
-            BigInteger currentVersion = schema.getVersion();
-            isHealthy = version.equals(currentVersion.toString());
+            String currentVersion = schema.getVersion();
+            isHealthy = version.equals(currentVersion);
         }
 
         return isHealthy ? Health.up().build() : Health.down().build();
