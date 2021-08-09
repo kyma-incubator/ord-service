@@ -41,8 +41,13 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
 
         String tenantID = super.extractInternalTenantIdFromIDToken(request);
         if (tenantID != null && !tenantID.isEmpty()) {
-            final JPAClaimsPair<UUID> user = new JPAClaimsPair<>(UUID.fromString(tenantID));
-            claims.add("tenant_id", user);
+            try{
+                UUID uuid = UUID.fromString(tenantID);
+                final JPAClaimsPair<UUID> user = new JPAClaimsPair<>(uuid);
+                claims.add("tenant_id", user);
+            } catch (IllegalArgumentException e){
+                logger.warn("Could not parse tenant uuid");
+            }
         } else {
             logger.warn("Could not determine tenant claim");
         }
