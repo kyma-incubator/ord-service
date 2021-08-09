@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @Entity(name = "specification")
-@Table(name = "specifications")
+@Table(name = "tenants_specifications")
 @EdmIgnore
 public class SpecificationEntity {
     @javax.persistence.Id
