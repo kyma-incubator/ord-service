@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "systemInstance")
-@Table(name = "applications")
+@Table(name = "tenants_apps")
 public class SystemInstanceEntity {
     @javax.persistence.Id
     @Column(name = "id")
