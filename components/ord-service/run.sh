@@ -37,14 +37,6 @@ do
     esac
 done
 
-ROOT_PATH="/Users/i539489/goProjects/src/github.com/kyma-incubator/compass/components/schema-migrator/migrations/director"
-DB_USER="postgres"
-DB_PWD="pgsql@12345"
-DB_NAME="compass"
-DB_PORT="5432"
-DB_HOST="127.0.0.1"
-CONNECTION_STRING="postgres://$DB_USER:$DB_PWD@$DB_HOST:$DB_PORT/$DB_NAME?sslmode=disable"
-
 export SCHEMA_MIGRATION_VERSION=$(ls -lr $MIGRATIONS_PATH | head -n 2 | tail -n 1 | tr -s ' ' | cut -d ' ' -f9 | cut -d '_' -f1)
 
 echo "VERSIONN" $SCHEMA_MIGRATION_VERSION
