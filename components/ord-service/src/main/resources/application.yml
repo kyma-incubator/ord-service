@@ -52,9 +52,8 @@ management:
     enabled-by-default: false
   endpoint:
     health:
-      show-details: always
       enabled: true
       group:
         readiness:
-          include: "customReadinessProbe,db"
+          include: "schemaCompatibility,db"
 

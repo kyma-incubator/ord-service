@@ -7,7 +7,7 @@ import org.springframework.boot.actuate.health.Health;
 import org.springframework.boot.actuate.health.HealthIndicator;
 import org.springframework.stereotype.Component;
 
-@Component("customReadinessProbe")
+@Component("schemaCompatibility")
 public class ReadinessHealthIndicator implements HealthIndicator {
     private boolean isHealthy = false;
     private String version;
