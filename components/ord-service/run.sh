@@ -25,12 +25,21 @@ do
             SKIP_DEPS=true
             shift # past argument
         ;;
+        --migrations-path)
+            MIGRATIONS_PATH=$2
+            shift
+            shift
+        ;;
         --*)
             echo "Unknown flag ${1}"
             exit 1
         ;;
     esac
 done
+
+export SCHEMA_MIGRATION_VERSION=$(ls -lr $MIGRATIONS_PATH | head -n 2 | tail -n 1 | tr -s ' ' | cut -d ' ' -f9 | cut -d '_' -f1)
+
+echo "Expected schema version" $SCHEMA_MIGRATION_VERSION
 
 if [[ ${SKIP_DEPS} = false ]]; then
     source "$COMPONENT_DIR/scripts/install_dependencies.sh"
