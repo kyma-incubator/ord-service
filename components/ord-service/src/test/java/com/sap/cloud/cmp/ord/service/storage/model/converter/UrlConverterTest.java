@@ -23,7 +23,7 @@ public class UrlConverterTest {
         String path = "/v1/api";
 
         String actualUrl = urlConverter.convertToEntityAttribute(path);
-        String expectedUrl = requestMappingPath + path;
+        String expectedUrl = "/" + requestMappingPath + path;
 
         assertEquals(expectedUrl, actualUrl);
     }
