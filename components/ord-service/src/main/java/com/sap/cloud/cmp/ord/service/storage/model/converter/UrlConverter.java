@@ -31,7 +31,7 @@ public class UrlConverter implements AttributeConverter<String, String> {
         String baseURL = req.getRequestURL().toString().replace(req.getRequestURI(), "");
 
         String externalHost = req.getHeader(EXTERNAL_HOST_HEADER);
-        if (externalHost != null && !externalHost.isEmpty()) { // ORD Service is behind of a reverse proxy (istio ingressgateway when running in cluster)
+        if (externalHost != null && !externalHost.isEmpty()) { // ORD Service is behind a reverse proxy (istio ingressgateway when running in cluster)
             String protocol = req.getHeader(PROTOCOL_HEADER);
             if (protocol == null || protocol.isEmpty()) {
                 protocol = "https";
