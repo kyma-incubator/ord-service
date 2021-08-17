@@ -12,9 +12,6 @@ import static org.junit.Assert.assertEquals;
 @SpringBootTest(classes = UrlConverter.class)
 public class UrlConverterTest {
 
-    @Value("${server.self_url}")
-    private String serverUrl;
-
     @Value("${static.request_mapping_path}")
     private String requestMappingPath;
 
@@ -26,7 +23,7 @@ public class UrlConverterTest {
         String path = "/v1/api";
 
         String actualUrl = urlConverter.convertToEntityAttribute(path);
-        String expectedUrl = serverUrl + "/" + requestMappingPath + path;
+        String expectedUrl = "http://localhost/" + requestMappingPath + path;
 
         assertEquals(expectedUrl, actualUrl);
     }

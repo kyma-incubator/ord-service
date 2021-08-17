@@ -16,7 +16,6 @@ static:
     path_prefix: "v0"
   request_mapping_path: "open-resource-discovery-static/${static.api.path_prefix}"
 server:
-  self_url: http://localhost:8080
   port: 8080
   default_response_type: "xml"
 spring:
