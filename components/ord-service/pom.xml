@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.4.7</version>
+        <version>2.5.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.sap.cloud.cmp</groupId>
@@ -19,7 +19,6 @@
         <project.build.source>1.8</project.build.source>
         <java.version>11</java.version>
         <jpa-processor>0.3.9-SNAPSHOT</jpa-processor>
-        <postgresql.version>42.2.22</postgresql.version>
     </properties>
 
     <dependencies>
