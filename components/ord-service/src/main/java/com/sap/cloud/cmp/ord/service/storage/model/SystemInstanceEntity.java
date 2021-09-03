@@ -28,6 +28,12 @@ public class SystemInstanceEntity {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
+    @Column(name = "system_number", length = 256)
+    private String systemNumber;
+
+    @Column(name = "product_type", length = 256)
+    private String productType;
+
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<PackageEntity> packages;
 
