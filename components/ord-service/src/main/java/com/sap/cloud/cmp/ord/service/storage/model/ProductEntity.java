@@ -14,12 +14,12 @@ import java.util.UUID;
 @Entity(name = "product")
 @Table(name = "products")
 public class ProductEntity {
+    @javax.persistence.Id
     @Column(name = "id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
 
-    @javax.persistence.Id
     @Column(name = "ord_id", length = 256)
     @NotNull
     private String ordId;
@@ -65,13 +65,13 @@ public class ProductEntity {
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
     private List<Label> labels;
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     private Set<PackageEntity> packages;
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     private Set<APIEntity> apis;
 
-    @ManyToMany(mappedBy = "products")
+    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     private Set<EventEntity> events;
 
     @EdmProtectedBy(name = "tenant_id")
