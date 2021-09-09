@@ -13,7 +13,6 @@ import java.io.Serializable;
 @Entity(name = "packageProduct")
 @IdClass(PackageProduct.class)
 public class PackageProduct implements Serializable {
-
     @javax.persistence.Id
     @Column(name = "package_id", length = 256)
     private String packageID;

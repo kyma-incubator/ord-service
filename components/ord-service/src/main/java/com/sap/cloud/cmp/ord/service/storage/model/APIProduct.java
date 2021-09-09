@@ -13,7 +13,6 @@ import java.io.Serializable;
 @Entity(name = "apiProduct")
 @IdClass(APIProduct.class)
 public class APIProduct implements Serializable {
-
     @javax.persistence.Id
     @Column(name = "api_definition_id", length = 256)
     private String apiDefID;
