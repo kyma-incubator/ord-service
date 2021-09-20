@@ -46,7 +46,11 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
         }
         String tenantID = tenantIDs.getFirst();
         String providerTenantID = tenantIDs.getSecond();
-        if (tenantID != null && !tenantID.isEmpty()) {
+        if (tenantID == null || tenantID.isEmpty()) {
+            logger.warn("Could not determine tenant from tenants claim");
+        } else if (providerTenantID == null || providerTenantID.isEmpty()) {
+            logger.warn("Could not determine provider tenant from tenants claim");
+        } else {
             try {
                 final JPAClaimsPair<UUID> tenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
                 final JPAClaimsPair<UUID> providerTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(providerTenantID));
@@ -55,8 +59,6 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
             } catch (IllegalArgumentException e) {
                 logger.warn("Could not parse tenant uuid");
             }
-        } else {
-            logger.warn("Could not determine tenant from tenants claim");
         }
         return claims;
     }
