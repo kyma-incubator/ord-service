@@ -34,7 +34,7 @@ public abstract class Controller {
             String idTokenDecoded = new String(idTokenBytes);
 
             JsonNode tokenTree = mapper.readTree(idTokenDecoded);
-            JsonNode tenantsTree = tokenTree.get(TENANTS_MAP_KEY);
+            JsonNode tenantsTree = mapper.readTree(tokenTree.get(TENANTS_MAP_KEY).asText().replace("\\",""));
 
             String tenantID = tenantsTree.path(CONSUMER_TENANT_KEY).asText();
             String providerTenantID = tenantsTree.path(PROVIDER_TENANT_KEY).asText();
