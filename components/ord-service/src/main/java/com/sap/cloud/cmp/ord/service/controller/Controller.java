@@ -12,9 +12,9 @@ public abstract class Controller {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    private final String TENANTS_MAP_KEY = "tenants";
-    private final String CONSUMER_TENANT_KEY = "tenant";
-    private final String PROVIDER_TENANT_KEY = "provider_tenant";
+    private final String TENANTS_MAP_KEY = "tenant";
+    private final String CONSUMER_TENANT_KEY = "consumerTenant";
+    private final String PROVIDER_TENANT_KEY = "providerTenant";
     private final String AUTHORIZATION_HEADER = "Authorization";
     private final String JWT_TOKEN_SPLIT_PARTS = "\\.";
     private final int PAYLOAD_INDEX = 1;
