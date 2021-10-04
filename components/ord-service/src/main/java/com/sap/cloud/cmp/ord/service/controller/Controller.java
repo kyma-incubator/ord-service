@@ -35,15 +35,18 @@ public abstract class Controller {
 
             JsonNode tokenTree = mapper.readTree(idTokenDecoded);
             String unescapedTenants = tokenTree.get(TENANTS_MAP_KEY).asText().replace("\\", "");
+            try {
+                JsonNode tenantsTree = mapper.readTree(unescapedTenants);
 
-            JsonNode tenantsTree = mapper.readTree(unescapedTenants);
-
-            String tenantID = tenantsTree.path(CONSUMER_TENANT_KEY).asText();
-            String providerTenantID = tenantsTree.path(PROVIDER_TENANT_KEY).asText();
-            if (providerTenantID.isEmpty()) {
-                providerTenantID = tenantID;
+                String tenantID = tenantsTree.path(CONSUMER_TENANT_KEY).asText();
+                String providerTenantID = tenantsTree.path(PROVIDER_TENANT_KEY).asText();
+                if (providerTenantID.isEmpty()) {
+                    providerTenantID = tenantID;
+                }
+                tenantsPair = Pair.of(tenantID, providerTenantID);
+            }catch (IOException e){
+                tenantsPair = Pair.of("", "");
             }
-            tenantsPair = Pair.of(tenantID, providerTenantID);
         }
 
         return tenantsPair;
