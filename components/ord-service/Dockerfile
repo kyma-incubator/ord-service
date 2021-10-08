@@ -1,4 +1,4 @@
-FROM maven:3.8.1-jdk-11-slim AS builder
+FROM maven:3.8.3-jdk-11-slim AS builder
 
 ENV BASE_APP_DIR /go/src/github.com/kyma-incubator/ord-service/components/ord-service
 WORKDIR ${BASE_APP_DIR}
