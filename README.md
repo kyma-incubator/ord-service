@@ -56,3 +56,5 @@ Another thing to consider is that there are E2E tests for the ORD Service, which
 to provide necessary E2E tests in the `kyma-incubator/compass` repository when the
 ORD Service evolves and new functionalities are introduced. There is also a dedicated
 E2E test image in the `chart/compass/values.yaml` file as well, so we should make sure to bump that as well.
+
+count(0)
