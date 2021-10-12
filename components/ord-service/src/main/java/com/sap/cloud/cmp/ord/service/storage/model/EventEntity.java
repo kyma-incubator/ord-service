@@ -48,9 +48,7 @@ public class EventEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID tenant;
+    private String tenant;
 
     @ElementCollection
     @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "event_definition_id"))
