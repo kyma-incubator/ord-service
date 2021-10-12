@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Repository
 public interface SpecRepository extends JpaRepository<SpecificationEntity, UUID> {
-    SpecificationEntity getBySpecIdAndApiDefinitionIdAndTenant(UUID id, UUID apiDefId, UUID tenant);
+    SpecificationEntity getBySpecIdAndApiDefinitionIdAndTenantAndProviderTenant(UUID id, UUID apiDefId, UUID tenant, UUID providerTenant);
 
-    SpecificationEntity getBySpecIdAndEventDefinitionIdAndTenant(UUID id, UUID apiDefId, UUID tenant);
+    SpecificationEntity getBySpecIdAndEventDefinitionIdAndTenantAndProviderTenant(UUID id, UUID apiDefId, UUID tenant, UUID providerTenant);
 }
