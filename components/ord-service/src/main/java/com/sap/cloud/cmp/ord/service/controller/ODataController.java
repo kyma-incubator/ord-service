@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.UUID;
 
 
 @Controller
@@ -41,12 +40,8 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
 
         String tenantID = super.extractInternalTenantIdFromIDToken(request);
         if (tenantID != null && !tenantID.isEmpty()) {
-            try {
-                final JPAClaimsPair<UUID> user = new JPAClaimsPair<>(UUID.fromString(tenantID));
-                claims.add("tenant_id", user);
-            } catch (IllegalArgumentException e) {
-                logger.warn("Could not parse tenant uuid");
-            }
+            final JPAClaimsPair<String> user = new JPAClaimsPair<>(tenantID);
+            claims.add("tenant_id", user);
         } else {
             logger.warn("Could not determine tenant claim");
         }

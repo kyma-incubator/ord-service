@@ -43,7 +43,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
 
     @RequestMapping(value = "/${static.request_mapping_path}/api/{apiId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
-    @ApiImplicitParam(name = "Tenant", value = "Tenant GUID", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = UUID.class)
+    @ApiImplicitParam(name = "Tenant", value = "Tenant GUID", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "<api specification in appropriate standard>"), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "400", description = "Missing or invalid tenantID", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Missing or invalid tenantID"), schema = @Schema(implementation = String.class))),
@@ -58,7 +58,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
         }
 
         try {
-            SpecificationEntity apiSpec = specRepository.getBySpecIdAndApiDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(apiId), UUID.fromString(tenantID));
+            SpecificationEntity apiSpec = specRepository.getBySpecIdAndApiDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(apiId), tenantID);
             if (apiSpec == null) {
                 respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
                 return;
@@ -72,7 +72,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
 
     @RequestMapping(value = "/${static.request_mapping_path}/event/{eventId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
-    @ApiImplicitParam(name = "Tenant", value = "Tenant GUID", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = UUID.class)
+    @ApiImplicitParam(name = "Tenant", value = "Tenant GUID", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "<event specification in appropriate standard>"), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "400", description = "Missing or invalid tenantID", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Missing or invalid tenantID"), schema = @Schema(implementation = String.class))),
@@ -87,7 +87,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
         }
 
         try {
-            SpecificationEntity eventSpec = specRepository.getBySpecIdAndEventDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(eventId), UUID.fromString(tenantID));
+            SpecificationEntity eventSpec = specRepository.getBySpecIdAndEventDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(eventId), tenantID);
             if (eventSpec == null) {
                 respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
                 return;

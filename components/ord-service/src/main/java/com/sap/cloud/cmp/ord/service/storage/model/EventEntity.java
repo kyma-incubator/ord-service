@@ -45,6 +45,8 @@ public class EventEntity {
     @Column(name = "system_instance_aware")
     private boolean systemInstanceAware;
 
+    @EdmProtectedBy(name = "tenant_id")
+    @EdmIgnore
     @Column(name = "tenant_id", length = 256)
     private String tenant;
 
