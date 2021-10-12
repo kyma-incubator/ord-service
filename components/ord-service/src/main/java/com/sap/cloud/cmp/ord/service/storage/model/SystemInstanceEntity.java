@@ -49,10 +49,8 @@ public class SystemInstanceEntity {
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<VendorEntity> vendors;
 
-    @EdmProtectedBy(name = "tenant_id")
-    @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    private UUID tenant;
+    private String tenant;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "application_id"))

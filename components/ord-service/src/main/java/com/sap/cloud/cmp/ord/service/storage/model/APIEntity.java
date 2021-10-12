@@ -58,8 +58,6 @@ public class APIEntity {
     @Column(name = "api_protocol")
     private String apiProtocol;
 
-    @EdmProtectedBy(name = "tenant_id")
-    @EdmIgnore
     @Column(name = "tenant_id", length = 256)
     private String tenant;
 

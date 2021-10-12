@@ -39,8 +39,6 @@ public class SpecificationEntity {
     @Column(name = "spec_data", length = Integer.MAX_VALUE)
     private String specData;
 
-    @EdmProtectedBy(name = "tenant_id")
-    @EdmIgnore
     @Column(name = "tenant_id", length = 256)
     private String tenant;
 
