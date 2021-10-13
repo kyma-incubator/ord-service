@@ -45,7 +45,7 @@ public class PackageEntity {
     @Column(name = "version")
     private String version;
 
-    @EdmProtectedBy(name = "tenant_id")
+    @EdmProtectedBy(name = "tenant_uuid")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
     @Convert("uuidConverter")

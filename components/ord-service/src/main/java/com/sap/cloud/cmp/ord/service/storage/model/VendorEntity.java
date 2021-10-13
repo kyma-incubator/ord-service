@@ -52,7 +52,7 @@ public class VendorEntity {
     @JoinColumn(name = "app_id", insertable = false, updatable = false)
     private SystemInstanceEntity systemInstance;
 
-    @EdmProtectedBy(name = "tenant_id")
+    @EdmProtectedBy(name = "tenant_uuid")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
     @Convert("uuidConverter")
