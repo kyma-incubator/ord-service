@@ -52,10 +52,14 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
             logger.warn("Could not determine provider tenant from tenants claim");
         } else {
             try {
-                final JPAClaimsPair<UUID> tenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
-                final JPAClaimsPair<UUID> providerTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(providerTenantID));
-                claims.add("tenant_id", tenantJPAPair);
-                claims.add("provider_tenant_id", providerTenantJPAPair);
+                final JPAClaimsPair<String> tenantIDJPAPair = new JPAClaimsPair<>(tenantID);
+                claims.add("tenant_id", tenantIDJPAPair);
+                final JPAClaimsPair<String> providerTenantIDJPAPair = new JPAClaimsPair<>(providerTenantID);
+                claims.add("provider_tenant_id", providerTenantIDJPAPair);
+                final JPAClaimsPair<UUID> tenantUUIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
+                claims.add("tenant_uuid", tenantUUIDJPAPair);
+                final JPAClaimsPair<UUID> providerTenantUUIDJPAPair = new JPAClaimsPair<>(UUID.fromString(providerTenantID));
+                claims.add("provider_tenant_uuid", providerTenantUUIDJPAPair);
             } catch (IllegalArgumentException e) {
                 logger.warn("Could not parse tenant uuid");
             }

@@ -26,7 +26,7 @@ public class TombstoneEntity {
     @NotNull
     private String removalDate;
 
-    @EdmProtectedBy(name = "tenant_id")
+    @EdmProtectedBy(name = "tenant_uuid")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
     @Convert("uuidConverter")
