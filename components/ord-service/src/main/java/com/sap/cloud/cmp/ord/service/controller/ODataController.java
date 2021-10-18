@@ -9,6 +9,7 @@ import org.apache.olingo.server.api.debug.DefaultDebugSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,17 +39,30 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
 
     private JPAODataClaimsProvider createClaims(final HttpServletRequest request) throws IOException {
         final JPAODataClaimsProvider claims = new JPAODataClaimsProvider();
-
-        String tenantID = super.extractInternalTenantIdFromIDToken(request);
-        if (tenantID != null && !tenantID.isEmpty()) {
+        Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
+        if (tenantIDs == null) {
+            logger.warn("Could not determine tenants claim");
+            return claims;
+        }
+        String tenantID = tenantIDs.getFirst();
+        String providerTenantID = tenantIDs.getSecond();
+        if (tenantID == null || tenantID.isEmpty()) {
+            logger.warn("Could not determine tenant from tenants claim");
+        } else if (providerTenantID == null || providerTenantID.isEmpty()) {
+            logger.warn("Could not determine provider tenant from tenants claim");
+        } else {
             try {
-                final JPAClaimsPair<UUID> user = new JPAClaimsPair<>(UUID.fromString(tenantID));
-                claims.add("tenant_id", user);
+                final JPAClaimsPair<String> tenantIDJPAPair = new JPAClaimsPair<>(tenantID);
+                claims.add("tenant_id", tenantIDJPAPair);
+                final JPAClaimsPair<String> providerTenantIDJPAPair = new JPAClaimsPair<>(providerTenantID);
+                claims.add("provider_tenant_id", providerTenantIDJPAPair);
+                final JPAClaimsPair<UUID> tenantUUIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
+                claims.add("tenant_uuid", tenantUUIDJPAPair);
+                final JPAClaimsPair<UUID> providerTenantUUIDJPAPair = new JPAClaimsPair<>(UUID.fromString(providerTenantID));
+                claims.add("provider_tenant_uuid", providerTenantUUIDJPAPair);
             } catch (IllegalArgumentException e) {
                 logger.warn("Could not parse tenant uuid");
             }
-        } else {
-            logger.warn("Could not determine tenant claim");
         }
         return claims;
     }

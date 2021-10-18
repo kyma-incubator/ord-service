@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -43,7 +44,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
 
     @RequestMapping(value = "/${static.request_mapping_path}/api/{apiId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
-    @ApiImplicitParam(name = "Tenant", value = "Tenant GUID", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = UUID.class)
+    @ApiImplicitParam(name = "Tenant", value = "Tenant GUID", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "<api specification in appropriate standard>"), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "400", description = "Missing or invalid tenantID", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Missing or invalid tenantID"), schema = @Schema(implementation = String.class))),
@@ -51,14 +52,21 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
     public void getApiSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String apiId, @PathVariable final String specId) throws IOException {
-        String tenantID = super.extractInternalTenantIdFromIDToken(request);
-        if (tenantID == null || tenantID.isEmpty()) {
+        Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
+        if (tenantIDs == null) {
+            respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
+            return;
+        }
+
+        String tenantID = tenantIDs.getFirst();
+        String providerTenantID = tenantIDs.getSecond();
+        if (tenantID == null || providerTenantID == null || tenantID.isEmpty() || providerTenantID.isEmpty()) {
             respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
             return;
         }
 
         try {
-            SpecificationEntity apiSpec = specRepository.getBySpecIdAndApiDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(apiId), UUID.fromString(tenantID));
+            SpecificationEntity apiSpec = specRepository.getBySpecIdAndApiDefinitionIdAndTenantAndProviderTenant(UUID.fromString(specId), UUID.fromString(apiId), tenantID, providerTenantID);
             if (apiSpec == null) {
                 respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
                 return;
@@ -72,7 +80,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
 
     @RequestMapping(value = "/${static.request_mapping_path}/event/{eventId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
-    @ApiImplicitParam(name = "Tenant", value = "Tenant GUID", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = UUID.class)
+    @ApiImplicitParam(name = "Tenant", value = "Tenant GUID", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class)
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "<event specification in appropriate standard>"), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "400", description = "Missing or invalid tenantID", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Missing or invalid tenantID"), schema = @Schema(implementation = String.class))),
@@ -80,14 +88,21 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
     public void getEventSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId, @PathVariable final String specId) throws IOException {
-        String tenantID = super.extractInternalTenantIdFromIDToken(request);
-        if (tenantID == null || tenantID.isEmpty()) {
+        Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
+        if (tenantIDs == null) {
+            respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
+            return;
+        }
+
+        String tenantID = tenantIDs.getFirst();
+        String providerTenantID = tenantIDs.getSecond();
+        if (tenantID == null || providerTenantID == null || tenantID.isEmpty() || providerTenantID.isEmpty()) {
             respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
             return;
         }
 
         try {
-            SpecificationEntity eventSpec = specRepository.getBySpecIdAndEventDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(eventId), UUID.fromString(tenantID));
+            SpecificationEntity eventSpec = specRepository.getBySpecIdAndEventDefinitionIdAndTenantAndProviderTenant(UUID.fromString(specId), UUID.fromString(eventId), tenantID, providerTenantID);
             if (eventSpec == null) {
                 respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
                 return;

@@ -9,6 +9,6 @@ public class ExtensibleEntity {
     @Column(name = "supported")
     private String supported;
 
-    @Column(name = "description")
+    @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 }

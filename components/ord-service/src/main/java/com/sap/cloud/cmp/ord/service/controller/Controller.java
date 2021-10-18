@@ -2,6 +2,7 @@ package com.sap.cloud.cmp.ord.service.controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.data.util.Pair;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -11,14 +12,16 @@ public abstract class Controller {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    private final String TENANT_KEY = "tenant";
+    private final String TENANTS_MAP_KEY = "tenant";
+    private final String CONSUMER_TENANT_KEY = "consumerTenant";
+    private final String PROVIDER_TENANT_KEY = "providerTenant";
     private final String AUTHORIZATION_HEADER = "Authorization";
     private final String JWT_TOKEN_SPLIT_PARTS = "\\.";
     private final int PAYLOAD_INDEX = 1;
 
-    String extractInternalTenantIdFromIDToken(final HttpServletRequest request) throws IOException {
+    Pair<String, String> extractTenantsFromIDToken(final HttpServletRequest request) throws IOException {
         final String idToken = request.getHeader(AUTHORIZATION_HEADER);
-        String tenantID = null;
+        Pair<String, String> tenantsPair = null;
 
         if (idToken != null && !idToken.isEmpty()) {
             // The id_token comes with `Bearer` prefix which we should trim
@@ -30,9 +33,22 @@ public abstract class Controller {
             byte[] idTokenBytes = Base64.getDecoder().decode(base64EncodedPayload);
             String idTokenDecoded = new String(idTokenBytes);
 
-            JsonNode parent = mapper.readTree(idTokenDecoded);
-            tenantID = parent.path(TENANT_KEY).asText();
+            JsonNode tokenTree = mapper.readTree(idTokenDecoded);
+            String unescapedTenants = tokenTree.get(TENANTS_MAP_KEY).asText().replace("\\", "");
+            try {
+                JsonNode tenantsTree = mapper.readTree(unescapedTenants);
+
+                String tenantID = tenantsTree.path(CONSUMER_TENANT_KEY).asText();
+                String providerTenantID = tenantsTree.path(PROVIDER_TENANT_KEY).asText();
+                if (providerTenantID.isEmpty()) {
+                    providerTenantID = tenantID;
+                }
+                tenantsPair = Pair.of(tenantID, providerTenantID);
+            }catch (IOException e){
+                tenantsPair = Pair.of("", "");
+            }
         }
-        return tenantID;
+
+        return tenantsPair;
     }
 }

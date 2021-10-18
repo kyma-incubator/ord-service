@@ -45,7 +45,7 @@ public class PackageEntity {
     @Column(name = "version")
     private String version;
 
-    @EdmProtectedBy(name = "tenant_id")
+    @EdmProtectedBy(name = "tenant_uuid")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
     @Convert("uuidConverter")
@@ -104,11 +104,11 @@ public class PackageEntity {
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "package_id"))
     private List<Label> labels;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "package_product",
-            joinColumns = {@JoinColumn(name = "package_id", referencedColumnName= "id"),@JoinColumn(name = "app_id", referencedColumnName= "app_id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName= "ord_id"), @JoinColumn(name = "app_id", referencedColumnName= "app_id")})
+            joinColumns = {@JoinColumn(name = "package_id")},
+            inverseJoinColumns = {@JoinColumn(name = "product_id")})
     private Set<ProductEntity> products;
 
     @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)

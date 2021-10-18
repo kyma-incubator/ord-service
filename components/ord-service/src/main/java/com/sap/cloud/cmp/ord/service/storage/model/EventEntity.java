@@ -48,9 +48,12 @@ public class EventEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID tenant;
+    private String tenant;
+
+    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmIgnore
+    @Column(name = "provider_tenant_id", length = 256)
+    private String providerTenant;
 
     @ElementCollection
     @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "event_definition_id"))
@@ -120,10 +123,10 @@ public class EventEntity {
             inverseJoinColumns = @JoinColumn(name = "bundle_id"))
     private Set<BundleEntity> consumptionBundles;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "event_product",
-            joinColumns = {@JoinColumn(name = "event_definition_id", referencedColumnName= "id"),@JoinColumn(name = "app_id", referencedColumnName= "app_id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName= "ord_id"), @JoinColumn(name = "app_id", referencedColumnName= "app_id")})
+            joinColumns = {@JoinColumn(name = "event_definition_id")},
+            inverseJoinColumns = {@JoinColumn(name = "product_id")})
     private Set<ProductEntity> products;
 }

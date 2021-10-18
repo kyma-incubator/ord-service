@@ -61,9 +61,12 @@ public class APIEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID tenant;
+    private String tenant;
+
+    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmIgnore
+    @Column(name = "provider_tenant_id", length = 256)
+    private String providerTenant;
 
     @ElementCollection
     @CollectionTable(name = "tags", joinColumns = @JoinColumn(name = "api_definition_id"))
@@ -131,11 +134,11 @@ public class APIEntity {
             inverseJoinColumns = @JoinColumn(name = "bundle_id"))
     private Set<BundleEntity> consumptionBundles;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "api_product",
-            joinColumns = {@JoinColumn(name = "api_definition_id", referencedColumnName= "id"),@JoinColumn(name = "app_id", referencedColumnName= "app_id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_id", referencedColumnName= "ord_id"), @JoinColumn(name = "app_id", referencedColumnName= "app_id")})
+            joinColumns = {@JoinColumn(name = "api_definition_id")},
+            inverseJoinColumns = {@JoinColumn(name = "product_id")})
     private Set<ProductEntity> products;
 
     @Column(name = "implementation_standard")

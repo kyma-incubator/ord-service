@@ -28,6 +28,12 @@ public class SystemInstanceEntity {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
+    @Column(name = "system_number", length = 256)
+    private String systemNumber;
+
+    @Column(name = "product_type", length = 256)
+    private String productType;
+
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<PackageEntity> packages;
 
@@ -46,9 +52,12 @@ public class SystemInstanceEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID tenant;
+    private String tenant;
+
+    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmIgnore
+    @Column(name = "provider_tenant_id", length = 256)
+    private String providerTenant;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "application_id"))
