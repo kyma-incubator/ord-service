@@ -56,6 +56,10 @@ public class BundleEntity {
     @CollectionTable(name = "credential_exchange_strategies", joinColumns = @JoinColumn(name = "bundle_id"))
     private List<CredentialExchangeStrategy> credentialExchangeStrategies;
 
+    @ElementCollection
+    @CollectionTable(name = "correlation_ids", joinColumns = @JoinColumn(name = "bundle_id", referencedColumnName= "id"))
+    private List<ArrayElement> correlationIds;
+
     @EdmIgnore
     @Column(name = "app_id", length = 256)
     @Convert("uuidConverter")
