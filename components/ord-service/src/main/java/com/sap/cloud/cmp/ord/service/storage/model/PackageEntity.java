@@ -45,12 +45,15 @@ public class PackageEntity {
     @Column(name = "version")
     private String version;
 
-    @EdmProtectedBy(name = "tenant_uuid")
+    @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID tenant;
+    private String tenant;
+
+    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmIgnore
+    @Column(name = "provider_tenant_id", length = 256)
+    private String providerTenant;
 
     @ElementCollection
     @CollectionTable(name = "package_links", joinColumns = @JoinColumn(name = "package_id"))
