@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity(name = "tombstone")
-@Table(name = "tombstones")
+@Table(name = "tenants_tombstones")
 public class TombstoneEntity {
     @Column(name = "id")
     @Convert("uuidConverter")

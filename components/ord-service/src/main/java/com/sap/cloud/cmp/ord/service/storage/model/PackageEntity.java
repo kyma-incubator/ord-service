@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "package")
-@Table(name = "packages")
+@Table(name = "tenants_packages")
 public class PackageEntity {
     @javax.persistence.Id
     @Column(name = "id")

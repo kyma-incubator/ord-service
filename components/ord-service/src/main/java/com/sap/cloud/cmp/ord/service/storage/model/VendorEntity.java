@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "vendor")
-@Table(name = "vendors")
+@Table(name = "tenants_vendors")
 public class VendorEntity {
     @Column(name = "id")
     @Convert("uuidConverter")
