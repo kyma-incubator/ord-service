@@ -12,7 +12,7 @@ import java.util.Set;
 import java.util.UUID;
 
 @Entity(name = "vendor")
-@Table(name = "vendors")
+@Table(name = "tenants_vendors")
 public class VendorEntity {
     @Column(name = "id")
     @Convert("uuidConverter")
@@ -52,10 +52,13 @@ public class VendorEntity {
     @JoinColumn(name = "app_id", insertable = false, updatable = false)
     private SystemInstanceEntity systemInstance;
 
-    @EdmProtectedBy(name = "tenant_uuid")
+    @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID tenant;
+    private String tenant;
+
+    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmIgnore
+    @Column(name = "provider_tenant_id", length = 256)
+    private String providerTenant;
 }

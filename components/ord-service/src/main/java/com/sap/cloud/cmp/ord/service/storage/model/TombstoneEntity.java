@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
 @Entity(name = "tombstone")
-@Table(name = "tombstones")
+@Table(name = "tenants_tombstones")
 public class TombstoneEntity {
     @Column(name = "id")
     @Convert("uuidConverter")
@@ -26,12 +26,15 @@ public class TombstoneEntity {
     @NotNull
     private String removalDate;
 
-    @EdmProtectedBy(name = "tenant_uuid")
+    @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID tenant;
+    private String tenant;
+
+    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmIgnore
+    @Column(name = "provider_tenant_id", length = 256)
+    private String providerTenant;
 
     @EdmIgnore
     @Column(name = "app_id", length = 256)
