@@ -30,4 +30,7 @@ public class BundleReference {
 
     @Column(name = "api_def_url", length = 256)
     private String defaultEntryPoint;
+
+    @Column(name = "default_consumption_bundle")
+    private boolean isDefaultBundle;
 }

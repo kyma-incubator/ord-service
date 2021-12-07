@@ -10,4 +10,7 @@ public class ConsumptionBundleReference {
 
     @Column(name = "default_entry_point", length = 256)
     private String defaultEntryPoint;
+
+    @Column(name = "default_consumption_bundle")
+    private boolean isDefaultBundle;
 }
