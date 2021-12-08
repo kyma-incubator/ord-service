@@ -19,6 +19,9 @@ server:
   port: 8080
   default_response_type: "xml"
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: "ant_path_matcher"
   autoconfigure:
     exclude:
       - org.springframework.boot.actuate.autoconfigure.metrics.orm.jpa.HibernateMetricsAutoConfiguration
