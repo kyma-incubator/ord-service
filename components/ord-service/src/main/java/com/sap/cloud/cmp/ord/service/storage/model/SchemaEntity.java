@@ -17,4 +17,8 @@ public class SchemaEntity {
     public String getVersion() {
         return version;
     }
+
+    public boolean isDirty() {
+        return dirty;
+    }
 }

@@ -32,9 +32,12 @@ public class ReadinessHealthIndicator implements HealthIndicator {
         if (!isHealthy) {
             SchemaEntity schema = schemaRepository.getByVersionNotNull();
             String currentVersion = schema.getVersion();
-            isHealthy = currentVersion.equals(version);
+            isHealthy = (currentVersion.equals(version) && !schema.isDirty());
+            if (!isHealthy) {
+                logger.error("Incompatible schema version. Expected: " + version + " Current (version, dirty): (" + currentVersion + " , " + schema.isDirty() + ")");
+                return Health.down().build();
+            }
         }
-
-        return isHealthy ? Health.up().build() : Health.down().build();
+        return Health.up().build();
     }
 }
