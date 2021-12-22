@@ -109,6 +109,10 @@ public class EventEntity {
     private List<Label> labels;
 
     @ElementCollection
+    @CollectionTable(name = "documentation_labels", joinColumns = @JoinColumn(name = "event_definition_id", referencedColumnName= "id"))
+    private List<Label> documentationLabels;
+
+    @ElementCollection
     @CollectionTable(name = "event_api_definition_extensible", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ExtensibleEntity> extensible;
 
