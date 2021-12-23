@@ -120,7 +120,7 @@ public class APIEntity {
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "documentation_labels", joinColumns = @JoinColumn(name = "api_definition_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "api_definition_id", referencedColumnName= "id"))
     private List<Label> documentationLabels;
 
     @ElementCollection

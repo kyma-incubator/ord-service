@@ -37,7 +37,7 @@ public class VendorEntity {
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "documentation_labels", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
     private List<Label> documentationLabels;
 
     @OneToMany(mappedBy = "vendor", fetch = FetchType.LAZY)
