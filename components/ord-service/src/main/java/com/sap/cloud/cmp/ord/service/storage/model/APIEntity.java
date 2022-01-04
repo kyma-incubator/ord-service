@@ -120,6 +120,10 @@ public class APIEntity {
     private List<Label> labels;
 
     @ElementCollection
+    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<Label> documentationLabels;
+
+    @ElementCollection
     @CollectionTable(name = "api_definition_extensible", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ExtensibleEntity> extensible;
 

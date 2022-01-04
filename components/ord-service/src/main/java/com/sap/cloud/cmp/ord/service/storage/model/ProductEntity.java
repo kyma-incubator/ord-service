@@ -65,6 +65,10 @@ public class ProductEntity {
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
     private List<Label> labels;
 
+    @ElementCollection
+    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
+    private List<Label> documentationLabels;
+
     @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     private Set<PackageEntity> packages;
 

@@ -107,6 +107,10 @@ public class PackageEntity {
     @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "package_id"))
     private List<Label> labels;
 
+    @ElementCollection
+    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "package_id"))
+    private List<Label> documentationLabels;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "package_product",

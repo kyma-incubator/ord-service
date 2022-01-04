@@ -53,6 +53,10 @@ public class BundleEntity {
     private List<Label> labels;
 
     @ElementCollection
+    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "bundle_id"))
+    private List<Label> documentationLabels;
+
+    @ElementCollection
     @CollectionTable(name = "credential_exchange_strategies", joinColumns = @JoinColumn(name = "bundle_id"))
     private List<CredentialExchangeStrategy> credentialExchangeStrategies;
 
