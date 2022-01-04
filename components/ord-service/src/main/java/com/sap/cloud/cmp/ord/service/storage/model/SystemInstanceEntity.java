@@ -64,7 +64,7 @@ public class SystemInstanceEntity {
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "application_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "application_id"))
     private List<Label> documentationLabels;
 
     @ElementCollection

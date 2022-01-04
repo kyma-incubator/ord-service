@@ -109,7 +109,7 @@ public class EventEntity {
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "event_definition_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<Label> documentationLabels;
 
     @ElementCollection
