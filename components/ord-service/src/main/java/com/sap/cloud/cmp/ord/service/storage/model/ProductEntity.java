@@ -40,7 +40,6 @@ public class ProductEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "vendor", referencedColumnName= "ord_id", insertable = false, updatable = false),
-            @JoinColumn(name = "app_id", referencedColumnName= "app_id", insertable = false, updatable = false)
     })
     private VendorEntity vendor;
 
