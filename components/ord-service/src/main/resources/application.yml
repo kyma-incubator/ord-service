@@ -40,14 +40,14 @@ spring:
   servlet:
     multipart:
       enabled: false
-springfox:
+springdoc:
+  openapi-version: "3.0.3"
   custom-base-path: "/open-resource-discovery-docs"
-  documentation:
-    swagger-ui:
-      baseUrl: "${springfox.custom-base-path}"
-    open-api:
-      v3:
-        path: "${springfox.custom-base-path}/api-docs"
+  swagger-ui:
+    path: "${springdoc.custom-base-path}/swagger-ui"
+  api-docs:
+    path: "${springdoc.custom-base-path}/api-docs"
+    pathsToMatch: "/${static.request_mapping_path}/**"
 
 management:
   endpoints:
