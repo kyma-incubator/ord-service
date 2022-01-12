@@ -2,7 +2,8 @@ package com.sap.cloud.cmp.ord.service.controller;
 
 import com.sap.cloud.cmp.ord.service.repository.SpecRepository;
 import com.sap.cloud.cmp.ord.service.storage.model.SpecificationEntity;
-import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -44,14 +45,14 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
 
     @RequestMapping(value = "/${static.request_mapping_path}/api/{apiId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
-    @ApiImplicitParam(name = "Tenant", value = "Tenant GUID", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class)
+    @Parameter(name = "Tenant", required = true, description = "Tenant GUID", allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "string")))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "<api specification in appropriate standard>"), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "400", description = "Missing or invalid tenantID", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Missing or invalid tenantID"), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(name = "example", value = UNAUTHORIZED_MSG), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
-    public void getApiSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String apiId, @PathVariable final String specId) throws IOException {
+    public void getApiSpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "API ID") @PathVariable final String apiId, @Parameter(description = "API specification ID") @PathVariable final String specId) throws IOException {
         Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
         if (tenantIDs == null) {
             respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
@@ -80,14 +81,14 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
 
     @RequestMapping(value = "/${static.request_mapping_path}/event/{eventId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
-    @ApiImplicitParam(name = "Tenant", value = "Tenant GUID", required = true, allowEmptyValue = false, paramType = "header", dataTypeClass = String.class)
+    @Parameter(name = "Tenant", description = "Tenant GUID", required = true, allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "string")))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "<event specification in appropriate standard>"), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "400", description = "Missing or invalid tenantID", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Missing or invalid tenantID"), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(name = "example", value = UNAUTHORIZED_MSG), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
-    public void getEventSpec(HttpServletRequest request, HttpServletResponse response, @PathVariable final String eventId, @PathVariable final String specId) throws IOException {
+    public void getEventSpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "Event ID") @PathVariable final String eventId, @Parameter(description = "Event specification ID") @PathVariable final String specId) throws IOException {
         Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
         if (tenantIDs == null) {
             respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
@@ -121,4 +122,3 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
         response.getWriter().print(body);
     }
 }
-
