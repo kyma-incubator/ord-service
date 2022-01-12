@@ -122,4 +122,3 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
         response.getWriter().print(body);
     }
 }
-
