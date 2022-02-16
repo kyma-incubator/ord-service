@@ -19,6 +19,7 @@
         <project.build.source>1.8</project.build.source>
         <java.version>11</java.version>
         <jpa-processor>0.3.9-SNAPSHOT</jpa-processor>
+        <postgresql.version>42.2.25</postgresql.version>
     </properties>
 
     <dependencies>
