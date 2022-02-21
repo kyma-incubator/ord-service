@@ -36,6 +36,7 @@ public class APIEntity {
     @Column(name = "version_value")
     private String version;
 
+    @EdmProtectedBy(name = "visibility_scope")
     @Column(name = "visibility")
     private String visibility;
 

@@ -27,6 +27,9 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
     private JPAODataCRUDContextAccess serviceContext;
 
     private static final Logger logger = LoggerFactory.getLogger(ODataController.class);
+    private final String PUBLIC_VISIBILITY = "public";
+    private final String INTERNAL_VISIBILITY = "internal";
+    private final String PRIVATE_VISIBILITY = "private";
 
     @RequestMapping(value = "**", method = {RequestMethod.GET})
     public void handleODataRequest(HttpServletRequest request, HttpServletResponse response) throws ODataException, IOException {
@@ -38,13 +41,16 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
 
     private JPAODataClaimsProvider createClaims(final HttpServletRequest request) throws IOException {
         final JPAODataClaimsProvider claims = new JPAODataClaimsProvider();
+
         Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
         if (tenantIDs == null) {
             logger.warn("Could not determine tenants claim");
             return claims;
         }
+
         String tenantID = tenantIDs.getFirst();
         String providerTenantID = tenantIDs.getSecond();
+
         if (tenantID == null || tenantID.isEmpty()) {
             logger.warn("Could not determine tenant from tenants claim");
         } else if (providerTenantID == null || providerTenantID.isEmpty()) {
@@ -55,6 +61,18 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
             final JPAClaimsPair<String> providerTenantIDJPAPair = new JPAClaimsPair<>(providerTenantID);
             claims.add("provider_tenant_id", providerTenantIDJPAPair);
         }
+
+        final JPAClaimsPair<String> publicVisibilityScopeJPAPair = new JPAClaimsPair<>(PUBLIC_VISIBILITY);
+        claims.add("visibility_scope", publicVisibilityScopeJPAPair);
+
+        if (super.isInternalVisibilityScopePresent(request)) {
+            final JPAClaimsPair<String> internalVisibilityScopeJPAPair = new JPAClaimsPair<>(INTERNAL_VISIBILITY);
+            claims.add("visibility_scope", internalVisibilityScopeJPAPair);
+
+            final JPAClaimsPair<String> privateVisibilityScopeJPAPair = new JPAClaimsPair<>(PRIVATE_VISIBILITY);
+            claims.add("visibility_scope", privateVisibilityScopeJPAPair);
+        }
+
         return claims;
     }
 }
