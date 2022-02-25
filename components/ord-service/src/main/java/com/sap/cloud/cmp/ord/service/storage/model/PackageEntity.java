@@ -66,7 +66,7 @@ public class PackageEntity {
     @Column(name = "licence_type", length = 256)
     private String licenseType;
 
-    @Column(name = "support_info", length = 256)
+    @Column(name = "support_info")
     private String supportInfo;
 
     @Column(name = "vendor")
