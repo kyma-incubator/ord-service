@@ -66,6 +66,9 @@ public class PackageEntity {
     @Column(name = "licence_type", length = 256)
     private String licenseType;
 
+    @Column(name = "support_info", length = Integer.MAX_VALUE)
+    private String supportInfo;
+
     @Column(name = "vendor")
     @EdmIgnore
     private String vendorReference;
