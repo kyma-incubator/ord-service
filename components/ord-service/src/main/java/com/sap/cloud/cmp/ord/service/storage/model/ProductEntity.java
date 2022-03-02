@@ -28,7 +28,7 @@ public class ProductEntity {
     @NotNull
     private String title;
 
-    @Column(name = "short_description", length = 255)
+    @Column(name = "short_description", length = 256)
     @NotNull
     private String shortDescription;
 
