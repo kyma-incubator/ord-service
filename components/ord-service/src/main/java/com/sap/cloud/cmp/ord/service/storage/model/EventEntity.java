@@ -33,6 +33,7 @@ public class EventEntity {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
+    @EdmProtectedBy(name = "visibility_scope")
     @Column(name = "visibility")
     private String visibility;
 
