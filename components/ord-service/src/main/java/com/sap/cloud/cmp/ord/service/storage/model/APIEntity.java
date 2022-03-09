@@ -27,7 +27,7 @@ public class APIEntity {
     @NotNull
     private String title;
 
-    @Column(name = "short_description", length = 255)
+    @Column(name = "short_description", length = 256)
     private String shortDescription;
 
     @Column(name = "description", length = Integer.MAX_VALUE)
