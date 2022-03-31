@@ -120,9 +120,9 @@ public class PackageEntity {
             inverseJoinColumns = {@JoinColumn(name = "product_id")})
     private Set<ProductEntity> products;
 
-    @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "package", fetch = FetchType.LAZY)
     private Set<APIEntity> apis;
 
-    @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "package", fetch = FetchType.LAZY)
     private Set<EventEntity> events;
 }
