@@ -39,6 +39,7 @@ public class ODataJPAConfiguration {
                 .setRequestMappingPath(requestMappingPath)
                 .setMetadataPostProcessor(jpaEdmMetadataPostProcessor)
                 .setErrorProcessor(errorProcessor)
+                .setEdmNameBuilder(new ApiNameBuilder(punit))
                 //.setDatabaseProcessor(new JPAPostgresDatabaseProcessorImpl()) // Enable only if search query is necessary.
                 .build();
     }

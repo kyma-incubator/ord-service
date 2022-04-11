@@ -2,7 +2,6 @@ package com.sap.cloud.cmp.ord.service.storage.model;
 
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
-import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmAlias;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
@@ -129,7 +128,6 @@ public class APIEntity {
     @CollectionTable(name = "api_definition_extensible", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ExtensibleEntity> extensible;
 
-    @EdmAlias(name = "package")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
     private PackageEntity pkg;
