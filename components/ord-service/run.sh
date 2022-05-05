@@ -30,6 +30,10 @@ do
             shift
             shift
         ;;
+        --auto-terminate)
+            AUTO_TERMINATE=true
+            shift
+        ;;
         --*)
             echo "Unknown flag ${1}"
             exit 1
@@ -58,5 +62,33 @@ if [[ ${NO_START} = true ]]; then
     log_section "Skipping start of Open Resource Discovery Service."
 else
     log_section "Starting Open Resource Discovery Service..."
-    java -jar "$COMPONENT_DIR/target/ord-service-$ARTIFACT_VERSION.jar"
+    echo "AUTO_TERMINATE=${AUTO_TERMINATE}"
+    if [[  ${AUTO_TERMINATE} == true ]]; then
+        MAIN_APP_LOGFILE=main.log
+        if [[ ${ARTIFACTS} ]]; then
+           MAIN_APP_LOGFILE=${ARTIFACTS}/main.log
+        fi
+
+        java -jar "$COMPONENT_DIR/target/ord-service-$ARTIFACT_VERSION.jar" > ${MAIN_APP_LOGFILE} &
+        MAIN_PROCESS_PID="$!"
+        echo "MAIN_PROCESS_PID=$MAIN_PROCESS_PID"
+
+        START_TIME=$(date +%s)
+        SECONDS=0
+        while (( SECONDS < 300 )) ; do
+            CURRENT_TIME=$(date +%s)
+            SECONDS=$((CURRENT_TIME-START_TIME))
+            echo "Wait 10s ..."
+            sleep 10
+        done
+        
+        echo "Timeout of 5 min for running ord-service reached. Killing the process."
+        echo -e "${GREEN}Kill main process..."
+        kill -SIGTERM "${MAIN_PROCESS_PID}"
+        echo -e "${GREEN}Delete build result and log..."
+        rm main.log || true
+        wait
+    else 
+        java -jar "$COMPONENT_DIR/target/ord-service-$ARTIFACT_VERSION.jar"
+    fi
 fi
