@@ -7,6 +7,7 @@ source "$COMPONENT_DIR/scripts/commons.sh"
 NO_START=false
 SKIP_TESTS=false
 SKIP_DEPS=false
+TERMINAION_TIMEOUT_IN_SECONDS=300
 
 while [[ $# -gt 0 ]]
 do
@@ -32,6 +33,8 @@ do
         ;;
         --auto-terminate)
             AUTO_TERMINATE=true
+            TERMINAION_TIMEOUT_IN_SECONDS=$2
+            shift
             shift
         ;;
         --*)
@@ -62,31 +65,26 @@ if [[ ${NO_START} = true ]]; then
     log_section "Skipping start of Open Resource Discovery Service."
 else
     log_section "Starting Open Resource Discovery Service..."
-    echo "AUTO_TERMINATE=${AUTO_TERMINATE}"
     if [[  ${AUTO_TERMINATE} == true ]]; then
-        MAIN_APP_LOGFILE=main.log
-        if [[ ${ARTIFACTS} ]]; then
-           MAIN_APP_LOGFILE=${ARTIFACTS}/main.log
-        fi
+        log_section "Auto termination is set for ${TERMINAION_TIMEOUT_IN_SECONDS} seconds ..."
+        MAIN_APP_LOGFILE=$COMPONENT_DIR/target/main.log
 
         java -jar "$COMPONENT_DIR/target/ord-service-$ARTIFACT_VERSION.jar" > ${MAIN_APP_LOGFILE} &
         MAIN_PROCESS_PID="$!"
-        echo "MAIN_PROCESS_PID=$MAIN_PROCESS_PID"
 
         START_TIME=$(date +%s)
         SECONDS=0
-        while (( SECONDS < 300 )) ; do
+        while (( SECONDS < ${TERMINAION_TIMEOUT_IN_SECONDS} )) ; do
             CURRENT_TIME=$(date +%s)
             SECONDS=$((CURRENT_TIME-START_TIME))
-            echo "[ORD Service] Wait 10s ..."
+            SECONDS_LEFT=$((TERMINAION_TIMEOUT_IN_SECONDS-SECONDS))
+            echo "[ORD Service] left ${SECONDS_LEFT} seconds. Wait ..."
             sleep 10
         done
         
-        echo "Timeout of 5 min for running ord-service reached. Killing the process."
+        echo "Timeout of ${TERMINAION_TIMEOUT_IN_SECONDS} seconds for running ord-service reached. Killing the process."
         echo -e "${GREEN}Kill main process..."
         kill -SIGTERM "${MAIN_PROCESS_PID}"
-        echo -e "${GREEN}Delete build result and log..."
-        rm main.log || true
         wait
     else 
         java -jar "$COMPONENT_DIR/target/ord-service-$ARTIFACT_VERSION.jar"
