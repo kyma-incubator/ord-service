@@ -7,6 +7,7 @@ source "$COMPONENT_DIR/scripts/commons.sh"
 NO_START=false
 SKIP_TESTS=false
 SKIP_DEPS=false
+TERMINAION_TIMEOUT_IN_SECONDS=300
 
 while [[ $# -gt 0 ]]
 do
@@ -27,6 +28,12 @@ do
         ;;
         --migrations-path)
             MIGRATIONS_PATH=$2
+            shift
+            shift
+        ;;
+        --auto-terminate)
+            AUTO_TERMINATE=true
+            TERMINAION_TIMEOUT_IN_SECONDS=$2
             shift
             shift
         ;;
@@ -58,5 +65,28 @@ if [[ ${NO_START} = true ]]; then
     log_section "Skipping start of Open Resource Discovery Service."
 else
     log_section "Starting Open Resource Discovery Service..."
-    java -jar "$COMPONENT_DIR/target/ord-service-$ARTIFACT_VERSION.jar"
+    if [[  ${AUTO_TERMINATE} == true ]]; then
+        log_section "Auto termination is set for ${TERMINAION_TIMEOUT_IN_SECONDS} seconds ..."
+        MAIN_APP_LOGFILE=$COMPONENT_DIR/target/main.log
+
+        java -jar "$COMPONENT_DIR/target/ord-service-$ARTIFACT_VERSION.jar" > ${MAIN_APP_LOGFILE} &
+        MAIN_PROCESS_PID="$!"
+
+        START_TIME=$(date +%s)
+        SECONDS=0
+        while (( SECONDS < ${TERMINAION_TIMEOUT_IN_SECONDS} )) ; do
+            CURRENT_TIME=$(date +%s)
+            SECONDS=$((CURRENT_TIME-START_TIME))
+            SECONDS_LEFT=$((TERMINAION_TIMEOUT_IN_SECONDS-SECONDS))
+            echo "[ORD Service] left ${SECONDS_LEFT} seconds. Wait ..."
+            sleep 10
+        done
+        
+        echo "Timeout of ${TERMINAION_TIMEOUT_IN_SECONDS} seconds for running ord-service reached. Killing the process."
+        echo -e "${GREEN}Kill main process..."
+        kill -SIGTERM "${MAIN_PROCESS_PID}"
+        wait
+    else 
+        java -jar "$COMPONENT_DIR/target/ord-service-$ARTIFACT_VERSION.jar"
+    fi
 fi
