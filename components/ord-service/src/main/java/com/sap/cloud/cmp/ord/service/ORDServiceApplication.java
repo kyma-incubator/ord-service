@@ -8,6 +8,7 @@ public class ORDServiceApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(ORDServiceApplication.class, args);
+
     }
 
 }
