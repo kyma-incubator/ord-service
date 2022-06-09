@@ -9,7 +9,6 @@ import org.apache.olingo.server.api.debug.DefaultDebugSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -42,25 +41,14 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
     private JPAODataClaimsProvider createClaims(final HttpServletRequest request) throws IOException {
         final JPAODataClaimsProvider claims = new JPAODataClaimsProvider();
 
-        Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
-        if (tenantIDs == null) {
-            logger.warn("Could not determine tenants claim");
+        String tenantID = super.extractTenantFromIDToken(request);
+        if (tenantID == null || tenantID.isEmpty()) {
+            logger.warn("Could not determine tenant claim");
             return claims;
         }
 
-        String tenantID = tenantIDs.getFirst();
-        String providerTenantID = tenantIDs.getSecond();
-
-        if (tenantID == null || tenantID.isEmpty()) {
-            logger.warn("Could not determine tenant from tenants claim");
-        } else if (providerTenantID == null || providerTenantID.isEmpty()) {
-            logger.warn("Could not determine provider tenant from tenants claim");
-        } else {
-            final JPAClaimsPair<String> tenantIDJPAPair = new JPAClaimsPair<>(tenantID);
-            claims.add("tenant_id", tenantIDJPAPair);
-            final JPAClaimsPair<String> providerTenantIDJPAPair = new JPAClaimsPair<>(providerTenantID);
-            claims.add("provider_tenant_id", providerTenantIDJPAPair);
-        }
+        final JPAClaimsPair<String> tenantIDJPAPair = new JPAClaimsPair<>(tenantID);
+        claims.add("tenant_id", tenantIDJPAPair);
 
         final JPAClaimsPair<String> publicVisibilityScopeJPAPair = new JPAClaimsPair<>(PUBLIC_VISIBILITY);
         claims.add("visibility_scope", publicVisibilityScopeJPAPair);
