@@ -49,11 +49,12 @@ public abstract class Controller {
         JsonNode tokenTree = mapper.readTree(idTokenDecoded);
         String unescapedTenants = tokenTree.get(TENANTS_MAP_KEY).asText().replace("\\", "");
 
+        String providerTenantID = "";
         try {
             JsonNode tenantsTree = mapper.readTree(unescapedTenants);
 
             String tenant = tenantsTree.path(CONSUMER_TENANT_KEY).asText();
-            String providerTenantID = tenantsTree.path(PROVIDER_TENANT_KEY).asText();
+            providerTenantID = tenantsTree.path(PROVIDER_TENANT_KEY).asText();
             if (providerTenantID == null || providerTenantID.isEmpty() || providerTenantID.equals(tenant)) {
                 return tenant;
             }
@@ -72,13 +73,13 @@ public abstract class Controller {
 
             Set<String> runtimeIds = repo.findSelfRegisteredRuntimesByLabels(providerTenantID, selfRegKey, tokenClientId, regionKey, tokenRegion);
             for (String runtimeId : runtimeIds) {
-                if (repo.isRuntimeSubscriptionAvailableInTenant(runtimeId, tenant) > 0) {
+                if (repo.isRuntimeSubscriptionAvailableInTenant(tenant, runtimeId) > 0) {
                     return tenant;
                 }
             }
         } catch (IOException ignored) {}
 
-        return "";
+        return providerTenantID;
     }
 
     boolean isInternalVisibilityScopePresent(final HttpServletRequest request) throws JsonProcessingException {
