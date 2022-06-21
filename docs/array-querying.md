@@ -65,5 +65,5 @@ And not like:
 Qyerying is based on the ArrayElement object and the query syntax is normal ODataV4 query syntax for array of object. For example:
 
 ```
-
+/open-resource-discovery-service/v0/apis?$filter=tags/any(d:d/value eq 'tag1') - Give me APIs that have tag "tag1"
 ```
