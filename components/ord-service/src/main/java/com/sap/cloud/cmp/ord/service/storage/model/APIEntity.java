@@ -64,11 +64,6 @@ public class APIEntity {
     @Column(name = "tenant_id", length = 256)
     private String tenant;
 
-    @EdmProtectedBy(name = "provider_tenant_id")
-    @EdmIgnore
-    @Column(name = "provider_tenant_id", length = 256)
-    private String providerTenant;
-
     @ElementCollection
     @CollectionTable(name = "tags", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> tags;

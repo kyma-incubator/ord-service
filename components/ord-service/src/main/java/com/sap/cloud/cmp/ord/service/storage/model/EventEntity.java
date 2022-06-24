@@ -51,11 +51,6 @@ public class EventEntity {
     @Column(name = "tenant_id", length = 256)
     private String tenant;
 
-    @EdmProtectedBy(name = "provider_tenant_id")
-    @EdmIgnore
-    @Column(name = "provider_tenant_id", length = 256)
-    private String providerTenant;
-
     @ElementCollection
     @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ChangelogEntry> changelogEntries;

@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -53,21 +52,14 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
     public void getApiSpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "API ID") @PathVariable final String apiId, @Parameter(description = "API specification ID") @PathVariable final String specId) throws IOException {
-        Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
-        if (tenantIDs == null) {
-            respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
-            return;
-        }
-
-        String tenantID = tenantIDs.getFirst();
-        String providerTenantID = tenantIDs.getSecond();
-        if (tenantID == null || providerTenantID == null || tenantID.isEmpty() || providerTenantID.isEmpty()) {
+        String tenantID = super.extractTenantFromIDToken(request);
+        if (tenantID == null || tenantID.isEmpty()) {
             respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
             return;
         }
 
         try {
-            SpecificationEntity apiSpec = specRepository.getBySpecIdAndApiDefinitionIdAndTenantAndProviderTenant(UUID.fromString(specId), UUID.fromString(apiId), tenantID, providerTenantID);
+            SpecificationEntity apiSpec = specRepository.getBySpecIdAndApiDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(apiId), tenantID);
             if (apiSpec == null) {
                 respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
                 return;
@@ -89,21 +81,14 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
     public void getEventSpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "Event ID") @PathVariable final String eventId, @Parameter(description = "Event specification ID") @PathVariable final String specId) throws IOException {
-        Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
-        if (tenantIDs == null) {
-            respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
-            return;
-        }
-
-        String tenantID = tenantIDs.getFirst();
-        String providerTenantID = tenantIDs.getSecond();
-        if (tenantID == null || providerTenantID == null || tenantID.isEmpty() || providerTenantID.isEmpty()) {
+        String tenantID = super.extractTenantFromIDToken(request);
+        if (tenantID == null || tenantID.isEmpty()) {
             respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
             return;
         }
 
         try {
-            SpecificationEntity eventSpec = specRepository.getBySpecIdAndEventDefinitionIdAndTenantAndProviderTenant(UUID.fromString(specId), UUID.fromString(eventId), tenantID, providerTenantID);
+            SpecificationEntity eventSpec = specRepository.getBySpecIdAndEventDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(eventId), tenantID);
             if (eventSpec == null) {
                 respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
                 return;
