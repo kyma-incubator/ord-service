@@ -39,6 +39,9 @@ public abstract class Controller {
     @Value("${subscription.region_key:region}")
     private String regionKey;
 
+    @Value("${subscription.token_prefix:prefix-}")
+    private String tokenPrefix;
+
     String extractTenantFromIDToken(final HttpServletRequest request) throws IOException {
         final String idToken = request.getHeader(AUTHORIZATION_HEADER);
         if (idToken == null || idToken.isEmpty()) {
@@ -65,6 +68,10 @@ public abstract class Controller {
                 logger.error("could not find consumer token client ID");
                 return "";
             }
+            if (tokenClientId.startsWith(tokenPrefix)){
+                tokenClientId = tokenClientId.substring(tokenPrefix.length());
+            }
+
             String tokenRegion = tokenTree.get(TOKEN_REGION_KEY).asText();
             if (tokenRegion == null || tokenRegion.isEmpty()) {
                 logger.error("could not determine token's region");
