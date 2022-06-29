@@ -110,7 +110,7 @@ public class EventEntity {
 
     @ElementCollection
     @CollectionTable(name = "event_api_definition_extensible", joinColumns = @JoinColumn(name = "event_definition_id"))
-    private List<ExtensibleEntity> extensible;
+    private List<Extensible> extensible;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
