@@ -81,9 +81,4 @@ public class ProductEntity {
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
     private String tenant;
-
-    @EdmProtectedBy(name = "provider_tenant_id")
-    @EdmIgnore
-    @Column(name = "provider_tenant_id", length = 256)
-    private String providerTenant;
 }
