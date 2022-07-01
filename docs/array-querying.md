@@ -1,14 +1,14 @@
-# Querying over fields of type array of strings
+# Querying Over Fields of Type Array of Strings
 
-ORD Service provides all of the rich querying capabilities that are supported by OData V4 standard.
+Open Resource Discovery Service (ORD Service) provides all query capabilities that are supported by the OData V4 standard.
 
-On top of that, ORD Service provides a custom implementation for querying over arrays of strings.
+Additionally, ORD Service provides a custom implementation that enables querying over arrays of strings.
 
-## ArrayElement object
+## ArrayElement Object
 
-In order to achieve filtering on array of strings, we itroduce an intermediary entity - `ArrayElement`.
+To enable filtering in arrays of strings, it is itroduced an intermediary entity called `ArrayElement`.
 
-Let's see how this looks like in the edmx document:
+The following snippet is part of the edmx document that describes the ORD Service API and shows how the `ArrayElement` object is described in it:
 ```xml
 <EntityType Name="api">
   ...
@@ -19,7 +19,7 @@ Let's see how this looks like in the edmx document:
   <Property Name="value" Type="Edm.String" MaxLength="2147483647"/>
 </ComplexType>
 ```
-And in JSON:
+The following excerpt shows the same `ArrayElement` object description in JSON:
 ```json
 "api": {
   "$Kind": "EntityType",
@@ -39,7 +39,7 @@ And in JSON:
 }
 ```
 
-This way each array of strings is modelled internally like:
+As a result, each array of strings is modelled internally as shown in the following excerpt:
 ```json
 "tags": [
   {
@@ -58,12 +58,12 @@ And not like:
 ]
 ```
 
-> NOTE: You can control the returned output by providing the `compact=true` as a query parameter. Then the response will look like a normal json array, however internally it will be again array of ArrayElement objects and the querying should be structured accordingly.
+> NOTE: You can control the returned output by providing the parameter `compact=true` as a query parameter. Then, the response is formatted as a normal JSON array. However, internally it will be handled as an array of `ArrayElement` objects and the query should be structured accordingly.
 
-## Query syntax
+## Query Syntax
 
-Qyerying is based on the ArrayElement object and the query syntax is normal ODataV4 query syntax for array of object. For example:
+Technically, the query is based on the `ArrayElement` object and the query syntax is the regular OData V4 query syntax for arrays of objects. For example, the following query command returns all APIs that contain the tag "nck":
 
 ```
-/open-resource-discovery-service/v0/apis?$filter=tags/any(d:d/value eq 'tag1') - Give me APIs that have tag "tag1"
+/open-resource-discovery-service/v0/apis?$filter=tags/any(d:d/value eq 'nck')
 ```
