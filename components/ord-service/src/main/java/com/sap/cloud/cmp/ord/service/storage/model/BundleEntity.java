@@ -76,4 +76,7 @@ public class BundleEntity {
 
     @ManyToMany(mappedBy = "consumptionBundles", fetch = FetchType.LAZY)
     private Set<EventEntity> events;
+    
+    @ManyToMany(mappedBy = "consumptionBundles", fetch = FetchType.LAZY)
+    private Set<DestinationEntity> destinations;
 }
