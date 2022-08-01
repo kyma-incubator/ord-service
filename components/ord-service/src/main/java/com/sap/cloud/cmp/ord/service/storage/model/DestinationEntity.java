@@ -1,5 +1,8 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -16,7 +19,7 @@ import java.util.UUID;
 
 
 @Entity(name = "destination")
-@Table(name = "destinations")
+@Table(name = "tenants_destinations")
 public class DestinationEntity {
     @javax.persistence.Id
     @Column(name = "id")
@@ -32,6 +35,11 @@ public class DestinationEntity {
 
     @Column(name = "url", length = Integer.MAX_VALUE)
     private String url;
+
+    @EdmProtectedBy(name = "tenant_id")
+    @EdmIgnore
+    @Column(name = "tenant_id", length = 256)
+    private String tenant;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
