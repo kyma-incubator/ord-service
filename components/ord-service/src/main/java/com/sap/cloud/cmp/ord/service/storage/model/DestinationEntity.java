@@ -1,5 +1,6 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
+import com.sap.cloud.cmp.ord.service.storage.model.converter.SensitiveDataConverter;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 
@@ -40,6 +41,9 @@ public class DestinationEntity {
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
     private String tenant;
+
+    @Column(name = "sensitive_data", length = Integer.MAX_VALUE)
+    private String sensitiveData;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

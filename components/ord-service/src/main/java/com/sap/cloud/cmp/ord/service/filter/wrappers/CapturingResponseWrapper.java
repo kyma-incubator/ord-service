@@ -9,13 +9,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
-public class JsonResponseWrapper extends HttpServletResponseWrapper {
+public class CapturingResponseWrapper extends HttpServletResponseWrapper {
 
     private final ByteArrayOutputStream capture;
     private ServletOutputStream output;
     private PrintWriter writer;
 
-    public JsonResponseWrapper(HttpServletResponse response) {
+    public CapturingResponseWrapper(HttpServletResponse response) {
         super(response);
         capture = new ByteArrayOutputStream(response.getBufferSize());
     }

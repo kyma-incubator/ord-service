@@ -3,7 +3,7 @@ package com.sap.cloud.cmp.ord.service.filter;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sap.cloud.cmp.ord.service.filter.aggregator.JsonArrayElementsAggregator;
-import com.sap.cloud.cmp.ord.service.filter.wrappers.JsonResponseWrapper;
+import com.sap.cloud.cmp.ord.service.filter.wrappers.CapturingResponseWrapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -26,12 +26,15 @@ public class JsonPostProcessFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        if (!((HttpServletRequest) request).getServletPath().startsWith("/" + odataPath)) {
+        boolean isODataPath = ((HttpServletRequest) request).getServletPath().startsWith("/" + odataPath);
+        boolean isCompactTrue = Boolean.TRUE.toString().equals(request.getParameter(COMPACT_QUERY_PARAM));
+
+        if (!isODataPath || !isCompactTrue) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        JsonResponseWrapper capturingResponseWrapper = new JsonResponseWrapper((HttpServletResponse) response);
+        CapturingResponseWrapper capturingResponseWrapper = new CapturingResponseWrapper((HttpServletResponse) response);
 
         filterChain.doFilter(request, capturingResponseWrapper);
 
@@ -42,11 +45,9 @@ public class JsonPostProcessFilter implements Filter {
             // content = content.replaceAll("\\\\\"","\"").replaceAll("\"\\{","{").replaceAll("}\"", "}");
 
             // Aggreagate Array Elements
-            if (Boolean.TRUE.toString().equals(request.getParameter(COMPACT_QUERY_PARAM))) {
-                JsonNode jsonTree = mapper.readTree(content);
-                aggregator.aggregate(jsonTree);
-                content = mapper.writeValueAsString(jsonTree);
-            }
+            JsonNode jsonTree = mapper.readTree(content);
+            aggregator.aggregate(jsonTree);
+            content = mapper.writeValueAsString(jsonTree);
         }
 
         response.setContentLength(content.length());
