@@ -44,11 +44,13 @@ public abstract class Controller {
 
     String extractTenantFromIDToken(final HttpServletRequest request) throws IOException {
         final String idToken = request.getHeader(AUTHORIZATION_HEADER);
+        System.out.println("idToken --> " + idToken);
         if (idToken == null || idToken.isEmpty()) {
             return "";
         }
 
         String idTokenDecoded = decodeIDToken(idToken);
+        System.out.println("idTokenDecoded --> " + idTokenDecoded);
         JsonNode tokenTree = mapper.readTree(idTokenDecoded);
         String unescapedTenants = tokenTree.get(TENANTS_MAP_KEY).asText().replace("\\", "");
 
