@@ -2,6 +2,7 @@ package com.sap.cloud.cmp.ord.service.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sap.cloud.cmp.ord.service.common.Common;
 import com.sap.cloud.cmp.ord.service.filter.aggregator.JsonArrayElementsAggregator;
 import com.sap.cloud.cmp.ord.service.filter.wrappers.CapturingResponseWrapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +27,7 @@ public class JsonPostProcessFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        boolean isODataPath = ((HttpServletRequest) request).getServletPath().startsWith("/" + odataPath);
+        boolean isODataPath = Common.buildRequestPath((HttpServletRequest) request).startsWith("/" + odataPath);
         boolean isCompactTrue = Boolean.TRUE.toString().equals(request.getParameter(COMPACT_QUERY_PARAM));
 
         if (!isODataPath || !isCompactTrue) {

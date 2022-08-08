@@ -1,6 +1,5 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
-import com.sap.cloud.cmp.ord.service.storage.model.converter.SensitiveDataConverter;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 
@@ -18,6 +17,7 @@ import org.eclipse.persistence.annotations.TypeConverter;
 import java.util.Set;
 import java.util.UUID;
 
+// TODO: include all relevant fields from the table through the view and into this entity
 
 @Entity(name = "destination")
 @Table(name = "tenants_destinations")
@@ -30,7 +30,7 @@ public class DestinationEntity {
 
     @Column(name = "name", length = Integer.MAX_VALUE)
     private String name;
-    
+
     @Column(name = "type", length = Integer.MAX_VALUE)
     private String type;
 

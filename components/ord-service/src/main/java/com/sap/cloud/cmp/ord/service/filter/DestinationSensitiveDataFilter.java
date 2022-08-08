@@ -18,11 +18,18 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestClientResponseException;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.sap.cloud.cmp.ord.service.client.DestinationFetcherClient;
+import com.sap.cloud.cmp.ord.service.common.Common;
 import com.sap.cloud.cmp.ord.service.filter.wrappers.CapturingResponseWrapper;
-import com.sap.cloud.cmp.ord.service.filter.wrappers.SensitiveData;
 
 @Component
 public class DestinationSensitiveDataFilter implements Filter {
@@ -38,6 +45,9 @@ public class DestinationSensitiveDataFilter implements Filter {
     @Value("${odata.jpa.request_mapping_path}")
     private String odataPath;
 
+    @Autowired
+    private DestinationFetcherClient destsFetcherClient;
+
     private final static String DESTINATIONS_ODATA_FILTER = "destinations";
     private final static String SENSITIVE_DATA_ODATA_FILTER = "sensitiveData";
 
@@ -46,13 +56,13 @@ public class DestinationSensitiveDataFilter implements Filter {
         if (query == null) {
             query = "";
         }
-        return servletRequest.getServletPath() + query;
+        return Common.buildRequestPath(servletRequest) + query;
     }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
-        
+
         String fullPath = getFullPath((HttpServletRequest) request);
 
         boolean isODataPath = fullPath.startsWith("/" + odataPath);
@@ -63,23 +73,40 @@ public class DestinationSensitiveDataFilter implements Filter {
             filterChain.doFilter(request, response);
             return;
         }
+
         HttpServletResponse servletResponse = ((HttpServletResponse) response);
         CapturingResponseWrapper capturingResponseWrapper = new CapturingResponseWrapper(servletResponse);
 
         filterChain.doFilter(request, capturingResponseWrapper);
-        if (servletResponse.getContentType() == null
-                || !servletResponse.getContentType().contains("application/json")) {
-            logger.error("Destination sensitiveData is only available for json responses");
-            servletResponse.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
-            return;
-        }
-        String content = replaceSensitiveData(capturingResponseWrapper.getCaptureAsString(), hasSensitiveDataSelect);
 
-        response.setContentLength(content.length());
-        response.getWriter().write(content);
+        String responseContentType = servletResponse.getContentType();
+        String responseContent = capturingResponseWrapper.getCaptureAsString();
+
+        if (responseContentType != null) {
+            if (responseContentType.contains("application/xml")) {
+                String message = "Destination sensitiveData is only available for json responses";
+                logger.error(message);
+                Common.sendTextResponse((HttpServletResponse) response, HttpStatus.NOT_IMPLEMENTED, message);
+                return;
+            }
+
+            if (responseContentType.contains("application/json")) {
+                String tenantId = (String) request.getAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID);
+                try {
+                    responseContent = replaceSensitiveData(tenantId, responseContent, hasSensitiveDataSelect);
+                } catch (RestClientResponseException exc) {
+                    logger.error("Load destinations sensitive data request failed with status: {}, body: {}", exc.getRawStatusCode(), exc.getResponseBodyAsString());
+                    Common.sendTextResponse((HttpServletResponse) response, HttpStatus.INTERNAL_SERVER_ERROR, null);
+                    return;
+                }
+            }
+        }
+
+        response.setContentLength(responseContent.length());
+        response.getWriter().write(responseContent);
     }
 
-    private String replaceSensitiveData(String content, boolean hasSensitiveDataSelect) {
+    private String replaceSensitiveData(String tenantId, String content, boolean hasSensitiveDataSelect) throws JsonProcessingException {
         List<String> destinationNames = getDestinationNames(content);
 
         if (!hasSensitiveDataSelect) {
@@ -88,14 +115,16 @@ public class DestinationSensitiveDataFilter implements Filter {
             }
             return content;
         }
-        Map<String, SensitiveData> sensitiveData = getSensitiveDataForDestinations(destinationNames);
+
+        ObjectNode sensitiveData = destsFetcherClient.getDestinations(tenantId, destinationNames);
         for (String destinationName : destinationNames) {
-            SensitiveData destinationSensitiveData = sensitiveData.get(destinationName);
+            JsonNode destinationSensitiveData = sensitiveData.get(destinationName);
 
             content = content.replace(
                     sensitiveDataPlaceholderJSONString(destinationName),
                     destinationSensitiveData == null ? "{}" : destinationSensitiveData.toString());
         }
+
         return content;
     }
 
@@ -107,14 +136,5 @@ public class DestinationSensitiveDataFilter implements Filter {
             destinationNames.add(matcher.group(1));
         }
         return destinationNames;
-    }
-
-    private Map<String, SensitiveData> getSensitiveDataForDestinations(List<String> destinationNames) {
-        // TODO call destination fetcher
-        // String query = String.join(',', destinationNames);
-        Map<String, SensitiveData> a = new HashMap<>();
-        a.put("mydest1", new SensitiveData());
-        a.put("mydest2", new SensitiveData());
-        return a;
     }
 }

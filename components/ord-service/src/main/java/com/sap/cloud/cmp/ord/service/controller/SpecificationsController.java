@@ -2,6 +2,9 @@ package com.sap.cloud.cmp.ord.service.controller;
 
 import com.sap.cloud.cmp.ord.service.repository.SpecRepository;
 import com.sap.cloud.cmp.ord.service.storage.model.SpecificationEntity;
+import com.sap.cloud.cmp.ord.service.token.Token;
+import com.sap.cloud.cmp.ord.service.token.TokenParser;
+
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -23,7 +26,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Controller
-public class SpecificationsController extends com.sap.cloud.cmp.ord.service.controller.Controller {
+public class SpecificationsController {
 
     private static final String MEDIA_TYPE_YAML_VALUE = "text/yaml";
 
@@ -42,6 +45,9 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
     @Autowired
     private SpecRepository specRepository;
 
+    @Autowired
+    private TokenParser tokenParser;
+
     @RequestMapping(value = "/${static.request_mapping_path}/api/{apiId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     @Parameter(name = "Tenant", required = true, description = "Tenant GUID", allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "uuid")))
@@ -52,8 +58,9 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
     public void getApiSpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "API ID") @PathVariable final String apiId, @Parameter(description = "API specification ID") @PathVariable final String specId) throws IOException {
-        String tenantID = super.extractTenantFromIDToken(request);
-        if (tenantID == null || tenantID.isEmpty()) {
+        Token token = tokenParser.fromRequest(request);
+        String tenantID = token == null ? "" : token.extractTenant();
+        if (token == null || tenantID == null || tenantID.isEmpty()) {
             respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
             return;
         }
@@ -81,8 +88,9 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
     public void getEventSpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "Event ID") @PathVariable final String eventId, @Parameter(description = "Event specification ID") @PathVariable final String specId) throws IOException {
-        String tenantID = super.extractTenantFromIDToken(request);
-        if (tenantID == null || tenantID.isEmpty()) {
+        Token token = tokenParser.fromRequest(request);
+        String tenantID = token == null ? "" : token.extractTenant();
+        if (token == null || tenantID == null || tenantID.isEmpty()) {
             respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
             return;
         }

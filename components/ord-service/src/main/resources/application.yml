@@ -59,3 +59,7 @@ management:
         readiness:
           include: "schemaCompatibility,db"
 
+destination_fetcher:
+  reload_url: http://localhost:1234/destinations/v1/fetch
+  sensitive_data_url: http://localhost:1234/destinations/v1/info
+  user_context_header: user_context
