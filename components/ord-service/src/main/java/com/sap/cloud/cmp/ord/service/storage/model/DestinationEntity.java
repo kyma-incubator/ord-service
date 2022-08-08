@@ -1,6 +1,5 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
-import com.sap.cloud.cmp.ord.service.storage.model.converter.SensitiveDataConverter;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 
@@ -10,6 +9,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
 import org.eclipse.persistence.annotations.Convert;
@@ -30,7 +31,7 @@ public class DestinationEntity {
 
     @Column(name = "name", length = Integer.MAX_VALUE)
     private String name;
-    
+
     @Column(name = "type", length = Integer.MAX_VALUE)
     private String type;
 
@@ -42,8 +43,9 @@ public class DestinationEntity {
     @Column(name = "tenant_id", length = 256)
     private String tenant;
 
-    @Column(name = "sensitive_data", length = Integer.MAX_VALUE)
-    private String sensitiveData;
+    @OneToOne(mappedBy = "destination", fetch = FetchType.LAZY)
+    @PrimaryKeyJoinColumn
+    private DestinationSensitiveDataEntity sensitiveData;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
