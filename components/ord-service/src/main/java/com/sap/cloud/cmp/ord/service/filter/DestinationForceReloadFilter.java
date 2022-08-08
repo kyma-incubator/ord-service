@@ -18,8 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.sap.cloud.cmp.ord.service.client.DestinationFetcherClient;
 import com.sap.cloud.cmp.ord.service.common.Common;
 import com.sap.cloud.cmp.ord.service.token.Token;
