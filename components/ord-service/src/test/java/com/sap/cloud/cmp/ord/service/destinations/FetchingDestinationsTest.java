@@ -1,14 +1,18 @@
 package com.sap.cloud.cmp.ord.service.destinations;
 
+import static org.hamcrest.CoreMatchers.allOf;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mockConstruction;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -16,6 +20,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,6 +34,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestClientResponseException;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sap.cloud.cmp.ord.service.client.DestinationFetcherClient;
 import com.sap.cloud.cmp.ord.service.controller.ODataController;
 import com.sap.cloud.cmp.ord.service.filter.DestinationForceReloadFilter;
@@ -65,7 +73,7 @@ public class FetchingDestinationsTest {
     @InjectMocks
     private DestinationSensitiveDataFilter sensitiveDataFilter;
 
-    @org.junit.Before
+    @Before
     public void setup() {
         String odataPath = "open-resource-discovery-service/v0";
         ReflectionTestUtils.setField(reloadFilter, "odataPath", odataPath);
@@ -78,10 +86,37 @@ public class FetchingDestinationsTest {
                 .build();
     }
 
-    @org.junit.After
+    @After
     public void cleanup() {
         reset(tokenParser);
         reset(destsFetcherClient);
+    }
+
+    @Test
+    public void testReloadFilter_DoesNotCallDestinationFetcher_WhenRequestIsNotOData() throws Exception {
+        TestLogic testLogic = () -> {
+            mvc.perform(get("/not/odata"))
+                .andExpect(status().isNotFound());
+
+            verify(destsFetcherClient, never()).reload(anyString());
+        };
+
+        runTest(null, ResponseType.JSON, testLogic);
+    }
+
+    @Test
+    public void testReloadFilter_DoesNotCallDestinationFetcher_WhenRealoadQueryParamIsNotProvided() throws Exception {
+        String odataResponse = "{}";
+        TestLogic testLogic = () -> {
+            mvc.perform(
+                get(requestPath(Reload.FALSE, ResponseType.JSON)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(odataResponse));
+
+            verify(destsFetcherClient, never()).reload(anyString());
+        };
+
+        runTest(odataResponse, ResponseType.JSON, testLogic);
     }
 
     @Test
@@ -90,12 +125,12 @@ public class FetchingDestinationsTest {
 
         TestLogic testLogic = () -> {
             mvc.perform(
-                get(requestPath(Reload.TRUE, SensitiveData.FALSE, ResponseType.JSON)))
+                get(requestPath(Reload.TRUE, ResponseType.JSON)))
                 .andExpect(status().isUnauthorized())
                 .andExpect(content().string(HttpStatus.UNAUTHORIZED.getReasonPhrase()));
         };
 
-        runTest(null, testLogic);
+        runTest(null, ResponseType.JSON, testLogic);
     }
 
     @Test
@@ -108,41 +143,139 @@ public class FetchingDestinationsTest {
 
         TestLogic testLogic = () -> {
             mvc.perform(
-                get(requestPath(Reload.TRUE, SensitiveData.FALSE, ResponseType.JSON)))
+                get(requestPath(Reload.TRUE, ResponseType.JSON)))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase()));
         };
 
-        runTest(null, testLogic);
+        runTest(null, ResponseType.JSON, testLogic);
     }
 
     @Test
-    public void testReloadFilter_ShouldNotCallDestinationsFetcher_WhenReloadQueryIsNotProvided() throws Exception {
+    public void testReloadFilter_ReturnsODataResponse_WhenCallToDestinationFetcherSucceeds() throws Exception {
+        String odataResponse = "{}";
         when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
+
         TestLogic testLogic = () -> {
             mvc.perform(
-                get(requestPath(Reload.FALSE, SensitiveData.FALSE, ResponseType.JSON)))
+                get(requestPath(Reload.TRUE, ResponseType.JSON)))
                 .andExpect(status().isOk())
-                .andExpect(content().string("{}"));
-
-            verify(destsFetcherClient, never()).reload(anyString());
+                .andExpect(content().string(odataResponse));
         };
 
-        runTest("{}", testLogic);
+        runTest(odataResponse, ResponseType.JSON, testLogic);
+    }
+
+    @Test
+    public void testSensitiveDataFilter_DoesNotCallDestinationFetcher_WhenRequestIsNotOData() throws Exception {
+        TestLogic testLogic = () -> {
+            mvc.perform(get("/not/odata"))
+                .andExpect(status().isNotFound());
+
+            verify(destsFetcherClient, never()).getDestinations(anyString(), anyList());
+        };
+
+        runTest(null, ResponseType.JSON, testLogic);
+    }
+
+    @Test
+    public void testSensitiveDataFilter_DoesNotCallDestinationFetcher_WhenDestinationsAreNotRequested() throws Exception {
+        String odataResponse = "{}";
+        TestLogic testLogic = () -> {
+            mvc.perform(get("/open-resource-discovery-service/v0/systemInstances?$expand=consumptionBundles"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(odataResponse)
+            );
+
+            verify(destsFetcherClient, never()).getDestinations(anyString(), anyList());
+        };
+
+        runTest(odataResponse, ResponseType.JSON, testLogic);
+    }
+
+    @Test
+    public void testSensitiveDataFilter_ReturnsNotImplemented_WhenResponseContentTypeIsXML() throws Exception {
+        String odataResponse = "<response></response>";
+        TestLogic testLogic = () -> {
+            mvc.perform(get(requestPath(Reload.FALSE, ResponseType.XML)))
+                .andExpect(status().isNotImplemented())
+                .andExpect(content().string("Destination sensitiveData is only available for json responses")
+            );
+
+            verify(destsFetcherClient, never()).getDestinations(anyString(), anyList());
+        };
+
+        runTest(odataResponse, ResponseType.XML, testLogic);
+    }
+
+    @Test
+    public void testSensitiveDataFilter_ReturnsInternalServerError_WhenCallToDestinationFetcherFails() throws Exception {
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
+        when(destsFetcherClient.getDestinations(eq(TENANT), anyList())).thenThrow(new RestClientResponseException("Request failed",
+        HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
+        null, null, null));
+
+
+        TestLogic testLogic = () -> {
+            mvc.perform(get(requestPath(Reload.FALSE, ResponseType.XML)))
+                .andExpect(status().isInternalServerError())
+                .andExpect(content().string(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
+            );
+        };
+
+        runTest(null, ResponseType.JSON, testLogic);
+    }
+
+    @Test
+    public void testSensitiveDataFilter_ReturnsDestinationsWithSensitiveDataWhereAvailable() throws Exception {
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
+
+        String odataResponse =
+        "{" +
+            "\"value\": [{" +
+                "\"consumptionBundles\": [{" +
+                    "\"destinations\": [{" +
+                        "\"name\": \"dest-1\"," +
+                        "\"sensitiveData\": \"__sensitive_data__dest-1__sensitive_data__\"" +
+                    "}, {" +
+                        "\"name\": \"dest-2\"," +
+                        "\"sensitiveData\": \"__sensitive_data__dest-2__sensitive_data__\"" +
+                    "}]" +
+                "}]" +
+            "}]" +
+        "}";
+
+        String destsFetcherResponse =
+        "{" +
+            "\"dest-1\": {" +
+                "\"password\": \"super-secret\"" +
+            "}" +
+        "}";
+
+        when(destsFetcherClient.getDestinations(eq(TENANT), anyList())).thenReturn((ObjectNode) new ObjectMapper().readTree(destsFetcherResponse));
+
+
+        TestLogic testLogic = () -> {
+            mvc.perform(get(requestPath(Reload.FALSE, ResponseType.JSON)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(allOf(
+                    containsString("{\"name\": \"dest-1\",\"sensitiveData\": {\"password\":\"super-secret\"}"),
+                    containsString("{\"name\": \"dest-2\",\"sensitiveData\": {}")
+                ))
+            );
+        };
+
+        runTest(odataResponse, ResponseType.JSON, testLogic);
     }
 
 
     private enum ResponseType { XML, JSON }
     private enum Reload { FALSE, TRUE }
-    private enum SensitiveData { FALSE, TRUE }
 
-    private String requestPath(Reload reload, SensitiveData sensitiveData, ResponseType responseType) {
+    private String requestPath(Reload reload, ResponseType responseType) {
         String path = "/open-resource-discovery-service/v0/systemInstances?$expand=consumptionBundles($expand=destinations)";
         if (reload == Reload.TRUE) {
             path += "&reload=true";
-        }
-        if (sensitiveData == SensitiveData.TRUE) {
-            path += "&sensitiveData";
         }
         if (responseType == ResponseType.JSON) {
             path += "&$format=json";
@@ -154,14 +287,27 @@ public class FetchingDestinationsTest {
         void run() throws Exception;
     }
 
-    private void runTest(String odataResult, TestLogic fn) throws Exception {
+    private void runTest(String odataResult, ResponseType responseType, TestLogic fn) throws Exception {
         try (MockedConstruction<JPAODataGetHandler> mocked = mockConstruction(JPAODataGetHandler.class,
         (mock, context) -> {
             when(mock.getJPAODataRequestContext()).thenReturn(new JPAODataRequestContextImpl());
 
             doAnswer(invocation -> {
                 HttpServletResponse response = invocation.getArgument(1);
+
+                switch (responseType) {
+                    case XML:
+                        response.setContentType("application/xml");
+                        break;
+                    case JSON:
+                        response.setContentType("application/json");
+                        break;
+                    default:
+                        break;
+                }
+
                 response.getWriter().print(odataResult);
+
                 return null;
             }).when(mock).process(any(HttpServletRequest.class), any(HttpServletResponse.class));
         })) {

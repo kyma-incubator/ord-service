@@ -26,11 +26,11 @@ public class DestinationFetcherClient {
     private RestTemplate restTemplate;
 
 
-    public DestinationFetcherClient(String reloadUrl, String sensitiveDataUrl, String userContextHeader) {
+    public DestinationFetcherClient(String reloadUrl, String sensitiveDataUrl, String userContextHeader, RestTemplate restTemplate) {
         this.reloadUrl = reloadUrl;
         this.sensitiveDataUrl = sensitiveDataUrl;
         this.userContextHeader = userContextHeader;
-        this.restTemplate = new RestTemplate();
+        this.restTemplate = restTemplate;
     }
 
     public void reload(String subaccount) throws JsonProcessingException {

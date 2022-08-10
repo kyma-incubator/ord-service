@@ -3,6 +3,7 @@ package com.sap.cloud.cmp.ord.service.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.client.RestTemplate;
 
 import com.sap.cloud.cmp.ord.service.client.DestinationFetcherClient;
 
@@ -20,6 +21,6 @@ public class DestinationFetcherConfig {
 
     @Bean
     public DestinationFetcherClient createDestinationFetcherClient() {
-        return new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, userContextHeader);
+        return new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, userContextHeader, new RestTemplate());
     }
 }

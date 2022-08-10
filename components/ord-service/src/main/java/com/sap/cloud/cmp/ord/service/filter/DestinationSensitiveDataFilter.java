@@ -1,10 +1,8 @@
 package com.sap.cloud.cmp.ord.service.filter;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,7 +47,6 @@ public class DestinationSensitiveDataFilter implements Filter {
     private DestinationFetcherClient destsFetcherClient;
 
     private final static String DESTINATIONS_ODATA_FILTER = "destinations";
-    private final static String SENSITIVE_DATA_ODATA_FILTER = "sensitiveData";
 
     private String getFullPath(HttpServletRequest servletRequest) {
         String query = servletRequest.getQueryString();
@@ -67,7 +64,6 @@ public class DestinationSensitiveDataFilter implements Filter {
 
         boolean isODataPath = fullPath.startsWith("/" + odataPath);
         boolean hasDestinations = fullPath.contains(DESTINATIONS_ODATA_FILTER);
-        boolean hasSensitiveDataSelect = fullPath.contains(SENSITIVE_DATA_ODATA_FILTER);
 
         if (!isODataPath || !hasDestinations) {
             filterChain.doFilter(request, response);
@@ -93,7 +89,7 @@ public class DestinationSensitiveDataFilter implements Filter {
             if (responseContentType.contains("application/json")) {
                 String tenantId = (String) request.getAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID);
                 try {
-                    responseContent = replaceSensitiveData(tenantId, responseContent, hasSensitiveDataSelect);
+                    responseContent = replaceSensitiveData(tenantId, responseContent);
                 } catch (RestClientResponseException exc) {
                     logger.error("Load destinations sensitive data request failed with status: {}, body: {}", exc.getRawStatusCode(), exc.getResponseBodyAsString());
                     Common.sendTextResponse((HttpServletResponse) response, HttpStatus.INTERNAL_SERVER_ERROR, null);
@@ -106,15 +102,8 @@ public class DestinationSensitiveDataFilter implements Filter {
         response.getWriter().write(responseContent);
     }
 
-    private String replaceSensitiveData(String tenantId, String content, boolean hasSensitiveDataSelect) throws JsonProcessingException {
+    private String replaceSensitiveData(String tenantId, String content) throws JsonProcessingException {
         List<String> destinationNames = getDestinationNames(content);
-
-        if (!hasSensitiveDataSelect) {
-            for (String destinationName : destinationNames) {
-                content = content.replace(sensitiveDataPlaceholderJSONString(destinationName), "{}");
-            }
-            return content;
-        }
 
         ObjectNode sensitiveData = destsFetcherClient.getDestinations(tenantId, destinationNames);
         for (String destinationName : destinationNames) {
