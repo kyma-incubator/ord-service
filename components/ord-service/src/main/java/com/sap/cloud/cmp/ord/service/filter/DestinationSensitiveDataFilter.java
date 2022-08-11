@@ -102,7 +102,7 @@ public class DestinationSensitiveDataFilter implements Filter {
         response.getWriter().write(responseContent);
     }
 
-    private String replaceSensitiveData(String tenantId, String content) throws JsonProcessingException {
+    private String replaceSensitiveData(String tenantId, String content) throws IOException {
         List<String> destinationNames = getDestinationNames(content);
 
         ObjectNode sensitiveData = destsFetcherClient.getDestinations(tenantId, destinationNames);

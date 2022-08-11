@@ -19,8 +19,11 @@ public class DestinationFetcherConfig {
     @Value("${destination_fetcher.user_context_header:user_context}")
     private String userContextHeader;
 
+    @Value("${destination_fetcher.auth_token_path:/var/run/secrets/kubernetes.io/serviceaccount/token}")
+    private String authTokenPath;
+
     @Bean
     public DestinationFetcherClient createDestinationFetcherClient() {
-        return new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, userContextHeader, new RestTemplate());
+        return new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, userContextHeader, authTokenPath, new RestTemplate());
     }
 }

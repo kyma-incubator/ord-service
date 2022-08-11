@@ -1,5 +1,8 @@
 package com.sap.cloud.cmp.ord.service.client;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import org.springframework.http.HttpEntity;
@@ -14,33 +17,34 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class DestinationFetcherClient {
-
     private static final String REQUEST_USER_CONTEXT_SUBACCOUNT_ID = "subaccountId";
     private static final String REQUEST_QUERY_DESTINATION_NAMES = "name";
 
     private static final String RESPONSE_ROOT_PROPERTY_NAME = "destinations";
 
+    private Path authTokenPath;
     private String reloadUrl;
     private String sensitiveDataUrl;
     private String userContextHeader;
     private RestTemplate restTemplate;
 
 
-    public DestinationFetcherClient(String reloadUrl, String sensitiveDataUrl, String userContextHeader, RestTemplate restTemplate) {
+    public DestinationFetcherClient(String reloadUrl, String sensitiveDataUrl, String userContextHeader, String authTokenPath, RestTemplate restTemplate) {
+        this.authTokenPath = Path.of(authTokenPath);
         this.reloadUrl = reloadUrl;
         this.sensitiveDataUrl = sensitiveDataUrl;
         this.userContextHeader = userContextHeader;
         this.restTemplate = restTemplate;
     }
 
-    public void reload(String subaccount) throws JsonProcessingException {
+    public void reload(String subaccount) throws IOException {
         // TODO: this request changes the state of the server, a different method would be more appropriate
         // TODO: also revisit the paths of the destinations fetcher
         restTemplate.exchange(this.reloadUrl, HttpMethod.GET,
             new HttpEntity<>(prepareRequestHeaders(subaccount)), String.class);
     }
 
-    public ObjectNode getDestinations(String subaccount, List<String> destinationNames) throws JsonProcessingException {
+    public ObjectNode getDestinations(String subaccount, List<String> destinationNames) throws IOException {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(sensitiveDataUrl);
         builder.queryParam(REQUEST_QUERY_DESTINATION_NAMES, "[" + String.join(",", destinationNames) + "]");
         String uriString = builder.build().toUriString();
@@ -52,10 +56,16 @@ public class DestinationFetcherClient {
         return (ObjectNode) response.getBody().get(RESPONSE_ROOT_PROPERTY_NAME);
     }
 
-    private HttpHeaders prepareRequestHeaders(String subaccount) throws JsonProcessingException {
+    private HttpHeaders prepareRequestHeaders(String subaccount) throws IOException {
         HttpHeaders headers = new HttpHeaders();
+        setAuthorizationHeader(headers);
         setUserContextHeader(headers, subaccount);
         return headers;
+    }
+
+    private void setAuthorizationHeader(HttpHeaders headers) throws IOException {
+        String token = Files.readString(authTokenPath);
+        headers.setBearerAuth(token.strip());
     }
 
     private void setUserContextHeader(HttpHeaders headers, String subaccount) throws JsonProcessingException {
