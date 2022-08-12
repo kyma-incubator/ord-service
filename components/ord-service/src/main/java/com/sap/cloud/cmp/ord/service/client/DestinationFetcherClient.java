@@ -38,8 +38,6 @@ public class DestinationFetcherClient {
     }
 
     public void reload(String subaccount) throws IOException {
-        // TODO: this request changes the state of the server, a different method would be more appropriate
-        // TODO: also revisit the paths of the destinations fetcher
         restTemplate.exchange(this.reloadUrl, HttpMethod.PUT,
             new HttpEntity<>(prepareRequestHeaders(subaccount)), String.class);
     }
@@ -48,8 +46,6 @@ public class DestinationFetcherClient {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(sensitiveDataUrl);
         builder.queryParam(REQUEST_QUERY_DESTINATION_NAMES, "[" + String.join(",", destinationNames) + "]");
         String uriString = builder.build().toUriString();
-        // TODO: a more standard alternative for passing several values
-        // is providing the query parameter multiple times
         ResponseEntity<ObjectNode> response = restTemplate.exchange(uriString, HttpMethod.GET,
             new HttpEntity<>(prepareRequestHeaders(subaccount)), ObjectNode.class);
 

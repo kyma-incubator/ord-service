@@ -17,8 +17,6 @@ import org.eclipse.persistence.annotations.TypeConverter;
 import java.util.Set;
 import java.util.UUID;
 
-// TODO: include all relevant fields from the table through the view and into this entity
-
 @Entity(name = "destination")
 @Table(name = "tenants_destinations")
 public class DestinationEntity {
