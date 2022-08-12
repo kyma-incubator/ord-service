@@ -40,7 +40,7 @@ public class DestinationFetcherClient {
     public void reload(String subaccount) throws IOException {
         // TODO: this request changes the state of the server, a different method would be more appropriate
         // TODO: also revisit the paths of the destinations fetcher
-        restTemplate.exchange(this.reloadUrl, HttpMethod.GET,
+        restTemplate.exchange(this.reloadUrl, HttpMethod.PUT,
             new HttpEntity<>(prepareRequestHeaders(subaccount)), String.class);
     }
 
