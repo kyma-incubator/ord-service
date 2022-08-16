@@ -33,11 +33,11 @@ public class VendorEntity {
     private List<ArrayElement> partners;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_labels_vendors", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_documentation_labels_vendors", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
     private List<Label> documentationLabels;
 
     @OneToMany(mappedBy = "vendor", fetch = FetchType.LAZY)

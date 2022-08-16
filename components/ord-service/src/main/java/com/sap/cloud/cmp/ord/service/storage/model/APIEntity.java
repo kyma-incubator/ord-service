@@ -65,11 +65,11 @@ public class APIEntity {
     private String tenant;
 
     @ElementCollection
-    @CollectionTable(name = "tags", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "tags_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> tags;
 
     @ElementCollection
-    @CollectionTable(name = "countries", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "countries_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> countries;
 
     @ElementCollection
@@ -77,15 +77,15 @@ public class APIEntity {
     private List<APIDefinition> resourceDefinitions;
 
     @ElementCollection
-    @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "links_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Link> links;
 
     @ElementCollection
-    @CollectionTable(name = "line_of_businesses", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "line_of_businesses_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> lineOfBusiness;
 
     @ElementCollection
-    @CollectionTable(name = "industries", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "industries_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> industry;
 
     @ElementCollection
@@ -104,7 +104,7 @@ public class APIEntity {
     private List<ArrayElement> successors;
 
     @ElementCollection
-    @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "changelog_entries_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ChangelogEntry> changelogEntries;
 
     @ElementCollection
@@ -112,11 +112,11 @@ public class APIEntity {
     private List<ArrayElement> entryPoints;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "ord_labels_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "ord_documentation_labels_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Label> documentationLabels;
 
     @ElementCollection

@@ -40,15 +40,15 @@ public class BundleEntity {
     private String tenant;
 
     @ElementCollection
-    @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "bundle_id"))
+    @CollectionTable(name = "links_bundles", joinColumns = @JoinColumn(name = "bundle_id"))
     private List<Link> links;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "bundle_id"))
+    @CollectionTable(name = "ord_labels_bundles", joinColumns = @JoinColumn(name = "bundle_id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "bundle_id"))
+    @CollectionTable(name = "ord_documentation_labels_bundles", joinColumns = @JoinColumn(name = "bundle_id"))
     private List<Label> documentationLabels;
 
     @ElementCollection
@@ -56,7 +56,7 @@ public class BundleEntity {
     private List<CredentialExchangeStrategy> credentialExchangeStrategies;
 
     @ElementCollection
-    @CollectionTable(name = "correlation_ids", joinColumns = @JoinColumn(name = "bundle_id", referencedColumnName= "id"))
+    @CollectionTable(name = "correlation_ids_bundles", joinColumns = @JoinColumn(name = "bundle_id", referencedColumnName= "id"))
     private List<ArrayElement> correlationIds;
 
     @EdmIgnore

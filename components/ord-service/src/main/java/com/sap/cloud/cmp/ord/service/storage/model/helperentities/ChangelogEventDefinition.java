@@ -6,14 +6,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @EdmIgnore
-@Table(name = "changelog_entries")
-@Entity(name = "changelogEntry")
-@IdClass(Changelog.class)
-public class Changelog implements Serializable {
-    @Id
-    @Column(name = "api_definition_id", length = 256)
-    private String apiDefID;
-
+@Table(name = "changelog_entries_event_definitions")
+@Entity(name = "changelogEventDefinition")
+@IdClass(ChangelogEventDefinition.class)
+public class ChangelogEventDefinition implements Serializable {
     @Id
     @Column(name = "event_definition_id", length = 256)
     private String eventDefID;

@@ -55,14 +55,14 @@ public class SystemInstanceEntity {
     private String tenant;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "application_id"))
+    @CollectionTable(name = "ord_labels_applications", joinColumns = @JoinColumn(name = "application_id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "application_id"))
+    @CollectionTable(name = "ord_documentation_labels_applications", joinColumns = @JoinColumn(name = "application_id"))
     private List<Label> documentationLabels;
 
     @ElementCollection
-    @CollectionTable(name = "correlation_ids", joinColumns = @JoinColumn(name = "application_id"))
+    @CollectionTable(name = "correlation_ids_applications", joinColumns = @JoinColumn(name = "application_id"))
     private List<ArrayElement> correlationIds;
 }
