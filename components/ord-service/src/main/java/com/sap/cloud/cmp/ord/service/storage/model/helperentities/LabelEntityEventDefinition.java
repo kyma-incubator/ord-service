@@ -14,8 +14,8 @@ import java.io.Serializable;
 @IdClass(LabelEntityEventDefinition.class)
 public class LabelEntityEventDefinition implements Serializable {
     @javax.persistence.Id
-    @Column(name = "api_definition_id", length = 256)
-    private String apiDefID;
+    @Column(name = "event_definition_id", length = 256)
+    private String eventDefID;
 
     @javax.persistence.Id
     @Column(name = "key", length = Integer.MAX_VALUE)
