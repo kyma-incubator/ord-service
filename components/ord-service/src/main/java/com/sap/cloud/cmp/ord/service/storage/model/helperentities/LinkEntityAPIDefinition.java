@@ -9,23 +9,23 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @EdmIgnore
-@Table(name = "industries")
-@Entity(name = "industry")
-@IdClass(Industry.class)
-public class Industry implements Serializable {
+@Table(name = "links_api_definitions")
+@Entity(name = "linkEntityAPIDefinition")
+@IdClass(LinkEntityAPIDefinition.class)
+public class LinkEntityAPIDefinition implements Serializable {
     @javax.persistence.Id
     @Column(name = "api_definition_id", length = 256)
     private String apiDefID;
 
     @javax.persistence.Id
-    @Column(name = "event_definition_id", length = 256)
-    private String eventDefID;
+    @Column(name = "title", length = Integer.MAX_VALUE)
+    private String title;
 
     @javax.persistence.Id
-    @Column(name = "package_id", length = 256)
-    private String packageID;
+    @Column(name = "description", length = Integer.MAX_VALUE)
+    private String description;
 
     @javax.persistence.Id
-    @Column(name = "value", length = Integer.MAX_VALUE)
-    private String value;
+    @Column(name = "url", length = Integer.MAX_VALUE)
+    private String url;
 }

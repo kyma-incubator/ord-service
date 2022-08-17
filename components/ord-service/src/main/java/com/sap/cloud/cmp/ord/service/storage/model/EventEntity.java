@@ -52,7 +52,7 @@ public class EventEntity {
     private String tenant;
 
     @ElementCollection
-    @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "event_definition_id"))
+    @CollectionTable(name = "changelog_entries_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ChangelogEntry> changelogEntries;
 
     @Column(name = "package_id")
@@ -66,23 +66,23 @@ public class EventEntity {
     private List<ConsumptionBundleReference> partOfConsumptionBundles;
 
     @ElementCollection
-    @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "event_definition_id"))
+    @CollectionTable(name = "links_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<Link> links;
 
     @ElementCollection
-    @CollectionTable(name = "tags", joinColumns = @JoinColumn(name = "event_definition_id"))
+    @CollectionTable(name = "tags_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ArrayElement> tags;
 
     @ElementCollection
-    @CollectionTable(name = "countries", joinColumns = @JoinColumn(name = "event_definition_id"))
+    @CollectionTable(name = "countries_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ArrayElement> countries;
 
     @ElementCollection
-    @CollectionTable(name = "line_of_businesses", joinColumns = @JoinColumn(name = "event_definition_id"))
+    @CollectionTable(name = "line_of_businesses_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ArrayElement> lineOfBusiness;
 
     @ElementCollection
-    @CollectionTable(name = "industries", joinColumns = @JoinColumn(name = "event_definition_id"))
+    @CollectionTable(name = "industries_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ArrayElement> industry;
 
     @Column(name = "release_status")
@@ -101,11 +101,11 @@ public class EventEntity {
     private List<EventDefinition> resourceDefinitions;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "event_definition_id"))
+    @CollectionTable(name = "ord_labels_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "event_definition_id"))
+    @CollectionTable(name = "ord_documentation_labels_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<Label> documentationLabels;
 
     @ElementCollection

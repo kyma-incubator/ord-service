@@ -55,7 +55,7 @@ public class PackageEntity {
     private List<PackageLink> packageLinks;
 
     @ElementCollection
-    @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "links_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<Link> links;
 
     @Column(name = "licence_type", length = 256)
@@ -85,27 +85,27 @@ public class PackageEntity {
     private SystemInstanceEntity systemInstance;
 
     @ElementCollection
-    @CollectionTable(name = "tags", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "tags_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<ArrayElement> tags;
 
     @ElementCollection
-    @CollectionTable(name = "countries", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "countries_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<ArrayElement> countries;
 
     @ElementCollection
-    @CollectionTable(name = "line_of_businesses", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "line_of_businesses_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<ArrayElement> lineOfBusiness;
 
     @ElementCollection
-    @CollectionTable(name = "industries", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "industries_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<ArrayElement> industry;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "ord_labels_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "ord_documentation_labels_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<Label> documentationLabels;
 
     @ManyToMany(fetch = FetchType.LAZY)

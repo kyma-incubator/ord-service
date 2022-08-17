@@ -9,21 +9,17 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @EdmIgnore
-@Table(name = "correlation_ids")
-@Entity(name = "correlationId")
-@IdClass(CorrelationId.class)
-public class CorrelationId implements Serializable {
+@Table(name = "ord_documentation_labels_bundles")
+@Entity(name = "documentationLabelBundle")
+@IdClass(DocumentationLabelBundle.class)
+public class DocumentationLabelBundle implements Serializable {
     @javax.persistence.Id
     @Column(name = "bundle_id", length = 256)
     private String bundleID;
 
     @javax.persistence.Id
-    @Column(name = "product_id", length = 256)
-    private String productID;
-
-    @javax.persistence.Id
-    @Column(name = "application_id", length = 256)
-    private String systemInstanceID;
+    @Column(name = "key", length = Integer.MAX_VALUE)
+    private String key;
 
     @javax.persistence.Id
     @Column(name = "value", length = Integer.MAX_VALUE)

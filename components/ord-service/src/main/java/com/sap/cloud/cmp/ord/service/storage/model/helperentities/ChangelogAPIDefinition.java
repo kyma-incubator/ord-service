@@ -9,29 +9,25 @@ import javax.persistence.Table;
 import java.io.Serializable;
 
 @EdmIgnore
-@Table(name = "links")
-@Entity(name = "link")
-@IdClass(LinkEntity.class)
-public class LinkEntity implements Serializable {
+@Table(name = "changelog_entries_api_definitions")
+@Entity(name = "changelogAPIDefinition")
+@IdClass(ChangelogAPIDefinition.class)
+public class ChangelogAPIDefinition implements Serializable {
     @javax.persistence.Id
     @Column(name = "api_definition_id", length = 256)
     private String apiDefID;
 
     @javax.persistence.Id
-    @Column(name = "event_definition_id", length = 256)
-    private String eventDefID;
+    @Column(name = "version", length = Integer.MAX_VALUE)
+    private String version;
 
     @javax.persistence.Id
-    @Column(name = "package_id", length = 256)
-    private String packageID;
+    @Column(name = "release_status", length = Integer.MAX_VALUE)
+    private String releaseStatus;
 
     @javax.persistence.Id
-    @Column(name = "bundle_id", length = 256)
-    private String bundleID;
-
-    @javax.persistence.Id
-    @Column(name = "title", length = Integer.MAX_VALUE)
-    private String title;
+    @Column(name = "date", length = Integer.MAX_VALUE)
+    private String date;
 
     @javax.persistence.Id
     @Column(name = "description", length = Integer.MAX_VALUE)
