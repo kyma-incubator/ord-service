@@ -35,16 +35,16 @@ public class DestinationFetcherConfig {
     @Value("${destination_fetcher.auth_token_path:/var/run/secrets/kubernetes.io/serviceaccount/token}")
     private String authTokenPath;
 
-    @Value("${destination_fetcher.validate_server_certificate:true}")
-    private Boolean validateServerCertificate;
+    @Value("${destination_fetcher.skip_ssl_validation:false}")
+    private Boolean skipSSLValidation;
 
     @Bean
     public DestinationFetcherClient createDestinationFetcherClient() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-        return new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, userContextHeader, authTokenPath, createHttpClient(validateServerCertificate));
+        return new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, userContextHeader, authTokenPath, createHttpClient(skipSSLValidation));
     }
 
-    private RestTemplate createHttpClient(Boolean validateServerCertificate) throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-        if (validateServerCertificate) {
+    private RestTemplate createHttpClient(Boolean skipSSLValidation) throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
+        if (!skipSSLValidation) {
             return new RestTemplate();
         }
 

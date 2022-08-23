@@ -17,6 +17,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.util.Arrays;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -194,6 +196,31 @@ public class FetchingDestinationsTest {
     }
 
     @Test
+    public void testSensitiveDataFilter_DoesNotCallDestinationFetcher_WhenSensitiveDataIsNotRequested() throws Exception {
+        String odataResponse =
+        "{" +
+            "\"value\": [{" +
+                "\"consumptionBundles\": [{" +
+                    "\"destinations\": [{" +
+                        "\"name\": \"dest-1\"" +
+                    "}]" +
+                "}]" +
+            "}]" +
+        "}";
+
+        TestLogic testLogic = () -> {
+            mvc.perform(get( "/open-resource-discovery-service/v0/systemInstances?$expand=consumptionBundles($expand=destinations($select=name))"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(odataResponse)
+            );
+
+            verify(destsFetcherClient, never()).getDestinations(anyString(), anyList());
+        };
+
+        runTest(odataResponse, ResponseType.JSON, testLogic);
+    }
+
+    @Test
     public void testSensitiveDataFilter_ReturnsNotImplemented_WhenResponseContentTypeIsXML() throws Exception {
         String odataResponse = "<response></response>";
         TestLogic testLogic = () -> {
@@ -211,7 +238,20 @@ public class FetchingDestinationsTest {
     @Test
     public void testSensitiveDataFilter_ReturnsInternalServerError_WhenCallToDestinationFetcherFails() throws Exception {
         when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
-        when(destsFetcherClient.getDestinations(eq(TENANT), anyList())).thenThrow(new RestClientResponseException("Request failed",
+
+        String odataResponse =
+        "{" +
+            "\"value\": [{" +
+                "\"consumptionBundles\": [{" +
+                    "\"destinations\": [{" +
+                        "\"name\": \"dest-1\"," +
+                        "\"sensitiveData\": \"__sensitive_data__dest-1__sensitive_data__\"" +
+                    "}]" +
+                "}]" +
+            "}]" +
+        "}";
+
+        when(destsFetcherClient.getDestinations(TENANT, Arrays.asList("dest-1"))).thenThrow(new RestClientResponseException("Request failed",
         HttpStatus.INTERNAL_SERVER_ERROR.value(), HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase(),
         null, null, null));
 
@@ -223,7 +263,7 @@ public class FetchingDestinationsTest {
             );
         };
 
-        runTest(null, ResponseType.JSON, testLogic);
+        runTest(odataResponse, ResponseType.JSON, testLogic);
     }
 
     @Test

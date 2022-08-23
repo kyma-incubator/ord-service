@@ -105,6 +105,10 @@ public class DestinationSensitiveDataFilter implements Filter {
     private String replaceSensitiveData(String tenantId, String content) throws IOException {
         List<String> destinationNames = getDestinationNames(content);
 
+        if (destinationNames.size() == 0) {
+            return content;
+        }
+
         ObjectNode sensitiveData = destsFetcherClient.getDestinations(tenantId, destinationNames);
         for (String destinationName : destinationNames) {
             JsonNode destinationSensitiveData = sensitiveData.get(destinationName);

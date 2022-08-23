@@ -60,6 +60,8 @@ management:
           include: "schemaCompatibility,db"
 
 destination_fetcher:
-  reload_url: http://localhost:1234/destinations/v1/fetch
-  sensitive_data_url: http://localhost:1234/destinations/v1/info
+  reload_url: null
+  sensitive_data_url: null
   user_context_header: user_context
+  auth_token_path: /tmp/ord-service-account.txt
+  skip_ssl_validation: false

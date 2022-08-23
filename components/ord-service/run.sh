@@ -44,6 +44,9 @@ do
     esac
 done
 
+# Create dummy service account token file
+touch /tmp/ord-service-account.txt
+
 export SCHEMA_MIGRATION_VERSION=$(ls -lr $MIGRATIONS_PATH | head -n 2 | tail -n 1 | tr -s ' ' | cut -d ' ' -f9 | cut -d '_' -f1)
 
 echo "Expected schema version" $SCHEMA_MIGRATION_VERSION
@@ -81,12 +84,12 @@ else
             echo "[ORD Service] left ${SECONDS_LEFT} seconds. Wait ..."
             sleep 10
         done
-        
+
         echo "Timeout of ${TERMINAION_TIMEOUT_IN_SECONDS} seconds for running ord-service reached. Killing the process."
         echo -e "${GREEN}Kill main process..."
         kill -SIGTERM "${MAIN_PROCESS_PID}"
         wait
-    else 
+    else
         java -jar "$COMPONENT_DIR/target/ord-service-$ARTIFACT_VERSION.jar"
     fi
 fi
