@@ -52,7 +52,9 @@ public class SystemInstanceEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    private String tenant;
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels_applications", joinColumns = @JoinColumn(name = "application_id"))
