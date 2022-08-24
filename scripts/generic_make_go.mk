@@ -72,9 +72,10 @@ docker-create-opts:
 MOUNT_TARGETS = build resolve pull-licenses
 $(foreach t,$(MOUNT_TARGETS),$(eval $(call buildpack-mount,$(t))))
 
-# Builds new Docker image into Minikube's Docker Registry
-build-to-minikube: pull-licenses
-	@eval $$(minikube docker-env) && docker build -t $(IMG_NAME) .
+# Builds new Docker image into k3d's Docker Registry
+build-for-k3d: pull-licenses-local
+	docker build -t k3d-kyma-registry:5001/$(IMG_NAME):latest .
+	docker push k3d-kyma-registry:5001/$(IMG_NAME):latest
 
 build-local:
 
@@ -93,7 +94,9 @@ endif
 COPY_TARGETS = test
 $(foreach t,$(COPY_TARGETS),$(eval $(call buildpack-cp-ro,$(t))))
 
-# Sets locally built image for a given component in Minikube cluster
-deploy-on-minikube: build-to-minikube
-	kubectl set image -n $(NAMESPACE) deployment/$(DEPLOYMENT_NAME) $(COMPONENT_NAME)=$(DEPLOYMENT_NAME):latest
+# Sets locally built image for a given component in k3d cluster
+deploy-on-k3d: build-for-k3d
+	kubectl config use-context k3d-kyma
+	kubectl patch -n $(NAMESPACE) deployment/$(DEPLOYMENT_NAME) -p '{"spec":{"template":{"spec":{"containers":[{"name":"'$(COMPONENT_NAME)'","imagePullPolicy":"Always"}]}}}}'
+	kubectl set image -n $(NAMESPACE) deployment/$(DEPLOYMENT_NAME) $(COMPONENT_NAME)=k3d-kyma-registry:5001/$(DEPLOYMENT_NAME):latest
 	kubectl rollout restart -n $(NAMESPACE) deployment/$(DEPLOYMENT_NAME)
