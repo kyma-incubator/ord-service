@@ -29,7 +29,9 @@ public class TombstoneEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    private String tenant;
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
 
     @EdmIgnore
     @Column(name = "app_id", length = 256)

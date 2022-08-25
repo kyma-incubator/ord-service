@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 
 
 @Controller
@@ -47,7 +48,7 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
             return claims;
         }
 
-        final JPAClaimsPair<String> tenantIDJPAPair = new JPAClaimsPair<>(tenantID);
+        final JPAClaimsPair<UUID> tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
         claims.add("tenant_id", tenantIDJPAPair);
 
         final JPAClaimsPair<String> publicVisibilityScopeJPAPair = new JPAClaimsPair<>(PUBLIC_VISIBILITY);

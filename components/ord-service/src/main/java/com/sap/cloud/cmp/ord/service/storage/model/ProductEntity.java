@@ -80,5 +80,7 @@ public class ProductEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    private String tenant;
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
 }
