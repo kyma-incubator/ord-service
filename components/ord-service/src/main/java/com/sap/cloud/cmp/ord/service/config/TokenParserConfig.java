@@ -1,6 +1,5 @@
 package com.sap.cloud.cmp.ord.service.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,11 +20,8 @@ public class TokenParserConfig {
     @Value("${subscription.token_prefix:prefix-}")
     private String tokenPrefix;
 
-    @Autowired
-    private SelfRegisteredRuntimeRepository repo;
-
     @Bean
-    public TokenParser buildTokenParser() {
+    public TokenParser tokenParser(SelfRegisteredRuntimeRepository repo) {
         return new TokenParser(new SubscriptionHelper(selfRegKey, regionKey, tokenPrefix, repo));
     }
 }

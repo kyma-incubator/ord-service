@@ -19,6 +19,9 @@ server:
   port: 8080
   default_response_type: "xml"
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: "ant_path_matcher"
   autoconfigure:
     exclude:
       - org.springframework.boot.actuate.autoconfigure.metrics.orm.jpa.HibernateMetricsAutoConfiguration
@@ -48,3 +51,10 @@ management:
   endpoint:
     health:
       enabled: true
+
+destination_fetcher:
+  reload_url: https://destination-fetcher/reload
+  sensitive_data_url: https://destination-fetcher/sensitive-data
+  tenant_header: InternalTenantId
+  auth_token_path: /tmp/ord-service-account.txt
+  skip_ssl_validation: false

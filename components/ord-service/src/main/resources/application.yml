@@ -62,6 +62,6 @@ management:
 destination_fetcher:
   reload_url: null
   sensitive_data_url: null
-  user_context_header: user_context
+  tenant_header: InternalTenantId
   auth_token_path: /tmp/ord-service-account.txt
   skip_ssl_validation: false

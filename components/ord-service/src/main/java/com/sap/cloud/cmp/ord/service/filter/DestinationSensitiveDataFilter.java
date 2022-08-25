@@ -22,7 +22,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientResponseException;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.sap.cloud.cmp.ord.service.client.DestinationFetcherClient;
@@ -47,14 +46,6 @@ public class DestinationSensitiveDataFilter implements Filter {
     private DestinationFetcherClient destsFetcherClient;
 
     private final static String DESTINATIONS_ODATA_FILTER = "destinations";
-
-    private String getFullPath(HttpServletRequest servletRequest) {
-        String query = servletRequest.getQueryString();
-        if (query == null) {
-            query = "";
-        }
-        return Common.buildRequestPath(servletRequest) + query;
-    }
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
@@ -100,6 +91,14 @@ public class DestinationSensitiveDataFilter implements Filter {
 
         response.setContentLength(responseContent.length());
         response.getWriter().write(responseContent);
+    }
+
+    private String getFullPath(HttpServletRequest servletRequest) {
+        String query = servletRequest.getQueryString();
+        if (query == null) {
+            query = "";
+        }
+        return Common.buildRequestPath(servletRequest) + query;
     }
 
     private String replaceSensitiveData(String tenantId, String content) throws IOException {

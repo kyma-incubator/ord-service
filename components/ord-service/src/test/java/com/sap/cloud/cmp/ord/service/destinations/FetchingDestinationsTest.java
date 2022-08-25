@@ -29,6 +29,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockedConstruction;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -50,10 +52,14 @@ import com.sap.olingo.jpa.processor.core.processor.JPAODataRequestContextImpl;
 
 
 @RunWith(SpringRunner.class)
+@SpringBootTest
 public class FetchingDestinationsTest {
 
     private static final String TOKEN_VALUE = "eyAiYWxnIjogIlJTMjU2IiwgImtpZCI6ICI4NTQ3NzFlMi00MGFlLTQyMzctOTcwNi1kMTg5NDc2M2Y4N2IiLCAidHlwIjogIkpXVCIgfQo.eyAiY29uc3VtZXJzIjogIlt7XCJDb25zdW1lcklEXCI6XCJhZG1pblwiLFwiQ29uc3VtZXJUeXBlXCI6XCJTdGF0aWMgVXNlclwiLFwiRmxvd1wiOlwiSldUXCJ9XSIsICJleHAiOiAxNjMzMTAxNTI5LCAiaWF0IjogMTYzMzA5NzkyOSwgImlzcyI6ICJodHRwczovL29hdGhrZWVwZXIua3ltYS5sb2NhbC8iLCAianRpIjogIjg1NmNkNWU4LWQ4NzEtNDM5MS04MDI5LTI4NmRjZTcyMzRjZiIsICJuYmYiOiAxNjMzMDk3OTI5LCAic2NvcGVzIjogImFwcGxpY2F0aW9uOnJlYWQgYXBwbGljYXRpb246d3JpdGUgYXBwbGljYXRpb25fdGVtcGxhdGU6cmVhZCBhcHBsaWNhdGlvbl90ZW1wbGF0ZTp3cml0ZSBpbnRlZ3JhdGlvbl9zeXN0ZW06cmVhZCBpbnRlZ3JhdGlvbl9zeXN0ZW06d3JpdGUgcnVudGltZTpyZWFkIHJ1bnRpbWU6d3JpdGUgbGFiZWxfZGVmaW5pdGlvbjpyZWFkIGxhYmVsX2RlZmluaXRpb246d3JpdGUgZXZlbnRpbmc6bWFuYWdlIHRlbmFudDpyZWFkIGF1dG9tYXRpY19zY2VuYXJpb19hc3NpZ25tZW50OnJlYWQgYXV0b21hdGljX3NjZW5hcmlvX2Fzc2lnbm1lbnQ6d3JpdGUgYXBwbGljYXRpb24uYXV0aHM6cmVhZCBhcHBsaWNhdGlvbi53ZWJob29rczpyZWFkIGFwcGxpY2F0aW9uX3RlbXBsYXRlLndlYmhvb2tzOnJlYWQgYnVuZGxlLmluc3RhbmNlX2F1dGhzOnJlYWQgZG9jdW1lbnQuZmV0Y2hfcmVxdWVzdDpyZWFkIGV2ZW50X3NwZWMuZmV0Y2hfcmVxdWVzdDpyZWFkIGFwaV9zcGVjLmZldGNoX3JlcXVlc3Q6cmVhZCBpbnRlZ3JhdGlvbl9zeXN0ZW0uYXV0aHM6cmVhZCBydW50aW1lLmF1dGhzOnJlYWQgZmV0Y2gtcmVxdWVzdC5hdXRoOnJlYWQgd2ViaG9va3MuYXV0aDpyZWFkIGludGVybmFsX3Zpc2liaWxpdHk6cmVhZCIsICJzdWIiOiAiQ2lCcmQzbDNielUxY1hZek1UZGhNWGsxYjNKbGNUZGpaM1pxY3pNMk1XMXRieElGYkc5allXdyIsICJ0ZW5hbnQiOiJ7XCJjb25zdW1lclRlbmFudFwiOlwiM2U2NGViYWUtMzhiNS00NmEwLWIxZWQtOWNjZWUxNTNhMGFlXCIsXCJleHRlcm5hbFRlbmFudFwiOlwiM2U2NGViYWUtMzhiNS00NmEwLWIxZWQtOWNjZWUxNTNhMGFlXCJ9IiB9Cg.";
     private static final String TENANT = "3e64ebae-38b5-46a0-b1ed-9ccee153a0ae";
+
+    @Value("${odata.jpa.request_mapping_path}")
+    private String requestMappingPath;
 
     private MockMvc mvc;
 
@@ -77,12 +83,11 @@ public class FetchingDestinationsTest {
 
     @Before
     public void setup() {
-        String odataPath = "open-resource-discovery-service/v0";
-        ReflectionTestUtils.setField(reloadFilter, "odataPath", odataPath);
-        ReflectionTestUtils.setField(sensitiveDataFilter, "odataPath", odataPath);
+        ReflectionTestUtils.setField(reloadFilter, "odataPath", requestMappingPath);
+        ReflectionTestUtils.setField(sensitiveDataFilter, "odataPath", requestMappingPath);
 
         mvc = MockMvcBuilders.standaloneSetup(odataController)
-                .addPlaceholderValue("odata.jpa.request_mapping_path", odataPath)
+                .addPlaceholderValue("odata.jpa.request_mapping_path", requestMappingPath)
                 .addFilters(reloadFilter)
                 .addFilters(sensitiveDataFilter)
                 .build();
@@ -184,7 +189,7 @@ public class FetchingDestinationsTest {
     public void testSensitiveDataFilter_DoesNotCallDestinationFetcher_WhenDestinationsAreNotRequested() throws Exception {
         String odataResponse = "{}";
         TestLogic testLogic = () -> {
-            mvc.perform(get("/open-resource-discovery-service/v0/systemInstances?$expand=consumptionBundles"))
+            mvc.perform(get("/" + requestMappingPath + "/systemInstances?$expand=consumptionBundles"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(odataResponse)
             );
@@ -209,7 +214,7 @@ public class FetchingDestinationsTest {
         "}";
 
         TestLogic testLogic = () -> {
-            mvc.perform(get( "/open-resource-discovery-service/v0/systemInstances?$expand=consumptionBundles($expand=destinations($select=name))"))
+            mvc.perform(get("/" + requestMappingPath + "/systemInstances?$expand=consumptionBundles($expand=destinations($select=name))"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(odataResponse)
             );
@@ -313,7 +318,7 @@ public class FetchingDestinationsTest {
     private enum Reload { FALSE, TRUE }
 
     private String requestPath(Reload reload, ResponseType responseType) {
-        String path = "/open-resource-discovery-service/v0/systemInstances?$expand=consumptionBundles($expand=destinations)";
+        String path = "/" + requestMappingPath + "/systemInstances?$expand=consumptionBundles($expand=destinations)";
         if (reload == Reload.TRUE) {
             path += "&reload=true";
         }
