@@ -63,5 +63,6 @@ destination_fetcher:
   reload_url: null
   sensitive_data_url: null
   tenant_header: InternalTenantId
+  sensitive_data_query_param: name
   auth_token_path: /tmp/ord-service-account.txt
   skip_ssl_validation: false

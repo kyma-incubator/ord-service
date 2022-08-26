@@ -30,7 +30,10 @@ public class DestinationFetcherConfig {
     private String sensitiveDataUrl;
 
     @Value("${destination_fetcher.tenant_header:InternalTenantId}")
-    private String tenantHeader;
+    private String tenantHeaderName;
+
+    @Value("${destination_fetcher.sensitive_data_query_param:name}")
+    private String sensitiveDataQueryParamName;
 
     @Value("${destination_fetcher.auth_token_path:/var/run/secrets/kubernetes.io/serviceaccount/token}")
     private String authTokenPath;
@@ -40,7 +43,9 @@ public class DestinationFetcherConfig {
 
     @Bean
     public DestinationFetcherClient createDestinationFetcherClient() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
-        return new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, tenantHeader, authTokenPath, createHttpClient(skipSSLValidation));
+        return new DestinationFetcherClient(reloadUrl, sensitiveDataUrl,
+            tenantHeaderName, sensitiveDataQueryParamName,
+            authTokenPath, createHttpClient(skipSSLValidation));
     }
 
     private RestTemplate createHttpClient(Boolean skipSSLValidation) throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {

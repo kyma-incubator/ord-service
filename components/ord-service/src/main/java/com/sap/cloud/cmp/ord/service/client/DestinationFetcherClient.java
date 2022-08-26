@@ -15,22 +15,27 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public class DestinationFetcherClient {
-    private static final String REQUEST_QUERY_DESTINATION_NAME = "name";
-
     private static final String RESPONSE_ROOT_PROPERTY_NAME = "destinations";
 
-    private Path authTokenPath;
     private String reloadUrl;
     private String sensitiveDataUrl;
-    private String tenantHeader;
+
+    private String tenantHeaderName;
+    private String sensitiveDataQueryParamName;
+
+    private Path authTokenPath;
     private RestTemplate restTemplate;
 
 
-    public DestinationFetcherClient(String reloadUrl, String sensitiveDataUrl, String tenantHeader, String authTokenPath, RestTemplate restTemplate) {
-        this.authTokenPath = Path.of(authTokenPath);
+    public DestinationFetcherClient(String reloadUrl, String sensitiveDataUrl,
+        String tenantHeaderName, String sensitiveDataQueryParamName,
+        String authTokenPath, RestTemplate restTemplate) {
+
         this.reloadUrl = reloadUrl;
         this.sensitiveDataUrl = sensitiveDataUrl;
-        this.tenantHeader = tenantHeader;
+        this.tenantHeaderName = tenantHeaderName;
+        this.sensitiveDataQueryParamName = sensitiveDataQueryParamName;
+        this.authTokenPath = Path.of(authTokenPath);
         this.restTemplate = restTemplate;
     }
 
@@ -42,7 +47,7 @@ public class DestinationFetcherClient {
     public ObjectNode getDestinations(String tenantId, List<String> destinationNames) throws IOException {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(sensitiveDataUrl);
         for (String destName : destinationNames) {
-            builder.queryParam(REQUEST_QUERY_DESTINATION_NAME, destName);
+            builder.queryParam(sensitiveDataQueryParamName, destName);
         }
         String uriString = builder.build().toUriString();
 
@@ -55,7 +60,7 @@ public class DestinationFetcherClient {
     private HttpHeaders prepareRequestHeaders(String tenantId) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         setAuthorizationHeader(headers);
-        headers.set(tenantHeader, tenantId);
+        headers.set(tenantHeaderName, tenantId);
         return headers;
     }
 
