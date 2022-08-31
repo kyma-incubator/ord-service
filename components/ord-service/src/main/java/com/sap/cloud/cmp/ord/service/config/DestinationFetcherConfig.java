@@ -29,7 +29,7 @@ public class DestinationFetcherConfig {
     @Value("${destination_fetcher.sensitive_data_url}")
     private String sensitiveDataUrl;
 
-    @Value("${destination_fetcher.tenant_header:InternalTenantId}")
+    @Value("${destination_fetcher.tenant_header:Tenant}")
     private String tenantHeaderName;
 
     @Value("${destination_fetcher.sensitive_data_query_param:name}")

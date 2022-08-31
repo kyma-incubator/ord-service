@@ -55,7 +55,7 @@ management:
 destination_fetcher:
   reload_url: https://destination-fetcher/reload
   sensitive_data_url: https://destination-fetcher/sensitive-data
-  tenant_header: InternalTenantId
+  tenant_header: Tenant
   sensitive_data_query_param: name
   auth_token_path: /tmp/ord-service-account.txt
   skip_ssl_validation: false
