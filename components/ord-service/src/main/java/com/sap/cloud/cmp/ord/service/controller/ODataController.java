@@ -1,5 +1,8 @@
 package com.sap.cloud.cmp.ord.service.controller;
 
+import com.sap.cloud.cmp.ord.service.common.Common;
+import com.sap.cloud.cmp.ord.service.token.Token;
+import com.sap.cloud.cmp.ord.service.token.TokenParser;
 import com.sap.olingo.jpa.processor.core.api.JPAClaimsPair;
 import com.sap.olingo.jpa.processor.core.api.JPAODataCRUDContextAccess;
 import com.sap.olingo.jpa.processor.core.api.JPAODataClaimsProvider;
@@ -21,7 +24,10 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping("/${odata.jpa.request_mapping_path}/**")
-public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Controller {
+public class ODataController {
+
+    @Autowired
+    private TokenParser tokenParser;
 
     @Autowired
     private JPAODataCRUDContextAccess serviceContext;
@@ -35,14 +41,20 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
     public void handleODataRequest(HttpServletRequest request, HttpServletResponse response) throws ODataException, IOException {
         final JPAODataGetHandler handler = new JPAODataGetHandler(serviceContext);
         handler.getJPAODataRequestContext().setDebugSupport(new DefaultDebugSupport()); // Use query parameter odata-debug=json to activate.
-        handler.getJPAODataRequestContext().setClaimsProvider(createClaims(request));
+
+        Token token = tokenParser.fromRequest(request);
+        String tenantId = token == null ? "" : token.extractTenant();
+
+        // store the tenant id so it is available to post-OData processing filters
+        request.setAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID, tenantId);
+
+        handler.getJPAODataRequestContext().setClaimsProvider(createClaims(token, tenantId));
         handler.process(request, response);
     }
 
-    private JPAODataClaimsProvider createClaims(final HttpServletRequest request) throws IOException {
+    private JPAODataClaimsProvider createClaims(final Token token, String tenantID) throws IOException {
         final JPAODataClaimsProvider claims = new JPAODataClaimsProvider();
 
-        String tenantID = super.extractTenantFromIDToken(request);
         if (tenantID == null || tenantID.isEmpty()) {
             logger.warn("Could not determine tenant claim");
             return claims;
@@ -54,7 +66,7 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
         final JPAClaimsPair<String> publicVisibilityScopeJPAPair = new JPAClaimsPair<>(PUBLIC_VISIBILITY);
         claims.add("visibility_scope", publicVisibilityScopeJPAPair);
 
-        if (super.isInternalVisibilityScopePresent(request)) {
+        if (token.isInternalVisibilityScopePresent()) {
             final JPAClaimsPair<String> internalVisibilityScopeJPAPair = new JPAClaimsPair<>(INTERNAL_VISIBILITY);
             claims.add("visibility_scope", internalVisibilityScopeJPAPair);
 
