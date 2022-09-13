@@ -24,6 +24,7 @@ import org.springframework.web.client.RestClientResponseException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.sap.cloud.cmp.ord.service.client.DestinationFetcherClient;
 import com.sap.cloud.cmp.ord.service.common.Common;
 import com.sap.cloud.cmp.ord.service.filter.wrappers.CapturingResponseWrapper;
@@ -32,9 +33,23 @@ import com.sap.cloud.cmp.ord.service.filter.wrappers.CapturingResponseWrapper;
 public class DestinationSensitiveDataFilter implements Filter {
     private static final Logger logger = LoggerFactory.getLogger(DestinationSensitiveDataFilter.class);
 
+    // OData response
     private static final Pattern sensitiveDataValuePlaceholder = Pattern
-            .compile("__sensitive_data__([^\"]+)__sensitive_data__");
+            .compile("__sensitive_data__([^\"<>]+)__sensitive_data__");
 
+    // XML
+    private static final String DESTINATION_SENSITIVE_DATA_XML_ROOT = "__sensitive_data__";
+
+    private static final Pattern XML_ROOT_ELEMENT_START_TAG_PATTERN = Pattern
+            .compile("<" + "\\s*" + DESTINATION_SENSITIVE_DATA_XML_ROOT + "\\s*" + ">");
+    private static final Pattern XML_ROOT_ELEMENT_END_TAG_PATTERN = Pattern
+            .compile("<" + "\\s*" + "/" + "\\s*" + DESTINATION_SENSITIVE_DATA_XML_ROOT + "\\s*" + ">");
+
+    private static String sensitiveDataPlaceholderXML(String destinationName) {
+        return "__sensitive_data__" + destinationName + "__sensitive_data__";
+    }
+
+    // JSON
     private static String sensitiveDataPlaceholderJSONString(String destinationName) {
         return "\"__sensitive_data__" + destinationName + "__sensitive_data__\"";
     }
@@ -72,24 +87,26 @@ public class DestinationSensitiveDataFilter implements Filter {
         String responseContent = capturingResponseWrapper.getCaptureAsString();
 
         if (responseContentType != null) {
-            if (responseContentType.contains("application/xml")) {
-                String message = "Destination sensitiveData is only available for json responses";
-                logger.error(message);
-                Common.sendTextResponse((HttpServletResponse) response, HttpStatus.NOT_IMPLEMENTED, message);
+            String tenantId = (String) request.getAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID);
+            List<String> destinationNames = getDestinationNames(responseContent);
+            String correlationId = ((HttpServletRequest) request).getHeader(correlationIdHeader);
+
+            try {
+                ObjectNode sensitiveData = loadSensitiveData(tenantId, correlationId, destinationNames);
+
+                if (responseContentType.contains("application/xml")) {
+                    responseContent = replaceSensitiveDataXML(destinationNames, sensitiveData, responseContent);
+                }
+
+                if (responseContentType.contains("application/json")) {
+                    responseContent = replaceSensitiveDataJSON(destinationNames, sensitiveData, responseContent);
+                }
+            } catch (RestClientResponseException exc) {
+                logger.error("Load destinations sensitive data request failed with status: {}, body: {}", exc.getRawStatusCode(), exc.getResponseBodyAsString());
+                Common.sendTextResponse((HttpServletResponse) response, HttpStatus.INTERNAL_SERVER_ERROR, null);
                 return;
             }
 
-            if (responseContentType.contains("application/json")) {
-                String tenantId = (String) request.getAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID);
-                String correlationId = ((HttpServletRequest) request).getHeader(correlationIdHeader);
-                try {
-                    responseContent = replaceSensitiveData(tenantId, correlationId, responseContent);
-                } catch (RestClientResponseException exc) {
-                    logger.error("Load destinations sensitive data request failed with status: {}, body: {}", exc.getRawStatusCode(), exc.getResponseBodyAsString());
-                    Common.sendTextResponse((HttpServletResponse) response, HttpStatus.INTERNAL_SERVER_ERROR, null);
-                    return;
-                }
-            }
         }
 
         response.setContentLength(responseContent.length());
@@ -104,14 +121,42 @@ public class DestinationSensitiveDataFilter implements Filter {
         return Common.buildRequestPath(servletRequest) + query;
     }
 
-    private String replaceSensitiveData(String tenantId, String correlationId, String content) throws IOException {
-        List<String> destinationNames = getDestinationNames(content);
-
+    private ObjectNode loadSensitiveData(String tenantId, String correlationId, List<String> destinationNames) throws IOException {
         if (destinationNames.size() == 0) {
-            return content;
+            return null;
         }
 
-        ObjectNode sensitiveData = destsFetcherClient.getDestinations(tenantId, correlationId, destinationNames);
+        return destsFetcherClient.getDestinations(tenantId, correlationId, destinationNames);
+    }
+
+    private String replaceSensitiveDataXML(List<String> destinationNames, ObjectNode sensitiveData, String content) throws IOException {
+        for (String destinationName : destinationNames) {
+            JsonNode destinationSensitiveData = sensitiveData.get(destinationName);
+
+            if (destinationSensitiveData == null) {
+                content = content.replace(sensitiveDataPlaceholderXML(destinationName), "");
+                continue;
+            }
+
+            XmlMapper mapper = new XmlMapper();
+            String destinationXML = mapper.writer()
+                .withRootName(DESTINATION_SENSITIVE_DATA_XML_ROOT)
+                .writeValueAsString(destinationSensitiveData);
+
+            destinationXML = removeRootElementXML(destinationXML);
+            content = content.replace(sensitiveDataPlaceholderXML(destinationName), destinationXML);
+        }
+
+        return content;
+    }
+
+    private String removeRootElementXML(String xml) {
+        xml = XML_ROOT_ELEMENT_START_TAG_PATTERN.matcher(xml).replaceFirst("");
+        xml = XML_ROOT_ELEMENT_END_TAG_PATTERN.matcher(xml).replaceFirst("");
+        return xml;
+    }
+
+    private String replaceSensitiveDataJSON(List<String> destinationNames, ObjectNode sensitiveData, String content) throws IOException {
         for (String destinationName : destinationNames) {
             JsonNode destinationSensitiveData = sensitiveData.get(destinationName);
 

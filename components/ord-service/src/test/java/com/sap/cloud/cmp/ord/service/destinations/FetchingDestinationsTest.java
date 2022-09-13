@@ -232,21 +232,6 @@ public class FetchingDestinationsTest {
     }
 
     @Test
-    public void testSensitiveDataFilter_ReturnsNotImplemented_WhenResponseContentTypeIsXML() throws Exception {
-        String odataResponse = "<response></response>";
-        TestLogic testLogic = () -> {
-            mvc.perform(get(requestPath(Reload.FALSE, ResponseType.XML)))
-                .andExpect(status().isNotImplemented())
-                .andExpect(content().string("Destination sensitiveData is only available for json responses")
-            );
-
-            verify(destsFetcherClient, never()).getDestinations(anyString(), anyString(), anyList());
-        };
-
-        runTest(odataResponse, ResponseType.XML, testLogic);
-    }
-
-    @Test
     public void testSensitiveDataFilter_ReturnsInternalServerError_WhenCallToDestinationFetcherFails() throws Exception {
         when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
 
@@ -277,8 +262,57 @@ public class FetchingDestinationsTest {
         runTest(odataResponse, ResponseType.JSON, testLogic);
     }
 
+     @Test
+     public void testSensitiveDataFilter_ReturnsDestinationsWithSensitiveDataWhereAvailableInXML() throws Exception {
+         when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
+
+         String odataResponse =
+         "<feed>" +
+             "<entry>" +
+                 "<id>system-1</id>" +
+                 "<link>" +
+                     "<entry>" +
+                         "<id>my-bundle</id>" +
+                         "<link>" +
+                             "<entry>" +
+                                 "<name>dest-1</name>" +
+                                 "<sensitiveData>__sensitive_data__dest-1__sensitive_data__</sensitiveData>" +
+                             "</entry>" +
+                             "<entry>" +
+                                 "<name>dest-2</name>" +
+                                 "<sensitiveData>__sensitive_data__dest-2__sensitive_data__</sensitiveData>" +
+                             "</entry>" +
+                         "</link>" +
+                     "</entry>" +
+                 "</link>" +
+             "</entry>" +
+         "</feed>";
+
+         String destsFetcherResponse =
+         "{" +
+             "\"dest-1\": {" +
+                 "\"password\": \"super-secret\"" +
+             "}" +
+         "}";
+
+         when(destsFetcherClient.getDestinations(eq(TENANT), eq(X_REQUEST_ID), anyList())).thenReturn((ObjectNode) new ObjectMapper().readTree(destsFetcherResponse));
+
+
+         TestLogic testLogic = () -> {
+             mvc.perform(get(requestPath(Reload.FALSE, ResponseType.XML)).header(correlationIdHeader, X_REQUEST_ID))
+                 .andExpect(status().isOk())
+                 .andExpect(content().string(allOf(
+                     containsString("<name>dest-1</name><sensitiveData><password>super-secret</password>"),
+                     containsString("<name>dest-2</name><sensitiveData></sensitiveData>")
+                 ))
+             );
+         };
+
+         runTest(odataResponse, ResponseType.XML, testLogic);
+     }
+
     @Test
-    public void testSensitiveDataFilter_ReturnsDestinationsWithSensitiveDataWhereAvailable() throws Exception {
+    public void testSensitiveDataFilter_ReturnsDestinationsWithSensitiveDataWhereAvailableInJSON() throws Exception {
         when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
 
         String odataResponse =
