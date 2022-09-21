@@ -79,8 +79,9 @@ public class DestinationSensitiveDataFilter implements Filter {
 
             if (responseContentType.contains("application/json")) {
                 String tenantId = (String) request.getAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID);
+                String xRequestID = ((HttpServletRequest) request).getHeader("x-request-id");
                 try {
-                    responseContent = replaceSensitiveData(tenantId, responseContent);
+                    responseContent = replaceSensitiveData(tenantId, xRequestID, responseContent);
                 } catch (RestClientResponseException exc) {
                     logger.error("Load destinations sensitive data request failed with status: {}, body: {}", exc.getRawStatusCode(), exc.getResponseBodyAsString());
                     Common.sendTextResponse((HttpServletResponse) response, HttpStatus.INTERNAL_SERVER_ERROR, null);
@@ -101,14 +102,14 @@ public class DestinationSensitiveDataFilter implements Filter {
         return Common.buildRequestPath(servletRequest) + query;
     }
 
-    private String replaceSensitiveData(String tenantId, String content) throws IOException {
+    private String replaceSensitiveData(String tenantId, String xRequestID, String content) throws IOException {
         List<String> destinationNames = getDestinationNames(content);
 
         if (destinationNames.size() == 0) {
             return content;
         }
 
-        ObjectNode sensitiveData = destsFetcherClient.getDestinations(tenantId, destinationNames);
+        ObjectNode sensitiveData = destsFetcherClient.getDestinations(tenantId, xRequestID, destinationNames);
         for (String destinationName : destinationNames) {
             JsonNode destinationSensitiveData = sensitiveData.get(destinationName);
 
