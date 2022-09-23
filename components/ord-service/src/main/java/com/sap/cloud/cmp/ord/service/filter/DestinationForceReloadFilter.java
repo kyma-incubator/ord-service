@@ -41,18 +41,16 @@ public class DestinationForceReloadFilter implements Filter {
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
-        HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         boolean isODataPath = Common.buildRequestPath(httpRequest).startsWith("/" + odataPath);
         boolean reloadQueryParamIsTrue = Boolean.TRUE.toString().equals(request.getParameter(RELOAD_QUERY_PARAM));
 
-        httpResponse.addHeader("x-request-id", httpRequest.getHeader("x-request-id"));
         if (isODataPath && reloadQueryParamIsTrue) {
             Token token = tokenParser.fromRequest(httpRequest);
             String tenant = token == null ? "" : token.extractTenant();
             String xRequestID = httpRequest.getHeader("x-request-id");
             if (token == null || tenant == null || tenant.isEmpty()) {
-                Common.sendTextResponse(httpResponse, HttpStatus.UNAUTHORIZED, null);
+                Common.sendTextResponse((HttpServletResponse) response, HttpStatus.UNAUTHORIZED, null);
                 return;
             }
 
@@ -60,7 +58,7 @@ public class DestinationForceReloadFilter implements Filter {
                 destsFetcherClient.reload(tenant, xRequestID);
             } catch (RestClientResponseException exc) {
                 logger.error("Reload destinations request failed with status: {}, body: {}", exc.getRawStatusCode(), exc.getResponseBodyAsString());
-                Common.sendTextResponse(httpResponse, HttpStatus.INTERNAL_SERVER_ERROR, null);
+                Common.sendTextResponse((HttpServletResponse) response, HttpStatus.INTERNAL_SERVER_ERROR, null);
                 return;
             }
         }

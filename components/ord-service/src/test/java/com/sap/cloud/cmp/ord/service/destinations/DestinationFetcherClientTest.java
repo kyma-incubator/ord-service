@@ -33,6 +33,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 public class DestinationFetcherClientTest {
 
     private static final String TENANT = "3e64ebae-38b5-46a0-b1ed-9ccee153a0ae";
+    private static final String X_REQUEST_ID = "xreqebae-38b5-46a0-b1ed-9ccee153a0ae";
 
     @Value("${destination_fetcher.sensitive_data_url}")
     private String sensitiveDataUrl;
@@ -40,6 +41,8 @@ public class DestinationFetcherClientTest {
     private String reloadUrl;
     @Value("${destination_fetcher.tenant_header}")
     private String tenantHeader;
+    @Value("${destination_fetcher.x_request_id_header}")
+    private String xRequestIDHeader;
     @Value("${destination_fetcher.sensitive_data_query_param}")
     private String sensitiveDataQueryParam;
     @Value("${destination_fetcher.auth_token_path}")
@@ -53,7 +56,7 @@ public class DestinationFetcherClientTest {
     @Before
     public void setup() {
         this.restTemplate = new RestTemplate();
-        this.client = new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, tenantHeader,
+        this.client = new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, tenantHeader, xRequestIDHeader,
                 sensitiveDataQueryParam, authTokePath, restTemplate);
         mockServer = MockRestServiceServer.createServer(restTemplate);
     }
@@ -62,10 +65,11 @@ public class DestinationFetcherClientTest {
     public void testReload_CallsReloadUrlAndDoesNotThrowException_WhenReceivedStatusOK() throws Exception {
         mockServer.expect(once(), requestTo(reloadUrl))
                 .andExpect(header(tenantHeader, TENANT))
+                .andExpect(header(xRequestIDHeader, X_REQUEST_ID))
                 .andExpect(method(HttpMethod.PUT))
                 .andRespond(MockRestResponseCreators.withStatus(HttpStatus.OK));
 
-        client.reload(TENANT);
+        client.reload(TENANT, X_REQUEST_ID);
         mockServer.verify();
     }
 
@@ -78,17 +82,18 @@ public class DestinationFetcherClientTest {
         List<String> destinations = new ArrayList<>();
         destinations.add("dest1");
         destinations.add("dest2");
-      
+
         mockServer.expect(once(), request ->
                         assertEquals(sensitiveDataUrl, request.getURI().toString().split("\\?")[0]))
                 .andExpect(request -> assertEquals("name=dest1&name=dest2",
                         request.getURI().toString().split("\\?")[1]))
                 .andExpect(header(tenantHeader, TENANT))
+                .andExpect(header(xRequestIDHeader, X_REQUEST_ID))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess("{\"destinations\": {\"dest1\":"+expectedDest1+", \"dest2\":"+expectedDest2+"}}",
                         MediaType.APPLICATION_JSON));
 
-        ObjectNode result = client.getDestinations(TENANT, destinations);
+        ObjectNode result = client.getDestinations(TENANT, X_REQUEST_ID, destinations);
 
         assertEquals(expectedDest1, result.get("dest1").toString());
         assertEquals(expectedDest2, result.get("dest2").toString());
