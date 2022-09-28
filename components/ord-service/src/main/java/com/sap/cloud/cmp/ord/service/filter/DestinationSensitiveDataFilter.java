@@ -41,6 +41,8 @@ public class DestinationSensitiveDataFilter implements Filter {
 
     @Value("${odata.jpa.request_mapping_path}")
     private String odataPath;
+    @Value("${http.headers.correlationId}")
+    private String correlationIdHeader;
 
     @Autowired
     private DestinationFetcherClient destsFetcherClient;
@@ -79,9 +81,9 @@ public class DestinationSensitiveDataFilter implements Filter {
 
             if (responseContentType.contains("application/json")) {
                 String tenantId = (String) request.getAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID);
-                String xRequestID = ((HttpServletRequest) request).getHeader("x-request-id");
+                String correlationId = ((HttpServletRequest) request).getHeader(correlationIdHeader);
                 try {
-                    responseContent = replaceSensitiveData(tenantId, xRequestID, responseContent);
+                    responseContent = replaceSensitiveData(tenantId, correlationId, responseContent);
                 } catch (RestClientResponseException exc) {
                     logger.error("Load destinations sensitive data request failed with status: {}, body: {}", exc.getRawStatusCode(), exc.getResponseBodyAsString());
                     Common.sendTextResponse((HttpServletResponse) response, HttpStatus.INTERNAL_SERVER_ERROR, null);
@@ -102,14 +104,14 @@ public class DestinationSensitiveDataFilter implements Filter {
         return Common.buildRequestPath(servletRequest) + query;
     }
 
-    private String replaceSensitiveData(String tenantId, String xRequestID, String content) throws IOException {
+    private String replaceSensitiveData(String tenantId, String correlationId, String content) throws IOException {
         List<String> destinationNames = getDestinationNames(content);
 
         if (destinationNames.size() == 0) {
             return content;
         }
 
-        ObjectNode sensitiveData = destsFetcherClient.getDestinations(tenantId, xRequestID, destinationNames);
+        ObjectNode sensitiveData = destsFetcherClient.getDestinations(tenantId, correlationId, destinationNames);
         for (String destinationName : destinationNames) {
             JsonNode destinationSensitiveData = sensitiveData.get(destinationName);
 

@@ -61,8 +61,8 @@ public class FetchingDestinationsTest {
 
     @Value("${odata.jpa.request_mapping_path}")
     private String requestMappingPath;
-    @Value("${destination_fetcher.x_request_id_header}")
-    private String xRequestIDHeader;
+    @Value("${http.headers.correlationId}")
+    private String correlationIdHeader;
 
     private MockMvc mvc;
 
@@ -88,9 +88,12 @@ public class FetchingDestinationsTest {
     public void setup() {
         ReflectionTestUtils.setField(reloadFilter, "odataPath", requestMappingPath);
         ReflectionTestUtils.setField(sensitiveDataFilter, "odataPath", requestMappingPath);
+        ReflectionTestUtils.setField(reloadFilter, "correlationIdHeader", correlationIdHeader);
+        ReflectionTestUtils.setField(sensitiveDataFilter, "correlationIdHeader", correlationIdHeader);
 
         mvc = MockMvcBuilders.standaloneSetup(odataController)
                 .addPlaceholderValue("odata.jpa.request_mapping_path", requestMappingPath)
+                .addPlaceholderValue("http.headers.correlationId", correlationIdHeader)
                 .addFilters(reloadFilter)
                 .addFilters(sensitiveDataFilter)
                 .build();
@@ -153,7 +156,7 @@ public class FetchingDestinationsTest {
 
         TestLogic testLogic = () -> {
             mvc.perform(
-                get(requestPath(Reload.TRUE, ResponseType.JSON)).header(xRequestIDHeader, X_REQUEST_ID))
+                get(requestPath(Reload.TRUE, ResponseType.JSON)).header(correlationIdHeader, X_REQUEST_ID))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase()));
         };
@@ -265,7 +268,7 @@ public class FetchingDestinationsTest {
 
 
         TestLogic testLogic = () -> {
-            mvc.perform(get(requestPath(Reload.FALSE, ResponseType.XML)).header(xRequestIDHeader, X_REQUEST_ID))
+            mvc.perform(get(requestPath(Reload.FALSE, ResponseType.XML)).header(correlationIdHeader, X_REQUEST_ID))
                 .andExpect(status().isInternalServerError())
                 .andExpect(content().string(HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase())
             );
@@ -304,7 +307,7 @@ public class FetchingDestinationsTest {
 
 
         TestLogic testLogic = () -> {
-            mvc.perform(get(requestPath(Reload.FALSE, ResponseType.JSON)).header(xRequestIDHeader, X_REQUEST_ID))
+            mvc.perform(get(requestPath(Reload.FALSE, ResponseType.JSON)).header(correlationIdHeader, X_REQUEST_ID))
                 .andExpect(status().isOk())
                 .andExpect(content().string(allOf(
                     containsString("{\"name\": \"dest-1\",\"sensitiveData\": {\"password\":\"super-secret\"}"),

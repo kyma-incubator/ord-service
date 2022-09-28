@@ -31,6 +31,8 @@ public class DestinationForceReloadFilter implements Filter {
 
     @Value("${odata.jpa.request_mapping_path}")
     private String odataPath;
+    @Value("${http.headers.correlationId}")
+    private String correlationIdHeader;
 
     @Autowired
     private TokenParser tokenParser;
@@ -48,14 +50,14 @@ public class DestinationForceReloadFilter implements Filter {
         if (isODataPath && reloadQueryParamIsTrue) {
             Token token = tokenParser.fromRequest(httpRequest);
             String tenant = token == null ? "" : token.extractTenant();
-            String xRequestID = httpRequest.getHeader("x-request-id");
+            String correlationId = httpRequest.getHeader(correlationIdHeader);
             if (token == null || tenant == null || tenant.isEmpty()) {
                 Common.sendTextResponse((HttpServletResponse) response, HttpStatus.UNAUTHORIZED, null);
                 return;
             }
 
             try {
-                destsFetcherClient.reload(tenant, xRequestID);
+                destsFetcherClient.reload(tenant, correlationId);
             } catch (RestClientResponseException exc) {
                 logger.error("Reload destinations request failed with status: {}, body: {}", exc.getRawStatusCode(), exc.getResponseBodyAsString());
                 Common.sendTextResponse((HttpServletResponse) response, HttpStatus.INTERNAL_SERVER_ERROR, null);

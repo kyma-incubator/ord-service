@@ -41,8 +41,8 @@ public class DestinationFetcherClientTest {
     private String reloadUrl;
     @Value("${destination_fetcher.tenant_header}")
     private String tenantHeader;
-    @Value("${destination_fetcher.x_request_id_header}")
-    private String xRequestIDHeader;
+    @Value("${http.headers.correlationId}")
+    private String correlationIdHeader;
     @Value("${destination_fetcher.sensitive_data_query_param}")
     private String sensitiveDataQueryParam;
     @Value("${destination_fetcher.auth_token_path}")
@@ -56,7 +56,7 @@ public class DestinationFetcherClientTest {
     @Before
     public void setup() {
         this.restTemplate = new RestTemplate();
-        this.client = new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, tenantHeader, xRequestIDHeader,
+        this.client = new DestinationFetcherClient(reloadUrl, sensitiveDataUrl, tenantHeader, correlationIdHeader,
                 sensitiveDataQueryParam, authTokePath, restTemplate);
         mockServer = MockRestServiceServer.createServer(restTemplate);
     }
@@ -65,7 +65,7 @@ public class DestinationFetcherClientTest {
     public void testReload_CallsReloadUrlAndDoesNotThrowException_WhenReceivedStatusOK() throws Exception {
         mockServer.expect(once(), requestTo(reloadUrl))
                 .andExpect(header(tenantHeader, TENANT))
-                .andExpect(header(xRequestIDHeader, X_REQUEST_ID))
+                .andExpect(header(correlationIdHeader, X_REQUEST_ID))
                 .andExpect(method(HttpMethod.PUT))
                 .andRespond(MockRestResponseCreators.withStatus(HttpStatus.OK));
 
@@ -88,7 +88,7 @@ public class DestinationFetcherClientTest {
                 .andExpect(request -> assertEquals("name=dest1&name=dest2",
                         request.getURI().toString().split("\\?")[1]))
                 .andExpect(header(tenantHeader, TENANT))
-                .andExpect(header(xRequestIDHeader, X_REQUEST_ID))
+                .andExpect(header(correlationIdHeader, X_REQUEST_ID))
                 .andExpect(method(HttpMethod.GET))
                 .andRespond(withSuccess("{\"destinations\": {\"dest1\":"+expectedDest1+", \"dest2\":"+expectedDest2+"}}",
                         MediaType.APPLICATION_JSON));

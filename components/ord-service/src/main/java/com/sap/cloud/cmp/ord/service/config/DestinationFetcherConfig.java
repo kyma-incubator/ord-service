@@ -32,8 +32,8 @@ public class DestinationFetcherConfig {
     @Value("${destination_fetcher.tenant_header:Tenant}")
     private String tenantHeaderName;
 
-    @Value("${destination_fetcher.x_request_id_header:x-request-id}")
-    private String xRequestIDHeaderName;
+    @Value("${http.headers.correlationId}")
+    private String correlationIdHeader;
 
     @Value("${destination_fetcher.sensitive_data_query_param:name}")
     private String sensitiveDataQueryParamName;
@@ -47,7 +47,7 @@ public class DestinationFetcherConfig {
     @Bean
     public DestinationFetcherClient createDestinationFetcherClient() throws KeyManagementException, NoSuchAlgorithmException, KeyStoreException {
         return new DestinationFetcherClient(reloadUrl, sensitiveDataUrl,
-            tenantHeaderName, xRequestIDHeaderName, sensitiveDataQueryParamName,
+            tenantHeaderName, correlationIdHeader, sensitiveDataQueryParamName,
             authTokenPath, createHttpClient(skipSSLValidation));
     }
 

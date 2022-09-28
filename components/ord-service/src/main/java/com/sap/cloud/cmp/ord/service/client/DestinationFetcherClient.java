@@ -21,7 +21,7 @@ public class DestinationFetcherClient {
     private String sensitiveDataUrl;
 
     private String tenantHeaderName;
-    private String xRequestIDHeaderName;
+    private String correlationIdHeaderName;
     private String sensitiveDataQueryParamName;
 
     private Path authTokenPath;
@@ -29,24 +29,24 @@ public class DestinationFetcherClient {
 
 
     public DestinationFetcherClient(String reloadUrl, String sensitiveDataUrl,
-        String tenantHeaderName, String xRequestIDHeaderName, String sensitiveDataQueryParamName,
+        String tenantHeaderName, String correlationIdHeaderName, String sensitiveDataQueryParamName,
         String authTokenPath, RestTemplate restTemplate) {
 
         this.reloadUrl = reloadUrl;
         this.sensitiveDataUrl = sensitiveDataUrl;
         this.tenantHeaderName = tenantHeaderName;
-        this.xRequestIDHeaderName = xRequestIDHeaderName;
+        this.correlationIdHeaderName = correlationIdHeaderName;
         this.sensitiveDataQueryParamName = sensitiveDataQueryParamName;
         this.authTokenPath = Path.of(authTokenPath);
         this.restTemplate = restTemplate;
     }
 
-    public void reload(String tenantId, String xRequestID) throws IOException {
+    public void reload(String tenantId, String correlationId) throws IOException {
         restTemplate.exchange(this.reloadUrl, HttpMethod.PUT,
-            new HttpEntity<>(prepareRequestHeaders(tenantId, xRequestID)), String.class);
+            new HttpEntity<>(prepareRequestHeaders(tenantId, correlationId)), String.class);
     }
 
-    public ObjectNode getDestinations(String tenantId, String xRequestID,
+    public ObjectNode getDestinations(String tenantId, String correlationId,
         List<String> destinationNames) throws IOException {
         UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(sensitiveDataUrl);
         for (String destName : destinationNames) {
@@ -55,16 +55,16 @@ public class DestinationFetcherClient {
         String uriString = builder.build().toUriString();
 
         ResponseEntity<ObjectNode> response = restTemplate.exchange(uriString, HttpMethod.GET,
-            new HttpEntity<>(prepareRequestHeaders(tenantId, xRequestID)), ObjectNode.class);
+            new HttpEntity<>(prepareRequestHeaders(tenantId, correlationId)), ObjectNode.class);
 
         return (ObjectNode) response.getBody().get(RESPONSE_ROOT_PROPERTY_NAME);
     }
 
-    private HttpHeaders prepareRequestHeaders(String tenantId, String xRequestID) throws IOException {
+    private HttpHeaders prepareRequestHeaders(String tenantId, String correlationId) throws IOException {
         HttpHeaders headers = new HttpHeaders();
         setAuthorizationHeader(headers);
         headers.set(tenantHeaderName, tenantId);
-        headers.set(xRequestIDHeaderName, xRequestID);
+        headers.set(correlationIdHeaderName, correlationId);
         return headers;
     }
 
