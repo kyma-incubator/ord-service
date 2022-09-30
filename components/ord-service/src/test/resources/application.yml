@@ -51,7 +51,9 @@ management:
   endpoint:
     health:
       enabled: true
-
+http:
+  headers:
+    correlationId: x-request-id
 destination_fetcher:
   reload_url: https://destination-fetcher/reload
   sensitive_data_url: https://destination-fetcher/sensitive-data

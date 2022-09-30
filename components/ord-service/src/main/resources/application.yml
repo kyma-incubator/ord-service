@@ -58,7 +58,9 @@ management:
       group:
         readiness:
           include: "schemaCompatibility,db"
-
+http:
+  headers:
+    correlationId: x-request-id
 destination_fetcher:
   reload_url: null
   sensitive_data_url: null
