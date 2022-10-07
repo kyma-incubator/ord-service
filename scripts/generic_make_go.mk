@@ -60,7 +60,7 @@ endef
 release: resolve build-image push-image
 
 .PHONY: build-image push-image
-build-image: pull-licenses
+build-image: 
 	docker build -t $(IMG_NAME) .
 push-image:
 	docker tag $(IMG_NAME) $(IMG_NAME):$(TAG)
@@ -69,11 +69,11 @@ docker-create-opts:
 	@echo $(DOCKER_CREATE_OPTS)
 
 # Targets mounting sources to buildpack
-MOUNT_TARGETS = build resolve pull-licenses
+MOUNT_TARGETS = build resolve 
 $(foreach t,$(MOUNT_TARGETS),$(eval $(call buildpack-mount,$(t))))
 
 # Builds new Docker image into k3d's Docker Registry
-build-for-k3d: pull-licenses-local
+build-for-k3d: 
 	docker build -t k3d-kyma-registry:5001/$(IMG_NAME):latest .
 	docker push k3d-kyma-registry:5001/$(IMG_NAME):latest
 
@@ -82,13 +82,6 @@ build-local:
 test-local:
 
 resolve-local:
-
-pull-licenses-local:
-ifdef LICENSE_PULLER_PATH
-	bash $(LICENSE_PULLER_PATH)
-else
-	mkdir -p licenses
-endif
 
 # Targets copying sources to buildpack
 COPY_TARGETS = test
