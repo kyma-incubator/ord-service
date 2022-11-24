@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 public class Common {
-
+    // Test change
     public static String REQUEST_ATTRIBUTE_TENANT_ID = "tenantId";
 
     public static String buildRequestPath(HttpServletRequest request) {
