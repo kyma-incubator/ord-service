@@ -1,0 +1,13 @@
+pjConfigs:
+  prConfigs:
+    kyma-project:
+      test-infra:
+        prNumber: 6451
+  prowJobs:
+      kyma-incubator:
+        ord-service:
+        - pjName: "pull-ord-service-build"
+prConfigs:
+    kyma-incubator:
+      ord-service:
+        prNumber: 83
