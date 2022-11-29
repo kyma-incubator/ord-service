@@ -36,6 +36,7 @@ public class ODataController {
     private final String PUBLIC_VISIBILITY = "public";
     private final String INTERNAL_VISIBILITY = "internal";
     private final String PRIVATE_VISIBILITY = "private";
+    // test change
 
     @RequestMapping(value = "**", method = {RequestMethod.GET})
     public void handleODataRequest(HttpServletRequest request, HttpServletResponse response) throws ODataException, IOException {
