@@ -4,9 +4,9 @@ pjConfigs:
       test-infra:
         prNumber: 6486
   prowJobs:
-      kyma-incubator:
-        ord-service:
-        - pjName: "pull-ord-service-unit-test"
+    kyma-incubator:
+      ord-service:
+      - pjName: "pull-ord-service-unit-test"
 prConfigs:
     kyma-incubator:
       ord-service:
