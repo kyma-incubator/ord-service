@@ -48,4 +48,5 @@ RUN apk --no-cache add curl ca-certificates
 # Run app
 #
 
+CMD ["mvn", "--version"]
 CMD ["java", "-jar", "ord-service.jar"]
