@@ -12,7 +12,7 @@ COPY pom.xml .
 
 RUN ./scripts/install_dependencies.sh
 
-RUN mvn version
+RUN mvn -version
 RUN mvn dependency:resolve
 
 #
