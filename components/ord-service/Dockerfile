@@ -12,7 +12,6 @@ COPY pom.xml .
 
 RUN ./scripts/install_dependencies.sh
 
-RUN mvn -version
 RUN mvn dependency:resolve
 
 #
@@ -48,5 +47,5 @@ RUN apk --no-cache add curl ca-certificates
 #
 # Run app
 #
-
+CMD ["mvn", "--version"]
 CMD ["java", "-jar", "ord-service.jar"]
