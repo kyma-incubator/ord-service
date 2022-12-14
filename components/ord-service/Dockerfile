@@ -30,27 +30,28 @@ RUN ./run.sh --skip-deps --no-start --skip-tests && \
 
 RUN java --version
 RUN mvn --version
-#CMD ["java", "-jar", "/app/ord-service.jar"]
+CMD ["java", "-jar", "/app/ord-service.jar"]
 
-FROM eclipse-temurin:11.0.16_8-jre-alpine
-LABEL source = git@github.com:kyma-incubator/compass.git
-WORKDIR /app
-
+#FROM eclipse-temurin:11.0.16_8-jre-alpine
+#LABEL source = git@github.com:kyma-incubator/compass.git
+#WORKDIR /app
 #
-# Copy binary
+##
+## Copy binary
+##
 #
-
-COPY --from=builder /app/ord-service.jar /app/
-
+#COPY --from=builder /app/ord-service.jar /app/
 #
-# Install curl & CA certs
+##
+## Install curl & CA certs
+##
 #
-
-RUN apk --no-cache add curl ca-certificates
-
+#RUN apk --no-cache add curl ca-certificates
 #
-# Run app
-#
-#RUN ["/bin/bash", "-c", "mvn --version"]
-RUN java --version
-CMD ["java", "-jar", "ord-service.jar"]
+##
+## Run app
+##
+##RUN ["/bin/bash", "-c", "mvn --version"]
+#RUN java --version
+#RUN mvn --version
+#CMD ["java", "-jar", "ord-service.jar"]
