@@ -29,6 +29,7 @@ RUN ./run.sh --skip-deps --no-start --skip-tests && \
     mkdir /app && mv ./target/ord-service-$VERSION.jar /app/ord-service.jar
 
 RUN java --version
+RUN mvn --version
 #CMD ["java", "-jar", "/app/ord-service.jar"]
 
 FROM eclipse-temurin:11.0.16_8-jre-alpine
