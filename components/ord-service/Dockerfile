@@ -28,7 +28,7 @@ RUN ./run.sh --skip-deps --no-start --skip-tests && \
     VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -DforceStdout -q) && \
     mkdir /app && mv ./target/ord-service-$VERSION.jar /app/ord-service.jar
 
-RUN ["/bin/bash", "-c", "java --version"]
+RUN java --version
 #CMD ["java", "-jar", "/app/ord-service.jar"]
 
 FROM eclipse-temurin:11.0.16_8-jre-alpine
@@ -51,5 +51,5 @@ RUN apk --no-cache add curl ca-certificates
 # Run app
 #
 #RUN ["/bin/bash", "-c", "mvn --version"]
-RUN ["/bin/bash", "-c", "java --version"]
+RUN java --version
 CMD ["java", "-jar", "ord-service.jar"]
