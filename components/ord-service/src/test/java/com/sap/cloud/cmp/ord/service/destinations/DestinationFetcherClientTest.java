@@ -29,7 +29,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = DestinationFetcherClient.class, properties = "spring.main.lazy-initialization=true")
 public class DestinationFetcherClientTest {
 
     private static final String TENANT = "3e64ebae-38b5-46a0-b1ed-9ccee153a0ae";
