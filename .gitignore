@@ -60,3 +60,6 @@ components/ord-service/.settings/org.eclipse.core.resources.prefs
 components/ord-service/.settings/org.eclipse.jdt.apt.core.prefs
 components/ord-service/.settings/org.eclipse.jdt.core.prefs
 components/ord-service/.settings/org.eclipse.m2e.core.prefs
+
+# Java
+.java-version
