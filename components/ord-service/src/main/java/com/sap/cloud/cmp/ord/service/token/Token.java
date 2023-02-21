@@ -2,6 +2,7 @@ package com.sap.cloud.cmp.ord.service.token;
 
 import java.io.IOException;
 import java.util.Base64;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -29,15 +30,21 @@ public class Token {
     private static final String SCOPES_KEY = "scopes";
     private final String INTERNAL_VISIBILITY_SCOPE = "internal_visibility:read";
 
+    // In case single tenant is present (discovery based on tenancy) in the call, we use this default formation claim
+    public final String DEFAULT_FORMATION_ID_CLAIM = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
+
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private SubscriptionHelper subscriptionHelper;
     private JsonNode content;
 
+    private Set<String> formationIDsClaims;
+
     public Token(SubscriptionHelper subscriptionHelper, String idTokenEncoded) throws JsonMappingException, JsonProcessingException {
         this.subscriptionHelper = subscriptionHelper;
         String idTokenDecoded = decodeIDToken(idTokenEncoded);
         this.content = mapper.readTree(idTokenDecoded);
+        this.formationIDsClaims = new HashSet<>();
     }
 
     public String extractTenant() {
@@ -50,6 +57,7 @@ public class Token {
             String tenant = tenantsTree.path(CONSUMER_TENANT_KEY).asText();
             providerTenantID = tenantsTree.path(PROVIDER_TENANT_KEY).asText();
             if (providerTenantID == null || providerTenantID.isEmpty() || providerTenantID.equals(tenant)) {
+                this.formationIDsClaims.add(DEFAULT_FORMATION_ID_CLAIM);
                 return tenant;
             }
 
@@ -75,18 +83,26 @@ public class Token {
             Set<String> runtimeIds = repo.findSelfRegisteredRuntimesByLabels(providerTenantID, subscriptionHelper.getSelfRegKey(),
                 tokenClientId, subscriptionHelper.getRegionKey(), tokenRegion);
             for (String runtimeId : runtimeIds) {
-                if (repo.isRuntimeSubscriptionAvailableInTenant(tenant, runtimeId) > 0) {
+                String runtimeSubscriptionAvailableInTenant = repo.getRuntimeSubscriptionAvailableInTenant(tenant, runtimeId);
+                if (runtimeSubscriptionAvailableInTenant != null && !runtimeSubscriptionAvailableInTenant.isEmpty()) {
+                    Set<String> formationIDs = repo.getFormationsThatRuntimeSubscriptionAvailableInTenantIsPartOf(runtimeSubscriptionAvailableInTenant);
+                    this.formationIDsClaims.addAll(formationIDs);
                     return tenant;
                 }
             }
         } catch (IOException ignored) {}
 
+        this.formationIDsClaims.add(DEFAULT_FORMATION_ID_CLAIM);
         return providerTenantID;
     }
 
     public boolean isInternalVisibilityScopePresent() {
         String scopes = content.get(SCOPES_KEY).asText();
         return scopes.contains(INTERNAL_VISIBILITY_SCOPE);
+    }
+
+    public Set<String> getFormationIDsClaims() {
+        return this.formationIDsClaims;
     }
 
     private String decodeIDToken(String idTokenEncoded) {

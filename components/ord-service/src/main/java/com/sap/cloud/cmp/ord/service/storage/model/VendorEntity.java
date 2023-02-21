@@ -62,4 +62,11 @@ public class VendorEntity {
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID tenant;
+
+    @EdmProtectedBy(name = "formation_scope")
+    @EdmIgnore
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
 }

@@ -45,7 +45,7 @@ public class ODataController {
         Token token = tokenParser.fromRequest(request);
         String tenantId = token == null ? "" : token.extractTenant();
 
-        // store the tenant id so it is available to post-OData processing filters
+        // store the tenant id, so it is available to post-OData processing filters
         request.setAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID, tenantId);
 
         handler.getJPAODataRequestContext().setClaimsProvider(createClaims(token, tenantId));
@@ -55,13 +55,27 @@ public class ODataController {
     private JPAODataClaimsProvider createClaims(final Token token, String tenantID) throws IOException {
         final JPAODataClaimsProvider claims = new JPAODataClaimsProvider();
 
+        if (token == null) {
+            logger.warn("Could not determine claims because tenant is null");
+            return claims;
+        }
+
         if (tenantID == null || tenantID.isEmpty()) {
             logger.warn("Could not determine tenant claim");
             return claims;
         }
 
+        if (token.getFormationIDsClaims().isEmpty()) {
+            logger.warn("Could not determine formation claim");
+            return claims;
+        }
+
         final JPAClaimsPair<UUID> tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
         claims.add("tenant_id", tenantIDJPAPair);
+
+        for (String formationID : token.getFormationIDsClaims()) {
+            claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(formationID)));
+        }
 
         final JPAClaimsPair<String> publicVisibilityScopeJPAPair = new JPAClaimsPair<>(PUBLIC_VISIBILITY);
         claims.add("visibility_scope", publicVisibilityScopeJPAPair);
