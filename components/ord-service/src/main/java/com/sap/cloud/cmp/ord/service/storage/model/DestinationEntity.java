@@ -42,12 +42,12 @@ public class DestinationEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID tenant;
 
-    @EdmProtectedBy(name = "formation_scope")
-    @EdmIgnore
-    @Column(name = "formation_id")
-    @Convert("uuidConverter")
-    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID formationID;
+//    @EdmProtectedBy(name = "formation_scope")
+//    @EdmIgnore
+//    @Column(name = "formation_id")
+//    @Convert("uuidConverter")
+//    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+//    private UUID formationID;
 
     @Column(name = "sensitive_data", length = Integer.MAX_VALUE)
     private String sensitiveData;
