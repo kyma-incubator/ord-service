@@ -46,6 +46,12 @@ public class EventEntity {
     @Column(name = "system_instance_aware")
     private boolean systemInstanceAware;
 
+    @Column(name = "policy_level", length = 256)
+    private String policyLevel;
+
+    @Column(name = "custom_policy_level", length = 256)
+    private String customPolicyLevel;
+
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
