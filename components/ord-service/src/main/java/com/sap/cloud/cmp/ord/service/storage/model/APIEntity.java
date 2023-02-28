@@ -46,6 +46,12 @@ public class APIEntity {
     @Column(name = "system_instance_aware")
     private boolean systemInstanceAware;
 
+    @Column(name = "policy_level", length = 256)
+    private String policyLevel;
+
+    @Column(name = "custom_policy_level", length = 256)
+    private String customPolicyLevel;
+
     @Column(name = "package_id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
