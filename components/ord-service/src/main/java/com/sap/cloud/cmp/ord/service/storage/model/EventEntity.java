@@ -59,6 +59,13 @@ public class EventEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID tenant;
 
+    @EdmProtectedBy(name = "formation_scope")
+    @EdmIgnore
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
+
     @ElementCollection
     @CollectionTable(name = "changelog_entries_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ChangelogEntry> changelogEntries;

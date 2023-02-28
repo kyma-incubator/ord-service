@@ -72,6 +72,13 @@ public class APIEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID tenant;
 
+    @EdmProtectedBy(name = "formation_scope")
+    @EdmIgnore
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
+
     @ElementCollection
     @CollectionTable(name = "tags_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> tags;
