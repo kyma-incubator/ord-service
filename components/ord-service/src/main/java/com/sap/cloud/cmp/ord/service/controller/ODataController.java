@@ -56,7 +56,7 @@ public class ODataController {
         final JPAODataClaimsProvider claims = new JPAODataClaimsProvider();
 
         if (token == null) {
-            logger.warn("Could not determine claims because tenant is null");
+            logger.warn("Could not determine claims because token is null");
             return claims;
         }
 
