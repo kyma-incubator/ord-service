@@ -57,15 +57,19 @@ public class ProductEntity {
     private String parent;
 
     @ElementCollection
-    @CollectionTable(name = "correlation_ids_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
+    @CollectionTable(name = "correlation_ids_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
     private List<ArrayElement> correlationIds;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_tags_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
+    private List<ArrayElement> tags;
+
+    @ElementCollection
+    @CollectionTable(name = "ord_labels_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_documentation_labels_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
     private List<Label> documentationLabels;
 
     @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)

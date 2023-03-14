@@ -64,6 +64,10 @@ public class SystemInstanceEntity {
     private UUID formationID;
 
     @ElementCollection
+    @CollectionTable(name = "ord_tags_applications", joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"))
+    private List<ArrayElement> tags;
+
+    @ElementCollection
     @CollectionTable(name = "ord_labels_applications", joinColumns = @JoinColumn(name = "application_id"))
     private List<Label> labels;
 
