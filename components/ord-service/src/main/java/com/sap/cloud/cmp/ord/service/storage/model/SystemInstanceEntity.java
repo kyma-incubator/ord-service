@@ -34,6 +34,9 @@ public class SystemInstanceEntity {
     @Column(name = "product_type", length = 256)
     private String productType;
 
+    @Column(name = "application_namespace", length = 256)
+    private String namespace;
+
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<PackageEntity> packages;
 
