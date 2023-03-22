@@ -80,6 +80,14 @@ public class APIEntity {
     private UUID formationID;
 
     @ElementCollection
+    @CollectionTable(name = "ord_hierarchy_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> hierarchy;
+
+    @ElementCollection
+    @CollectionTable(name = "ord_supported_use_cases_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> supportedUseCases;
+
+    @ElementCollection
     @CollectionTable(name = "tags_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> tags;
 

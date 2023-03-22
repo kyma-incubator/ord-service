@@ -29,15 +29,19 @@ public class VendorEntity {
     private String title;
 
     @ElementCollection
-    @CollectionTable(name = "partners", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
+    @CollectionTable(name = "partners", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName = "id"))
     private List<ArrayElement> partners;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels_vendors", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_tags_vendors", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName = "id"))
+    private List<ArrayElement> tags;
+
+    @ElementCollection
+    @CollectionTable(name = "ord_labels_vendors", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName = "id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels_vendors", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_documentation_labels_vendors", joinColumns = @JoinColumn(name = "vendor_id", referencedColumnName = "id"))
     private List<Label> documentationLabels;
 
     @OneToMany(mappedBy = "vendor", fetch = FetchType.LAZY)
