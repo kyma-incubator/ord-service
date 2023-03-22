@@ -53,6 +53,10 @@ public class BundleEntity {
     private List<Link> links;
 
     @ElementCollection
+    @CollectionTable(name = "ord_tags_bundles", joinColumns = @JoinColumn(name = "bundle_id", referencedColumnName = "id"))
+    private List<ArrayElement> tags;
+
+    @ElementCollection
     @CollectionTable(name = "ord_labels_bundles", joinColumns = @JoinColumn(name = "bundle_id"))
     private List<Label> labels;
 

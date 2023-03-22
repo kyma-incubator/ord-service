@@ -34,6 +34,9 @@ public class SystemInstanceEntity {
     @Column(name = "product_type", length = 256)
     private String productType;
 
+    @Column(name = "application_namespace", length = 256)
+    private String namespace;
+
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<PackageEntity> packages;
 
@@ -62,6 +65,10 @@ public class SystemInstanceEntity {
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID formationID;
+
+    @ElementCollection
+    @CollectionTable(name = "ord_tags_applications", joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"))
+    private List<ArrayElement> tags;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels_applications", joinColumns = @JoinColumn(name = "application_id"))
