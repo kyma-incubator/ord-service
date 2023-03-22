@@ -89,10 +89,6 @@ public class EventEntity {
     private List<ArrayElement> hierarchy;
 
     @ElementCollection
-    @CollectionTable(name = "ord_supported_use_cases_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
-    private List<ArrayElement> supportedUseCases;
-
-    @ElementCollection
     @CollectionTable(name = "tags_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ArrayElement> tags;
 
