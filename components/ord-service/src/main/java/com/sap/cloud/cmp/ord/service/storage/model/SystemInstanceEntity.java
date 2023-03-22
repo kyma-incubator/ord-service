@@ -49,6 +49,13 @@ public class SystemInstanceEntity {
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<VendorEntity> vendors;
 
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<DataProductEntity> dataProducts;
+
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<PortEntity> ports;
+
+
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)

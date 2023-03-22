@@ -138,6 +138,16 @@ public class APIEntity {
     @CollectionTable(name = "api_definition_extensible", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Extensible> extensible;
 
+    // Currently this relation is a bit misleading because it is not ManyToMany but ManyToOne (1 API can be part of only 1 Port while 1 Port can have many APIs)
+    // @ManyToOne seems to not be working properly when in @JoinTable are added several join columns, that's why we fallbacked to the @ManyToMany annotation. The relation itself remains ManyToOne but is modelled as ManyToMany so that the ORD Svc can work. That's why the field is named 'port' instead of 'ports'.
+    // In the future we can research whether we can use the right annotation with several join columns or model the relation b/w APIs and Ports not in a reference db table but add port_id in the apis db table (then the ManyToOne annotation will work correctly)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "port_api_reference",
+            joinColumns = @JoinColumn(name = "api_id"),
+            inverseJoinColumns = @JoinColumn(name = "port_id"))
+    private Set<PortEntity> port;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
     private PackageEntity pkg;
