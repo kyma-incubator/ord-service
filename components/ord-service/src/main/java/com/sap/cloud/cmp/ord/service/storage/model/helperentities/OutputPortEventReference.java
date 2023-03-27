@@ -10,9 +10,9 @@ import javax.persistence.Table;
 import java.util.UUID;
 
 @EdmIgnore
-@Table(name = "port_api_reference")
-@Entity(name = "portAPIReference")
-public class PortAPIReference {
+@Table(name = "output_port_event_reference")
+@Entity(name = "outputPortEventReference")
+public class OutputPortEventReference {
     @javax.persistence.Id
     @Column(name = "id")
     @Convert("uuidConverter")
@@ -25,6 +25,9 @@ public class PortAPIReference {
     @Column(name = "port_id", length = 256)
     private String portID;
 
-    @Column(name = "api_id", length = 256)
-    private String apiID;
+    @Column(name = "event_id", length = 256)
+    private String eventID;
+
+    @Column(name = "min_version", length = 256)
+    private String minVersion;
 }

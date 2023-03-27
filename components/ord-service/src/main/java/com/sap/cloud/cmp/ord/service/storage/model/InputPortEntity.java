@@ -1,19 +1,17 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
-import com.sap.cloud.cmp.ord.service.storage.model.SystemInstanceEntity;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "port")
-@Table(name = "tenants_ports")
-public class PortEntity {
+@Entity(name = "inputPort")
+@Table(name = "tenants_input_ports")
+public class InputPortEntity {
     @javax.persistence.Id
     @Column(name = "id")
     @Convert("uuidConverter")
@@ -69,10 +67,10 @@ public class PortEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID formationID;
 
-   @ManyToMany(mappedBy = "port", fetch = FetchType.LAZY)
+   @ManyToMany(mappedBy = "inputPort", fetch = FetchType.LAZY)
     private Set<APIEntity> apis;
 
-   @ManyToMany(mappedBy = "port", fetch = FetchType.LAZY)
+   @ManyToMany(mappedBy = "inputPort", fetch = FetchType.LAZY)
    private Set<EventEntity> events;
 }
 

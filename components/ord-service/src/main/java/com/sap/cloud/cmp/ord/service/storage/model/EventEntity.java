@@ -136,10 +136,20 @@ public class EventEntity {
     // In the future we can research whether we can use the right annotation with several join columns or model the relation b/w Events and Ports not in a reference db table but add port_id in the events db table (then the ManyToOne annotation will work correctly)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "port_event_reference",
+            name = "input_port_event_reference",
             joinColumns = @JoinColumn(name = "event_id"),
             inverseJoinColumns = @JoinColumn(name = "port_id"))
-    private Set<PortEntity> port;
+    private Set<InputPortEntity> inputPort;
+
+    // Currently this relation is a bit misleading because it is not ManyToMany but ManyToOne (1 Event can be part of only 1 Port while 1 Port can have many Events)
+    // @ManyToOne seems to not be working properly when in @JoinTable are added several join columns, that's why we fallbacked to the @ManyToMany annotation. The relation itself remains ManyToOne but is modelled as ManyToMany so that the ORD Svc can work. That's why the field is named 'port' instead of 'ports'.
+    // In the future we can research whether we can use the right annotation with several join columns or model the relation b/w Events and Ports not in a reference db table but add port_id in the events db table (then the ManyToOne annotation will work correctly)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "output_port_event_reference",
+            joinColumns = @JoinColumn(name = "event_id"),
+            inverseJoinColumns = @JoinColumn(name = "port_id"))
+    private Set<OutputPortEntity> outputPort;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)

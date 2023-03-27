@@ -56,8 +56,10 @@ public class SystemInstanceEntity {
     private Set<DataProductEntity> dataProducts;
 
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
-    private Set<PortEntity> ports;
+    private Set<InputPortEntity> inputPorts;
 
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<OutputPortEntity> outputPorts;
 
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore

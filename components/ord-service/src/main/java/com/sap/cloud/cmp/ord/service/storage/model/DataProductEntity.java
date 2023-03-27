@@ -99,5 +99,8 @@ public class DataProductEntity {
     private UUID formationID;
 
     @OneToMany(mappedBy = "dataProduct", fetch = FetchType.LAZY)
-    private Set<PortEntity> ports;
+    private Set<InputPortEntity> inputPorts;
+
+    @OneToMany(mappedBy = "dataProduct", fetch = FetchType.LAZY)
+    private Set<OutputPortEntity> outputPorts;
 }
