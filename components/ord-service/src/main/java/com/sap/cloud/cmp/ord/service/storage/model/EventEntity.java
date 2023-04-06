@@ -52,6 +52,9 @@ public class EventEntity {
     @Column(name = "custom_policy_level", length = 256)
     private String customPolicyLevel;
 
+    @Column(name = "local_tenant_id", length = 256)
+    private String localId;
+
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)

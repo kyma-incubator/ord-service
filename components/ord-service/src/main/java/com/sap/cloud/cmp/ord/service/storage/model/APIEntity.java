@@ -23,6 +23,9 @@ public class APIEntity {
     @Column(name = "ord_id", length = 256)
     private String ordId;
 
+    @Column(name = "local_tenant_id", length = 256)
+    private String localId;
+
     @Column(name = "name", length = 256)
     @NotNull
     private String title;

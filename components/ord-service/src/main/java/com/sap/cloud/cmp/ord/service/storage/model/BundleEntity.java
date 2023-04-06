@@ -34,6 +34,12 @@ public class BundleEntity {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
+    @Column(name = "version")
+    private String version;
+
+    @Column(name = "local_tenant_id", length = 256)
+    private String localId;
+
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
