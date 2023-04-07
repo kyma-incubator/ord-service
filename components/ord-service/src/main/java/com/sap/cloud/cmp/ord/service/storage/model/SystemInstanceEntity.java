@@ -37,6 +37,9 @@ public class SystemInstanceEntity {
     @Column(name = "application_namespace", length = 256)
     private String namespace;
 
+    @Column(name = "local_tenant_id", length = 256)
+    private String localId;
+
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<PackageEntity> packages;
 
