@@ -1,4 +1,4 @@
-FROM maven:3.8.7-eclipse-temurin-11-focal AS builder
+FROM maven:3.9.1-eclipse-temurin-11-focal AS builder
 
 ENV BASE_APP_DIR /go/src/github.com/kyma-incubator/ord-service/components/ord-service
 WORKDIR ${BASE_APP_DIR}
