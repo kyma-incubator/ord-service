@@ -2,6 +2,9 @@ package com.sap.cloud.cmp.ord.service.controller;
 
 import com.sap.cloud.cmp.ord.service.repository.SpecRepository;
 import com.sap.cloud.cmp.ord.service.storage.model.SpecificationEntity;
+import com.sap.cloud.cmp.ord.service.token.Token;
+import com.sap.cloud.cmp.ord.service.token.TokenParser;
+
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,7 +13,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,7 +26,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Controller
-public class SpecificationsController extends com.sap.cloud.cmp.ord.service.controller.Controller {
+public class SpecificationsController {
 
     private static final String MEDIA_TYPE_YAML_VALUE = "text/yaml";
 
@@ -43,9 +45,12 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
     @Autowired
     private SpecRepository specRepository;
 
+    @Autowired
+    private TokenParser tokenParser;
+
     @RequestMapping(value = "/${static.request_mapping_path}/api/{apiId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
-    @Parameter(name = "Tenant", required = true, description = "Tenant GUID", allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "string")))
+    @Parameter(name = "Tenant", required = true, description = "Tenant GUID", allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "uuid")))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "<api specification in appropriate standard>"), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "400", description = "Missing or invalid tenantID", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Missing or invalid tenantID"), schema = @Schema(implementation = String.class))),
@@ -53,21 +58,15 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
     public void getApiSpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "API ID") @PathVariable final String apiId, @Parameter(description = "API specification ID") @PathVariable final String specId) throws IOException {
-        Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
-        if (tenantIDs == null) {
-            respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
-            return;
-        }
-
-        String tenantID = tenantIDs.getFirst();
-        String providerTenantID = tenantIDs.getSecond();
-        if (tenantID == null || providerTenantID == null || tenantID.isEmpty() || providerTenantID.isEmpty()) {
+        Token token = tokenParser.fromRequest(request);
+        String tenantID = token == null ? "" : token.extractTenant();
+        if (token == null || tenantID == null || tenantID.isEmpty()) {
             respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
             return;
         }
 
         try {
-            SpecificationEntity apiSpec = specRepository.getBySpecIdAndApiDefinitionIdAndTenantAndProviderTenant(UUID.fromString(specId), UUID.fromString(apiId), tenantID, providerTenantID);
+            SpecificationEntity apiSpec = specRepository.getBySpecIdAndApiDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(apiId), UUID.fromString(tenantID));
             if (apiSpec == null) {
                 respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
                 return;
@@ -81,7 +80,7 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
 
     @RequestMapping(value = "/${static.request_mapping_path}/event/{eventId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
-    @Parameter(name = "Tenant", description = "Tenant GUID", required = true, allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "string")))
+    @Parameter(name = "Tenant", description = "Tenant GUID", required = true, allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "uuid")))
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "<event specification in appropriate standard>"), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "400", description = "Missing or invalid tenantID", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Missing or invalid tenantID"), schema = @Schema(implementation = String.class))),
@@ -89,21 +88,15 @@ public class SpecificationsController extends com.sap.cloud.cmp.ord.service.cont
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
     public void getEventSpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "Event ID") @PathVariable final String eventId, @Parameter(description = "Event specification ID") @PathVariable final String specId) throws IOException {
-        Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
-        if (tenantIDs == null) {
-            respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
-            return;
-        }
-
-        String tenantID = tenantIDs.getFirst();
-        String providerTenantID = tenantIDs.getSecond();
-        if (tenantID == null || providerTenantID == null || tenantID.isEmpty() || providerTenantID.isEmpty()) {
+        Token token = tokenParser.fromRequest(request);
+        String tenantID = token == null ? "" : token.extractTenant();
+        if (token == null || tenantID == null || tenantID.isEmpty()) {
             respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
             return;
         }
 
         try {
-            SpecificationEntity eventSpec = specRepository.getBySpecIdAndEventDefinitionIdAndTenantAndProviderTenant(UUID.fromString(specId), UUID.fromString(eventId), tenantID, providerTenantID);
+            SpecificationEntity eventSpec = specRepository.getBySpecIdAndEventDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(eventId), UUID.fromString(tenantID));
             if (eventSpec == null) {
                 respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
                 return;

@@ -23,6 +23,9 @@ public class APIEntity {
     @Column(name = "ord_id", length = 256)
     private String ordId;
 
+    @Column(name = "local_tenant_id", length = 256)
+    private String localId;
+
     @Column(name = "name", length = 256)
     @NotNull
     private String title;
@@ -46,6 +49,12 @@ public class APIEntity {
     @Column(name = "system_instance_aware")
     private boolean systemInstanceAware;
 
+    @Column(name = "policy_level", length = 256)
+    private String policyLevel;
+
+    @Column(name = "custom_policy_level", length = 256)
+    private String customPolicyLevel;
+
     @Column(name = "package_id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
@@ -62,19 +71,31 @@ public class APIEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    private String tenant;
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
 
-    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmProtectedBy(name = "formation_scope")
     @EdmIgnore
-    @Column(name = "provider_tenant_id", length = 256)
-    private String providerTenant;
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
 
     @ElementCollection
-    @CollectionTable(name = "tags", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "ord_hierarchy_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> hierarchy;
+
+    @ElementCollection
+    @CollectionTable(name = "ord_supported_use_cases_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
+    private List<ArrayElement> supportedUseCases;
+
+    @ElementCollection
+    @CollectionTable(name = "tags_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> tags;
 
     @ElementCollection
-    @CollectionTable(name = "countries", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "countries_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> countries;
 
     @ElementCollection
@@ -82,15 +103,15 @@ public class APIEntity {
     private List<APIDefinition> resourceDefinitions;
 
     @ElementCollection
-    @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "links_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Link> links;
 
     @ElementCollection
-    @CollectionTable(name = "line_of_businesses", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "line_of_businesses_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> lineOfBusiness;
 
     @ElementCollection
-    @CollectionTable(name = "industries", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "industries_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> industry;
 
     @ElementCollection
@@ -109,7 +130,7 @@ public class APIEntity {
     private List<ArrayElement> successors;
 
     @ElementCollection
-    @CollectionTable(name = "changelog_entries", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "changelog_entries_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ChangelogEntry> changelogEntries;
 
     @ElementCollection
@@ -117,16 +138,16 @@ public class APIEntity {
     private List<ArrayElement> entryPoints;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "ord_labels_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "api_definition_id"))
+    @CollectionTable(name = "ord_documentation_labels_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Label> documentationLabels;
 
     @ElementCollection
     @CollectionTable(name = "api_definition_extensible", joinColumns = @JoinColumn(name = "api_definition_id"))
-    private List<ExtensibleEntity> extensible;
+    private List<Extensible> extensible;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)

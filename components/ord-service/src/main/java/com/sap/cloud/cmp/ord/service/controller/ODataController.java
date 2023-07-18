@@ -1,5 +1,8 @@
 package com.sap.cloud.cmp.ord.service.controller;
 
+import com.sap.cloud.cmp.ord.service.common.Common;
+import com.sap.cloud.cmp.ord.service.token.Token;
+import com.sap.cloud.cmp.ord.service.token.TokenParser;
 import com.sap.olingo.jpa.processor.core.api.JPAClaimsPair;
 import com.sap.olingo.jpa.processor.core.api.JPAODataCRUDContextAccess;
 import com.sap.olingo.jpa.processor.core.api.JPAODataClaimsProvider;
@@ -9,7 +12,6 @@ import org.apache.olingo.server.api.debug.DefaultDebugSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -17,11 +19,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.UUID;
 
 
 @Controller
 @RequestMapping("/${odata.jpa.request_mapping_path}/**")
-public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Controller {
+public class ODataController {
+
+    @Autowired
+    private TokenParser tokenParser;
 
     @Autowired
     private JPAODataCRUDContextAccess serviceContext;
@@ -30,42 +36,52 @@ public class ODataController extends com.sap.cloud.cmp.ord.service.controller.Co
     private final String PUBLIC_VISIBILITY = "public";
     private final String INTERNAL_VISIBILITY = "internal";
     private final String PRIVATE_VISIBILITY = "private";
+    private final String EMPTY_FORMATIONS_DEFAULT_FORMATION_ID_CLAIM = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee";
 
     @RequestMapping(value = "**", method = {RequestMethod.GET})
     public void handleODataRequest(HttpServletRequest request, HttpServletResponse response) throws ODataException, IOException {
         final JPAODataGetHandler handler = new JPAODataGetHandler(serviceContext);
         handler.getJPAODataRequestContext().setDebugSupport(new DefaultDebugSupport()); // Use query parameter odata-debug=json to activate.
-        handler.getJPAODataRequestContext().setClaimsProvider(createClaims(request));
+
+        Token token = tokenParser.fromRequest(request);
+        String tenantId = token == null ? "" : token.extractTenant();
+
+        // store the tenant id, so it is available to post-OData processing filters
+        request.setAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID, tenantId);
+
+        handler.getJPAODataRequestContext().setClaimsProvider(createClaims(token, tenantId));
         handler.process(request, response);
     }
 
-    private JPAODataClaimsProvider createClaims(final HttpServletRequest request) throws IOException {
+    private JPAODataClaimsProvider createClaims(final Token token, String tenantID) throws IOException {
         final JPAODataClaimsProvider claims = new JPAODataClaimsProvider();
 
-        Pair<String, String> tenantIDs = super.extractTenantsFromIDToken(request);
-        if (tenantIDs == null) {
-            logger.warn("Could not determine tenants claim");
+        if (token == null) {
+            logger.warn("Could not determine claims because token is null");
             return claims;
         }
 
-        String tenantID = tenantIDs.getFirst();
-        String providerTenantID = tenantIDs.getSecond();
-
         if (tenantID == null || tenantID.isEmpty()) {
-            logger.warn("Could not determine tenant from tenants claim");
-        } else if (providerTenantID == null || providerTenantID.isEmpty()) {
-            logger.warn("Could not determine provider tenant from tenants claim");
+            logger.warn("Could not determine tenant claim");
+            return claims;
+        }
+
+        final JPAClaimsPair<UUID> tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
+        claims.add("tenant_id", tenantIDJPAPair);
+
+        if (token.getFormationIDsClaims().isEmpty()) {
+            logger.warn("Could not determine formation claim");
+            claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(EMPTY_FORMATIONS_DEFAULT_FORMATION_ID_CLAIM))); // in the consumer-provider flow, if there are currently no formations the rtCtx is part of; we will return empty array this way instead of misleading claims error
         } else {
-            final JPAClaimsPair<String> tenantIDJPAPair = new JPAClaimsPair<>(tenantID);
-            claims.add("tenant_id", tenantIDJPAPair);
-            final JPAClaimsPair<String> providerTenantIDJPAPair = new JPAClaimsPair<>(providerTenantID);
-            claims.add("provider_tenant_id", providerTenantIDJPAPair);
+            for (String formationID : token.getFormationIDsClaims()) {
+                claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(formationID)));
+            }
         }
 
         final JPAClaimsPair<String> publicVisibilityScopeJPAPair = new JPAClaimsPair<>(PUBLIC_VISIBILITY);
         claims.add("visibility_scope", publicVisibilityScopeJPAPair);
 
-        if (super.isInternalVisibilityScopePresent(request)) {
+        if (token.isInternalVisibilityScopePresent()) {
             final JPAClaimsPair<String> internalVisibilityScopeJPAPair = new JPAClaimsPair<>(INTERNAL_VISIBILITY);
             claims.add("visibility_scope", internalVisibilityScopeJPAPair);
 

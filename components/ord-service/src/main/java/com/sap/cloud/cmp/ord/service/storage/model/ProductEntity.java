@@ -57,15 +57,19 @@ public class ProductEntity {
     private String parent;
 
     @ElementCollection
-    @CollectionTable(name = "correlation_ids", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
+    @CollectionTable(name = "correlation_ids_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
     private List<ArrayElement> correlationIds;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_tags_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
+    private List<ArrayElement> tags;
+
+    @ElementCollection
+    @CollectionTable(name = "ord_labels_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "product_id", referencedColumnName= "id"))
+    @CollectionTable(name = "ord_documentation_labels_products", joinColumns = @JoinColumn(name = "product_id", referencedColumnName = "id"))
     private List<Label> documentationLabels;
 
     @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
@@ -80,10 +84,14 @@ public class ProductEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    private String tenant;
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
 
-    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmProtectedBy(name = "formation_scope")
     @EdmIgnore
-    @Column(name = "provider_tenant_id", length = 256)
-    private String providerTenant;
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
 }

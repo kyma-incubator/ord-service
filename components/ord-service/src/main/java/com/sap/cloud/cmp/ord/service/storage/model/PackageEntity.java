@@ -48,19 +48,23 @@ public class PackageEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    private String tenant;
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
 
-    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmProtectedBy(name = "formation_scope")
     @EdmIgnore
-    @Column(name = "provider_tenant_id", length = 256)
-    private String providerTenant;
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
 
     @ElementCollection
     @CollectionTable(name = "package_links", joinColumns = @JoinColumn(name = "package_id"))
     private List<PackageLink> packageLinks;
 
     @ElementCollection
-    @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "links_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<Link> links;
 
     @Column(name = "licence_type", length = 256)
@@ -90,27 +94,27 @@ public class PackageEntity {
     private SystemInstanceEntity systemInstance;
 
     @ElementCollection
-    @CollectionTable(name = "tags", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "tags_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<ArrayElement> tags;
 
     @ElementCollection
-    @CollectionTable(name = "countries", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "countries_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<ArrayElement> countries;
 
     @ElementCollection
-    @CollectionTable(name = "line_of_businesses", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "line_of_businesses_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<ArrayElement> lineOfBusiness;
 
     @ElementCollection
-    @CollectionTable(name = "industries", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "industries_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<ArrayElement> industry;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "ord_labels_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "package_id"))
+    @CollectionTable(name = "ord_documentation_labels_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<Label> documentationLabels;
 
     @ManyToMany(fetch = FetchType.LAZY)

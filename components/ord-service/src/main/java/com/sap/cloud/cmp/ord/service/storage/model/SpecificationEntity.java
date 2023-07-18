@@ -42,12 +42,9 @@ public class SpecificationEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    private String tenant;
-
-    @EdmProtectedBy(name = "provider_tenant_id")
-    @EdmIgnore
-    @Column(name = "provider_tenant_id", length = 256)
-    private String providerTenant;
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
 
     public String getSpecData() {
         return specData;

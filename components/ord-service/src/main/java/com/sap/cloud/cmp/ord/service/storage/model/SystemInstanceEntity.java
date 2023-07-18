@@ -34,6 +34,12 @@ public class SystemInstanceEntity {
     @Column(name = "product_type", length = 256)
     private String productType;
 
+    @Column(name = "application_namespace", length = 256)
+    private String namespace;
+
+    @Column(name = "local_tenant_id", length = 256)
+    private String localId;
+
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<PackageEntity> packages;
 
@@ -52,22 +58,30 @@ public class SystemInstanceEntity {
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    private String tenant;
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
 
-    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmProtectedBy(name = "formation_scope")
     @EdmIgnore
-    @Column(name = "provider_tenant_id", length = 256)
-    private String providerTenant;
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "application_id"))
+    @CollectionTable(name = "ord_tags_applications", joinColumns = @JoinColumn(name = "application_id", referencedColumnName = "id"))
+    private List<ArrayElement> tags;
+
+    @ElementCollection
+    @CollectionTable(name = "ord_labels_applications", joinColumns = @JoinColumn(name = "application_id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "application_id"))
+    @CollectionTable(name = "ord_documentation_labels_applications", joinColumns = @JoinColumn(name = "application_id"))
     private List<Label> documentationLabels;
 
     @ElementCollection
-    @CollectionTable(name = "correlation_ids", joinColumns = @JoinColumn(name = "application_id"))
+    @CollectionTable(name = "correlation_ids_applications", joinColumns = @JoinColumn(name = "application_id"))
     private List<ArrayElement> correlationIds;
 }

@@ -34,26 +34,40 @@ public class BundleEntity {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
+    @Column(name = "version")
+    private String version;
+
+    @Column(name = "local_tenant_id", length = 256)
+    private String localId;
+
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
-    private String tenant;
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
 
-    @EdmProtectedBy(name = "provider_tenant_id")
+    @EdmProtectedBy(name = "formation_scope")
     @EdmIgnore
-    @Column(name = "provider_tenant_id", length = 256)
-    private String providerTenant;
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
 
     @ElementCollection
-    @CollectionTable(name = "links", joinColumns = @JoinColumn(name = "bundle_id"))
+    @CollectionTable(name = "links_bundles", joinColumns = @JoinColumn(name = "bundle_id"))
     private List<Link> links;
 
     @ElementCollection
-    @CollectionTable(name = "ord_labels", joinColumns = @JoinColumn(name = "bundle_id"))
+    @CollectionTable(name = "ord_tags_bundles", joinColumns = @JoinColumn(name = "bundle_id", referencedColumnName = "id"))
+    private List<ArrayElement> tags;
+
+    @ElementCollection
+    @CollectionTable(name = "ord_labels_bundles", joinColumns = @JoinColumn(name = "bundle_id"))
     private List<Label> labels;
 
     @ElementCollection
-    @CollectionTable(name = "ord_documentation_labels", joinColumns = @JoinColumn(name = "bundle_id"))
+    @CollectionTable(name = "ord_documentation_labels_bundles", joinColumns = @JoinColumn(name = "bundle_id"))
     private List<Label> documentationLabels;
 
     @ElementCollection
@@ -61,7 +75,7 @@ public class BundleEntity {
     private List<CredentialExchangeStrategy> credentialExchangeStrategies;
 
     @ElementCollection
-    @CollectionTable(name = "correlation_ids", joinColumns = @JoinColumn(name = "bundle_id", referencedColumnName= "id"))
+    @CollectionTable(name = "correlation_ids_bundles", joinColumns = @JoinColumn(name = "bundle_id", referencedColumnName= "id"))
     private List<ArrayElement> correlationIds;
 
     @EdmIgnore
@@ -79,4 +93,7 @@ public class BundleEntity {
 
     @ManyToMany(mappedBy = "consumptionBundles", fetch = FetchType.LAZY)
     private Set<EventEntity> events;
+    
+    @ManyToMany(mappedBy = "consumptionBundles", fetch = FetchType.LAZY)
+    private Set<DestinationEntity> destinations;
 }

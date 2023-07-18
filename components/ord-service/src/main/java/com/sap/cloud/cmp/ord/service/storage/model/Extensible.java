@@ -2,10 +2,9 @@ package com.sap.cloud.cmp.ord.service.storage.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.validation.constraints.NotNull;
 
 @Embeddable
-public class ExtensibleEntity {
+public class Extensible {
     @Column(name = "supported")
     private String supported;
 
