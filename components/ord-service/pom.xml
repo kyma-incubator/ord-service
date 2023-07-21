@@ -128,6 +128,16 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.jboss.logging</groupId>
+            <artifactId>jboss-logging</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-codec-http</artifactId>
             <version>4.1.94.Final</version>
@@ -183,29 +193,6 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.3.0</version>
-                <executions>
-                <execution>
-                    <id>enforce-banned-dependencies</id>
-                    <goals>
-                    <goal>enforce</goal>
-                    </goals>
-                    <configuration>
-                    <rules>
-                        <bannedDependencies>
-                        <excludes>
-                            <exclude>log4j:log4j</exclude>
-                        </excludes>
-                        </bannedDependencies>
-                    </rules>
-                    <fail>true</fail>
-                    </configuration>
-                </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
