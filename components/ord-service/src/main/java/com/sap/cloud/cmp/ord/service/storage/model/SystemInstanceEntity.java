@@ -5,7 +5,7 @@ import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -13,7 +13,7 @@ import java.util.UUID;
 @Entity(name = "systemInstance")
 @Table(name = "tenants_apps")
 public class SystemInstanceEntity {
-    @javax.persistence.Id
+    @jakarta.persistence.Id
     @Column(name = "id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)

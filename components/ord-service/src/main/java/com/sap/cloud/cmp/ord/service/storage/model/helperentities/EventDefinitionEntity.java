@@ -3,7 +3,7 @@ package com.sap.cloud.cmp.ord.service.storage.model.helperentities;
 import com.sap.cloud.cmp.ord.service.storage.model.converter.UrlConverter;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 
 @EdmIgnore

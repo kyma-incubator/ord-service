@@ -17,7 +17,7 @@ import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;

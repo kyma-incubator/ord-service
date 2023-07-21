@@ -5,8 +5,8 @@ import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -19,7 +19,7 @@ public class VendorEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
 
-    @javax.persistence.Id
+    @jakarta.persistence.Id
     @Column(name = "ord_id", length = 256)
     @NotNull
     private String ordId;
