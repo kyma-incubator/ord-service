@@ -109,7 +109,7 @@ public class APIEntity {
     @ElementCollection
     @CollectionTable(name = "links_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Link> links;
-
+    //
     @ElementCollection
     @CollectionTable(name = "line_of_businesses_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> lineOfBusiness;
