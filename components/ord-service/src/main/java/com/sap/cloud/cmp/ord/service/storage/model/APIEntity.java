@@ -23,6 +23,10 @@ public class APIEntity {
     @Column(name = "ord_id", length = 256)
     private String ordId;
 
+    @ElementCollection
+    @CollectionTable(name = "correlation_ids_apis", joinColumns = @JoinColumn(name = "api_id", referencedColumnName= "id"))
+    private List<ArrayElement> correlationIds;
+
     @Column(name = "local_tenant_id", length = 256)
     private String localId;
 

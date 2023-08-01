@@ -52,6 +52,10 @@ public class EventEntity {
     @Column(name = "custom_policy_level", length = 256)
     private String customPolicyLevel;
 
+    @ElementCollection
+    @CollectionTable(name = "correlation_ids_events", joinColumns = @JoinColumn(name = "event_id", referencedColumnName= "id"))
+    private List<ArrayElement> correlationIds;
+
     @Column(name = "local_tenant_id", length = 256)
     private String localId;
 
