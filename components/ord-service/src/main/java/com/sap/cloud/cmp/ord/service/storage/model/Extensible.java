@@ -5,9 +5,9 @@ import javax.persistence.Embeddable;
 
 @Embeddable
 public class Extensible {
-    @Column(name = "supported")
-    private String supported;
+    @Column(name = "extensible_supported")
+    protected String supported;
 
-    @Column(name = "description", length = Integer.MAX_VALUE)
-    private String description;
+    @Column(name = "extensible_description", length = Integer.MAX_VALUE, nullable = true)
+    protected String description;
 }
