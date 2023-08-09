@@ -263,4 +263,46 @@ public class JsonArrayElementsAggregatorTest {
 
         assertEquals(expectedContent, actualContent);
     }
+
+    @Test
+    public void testAggregate_ReturnsUnodifiedJson_WhenExtensiblePopulated() throws Exception {
+        JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
+
+        String content = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\":\"no\",\"description\":\"some description\"}}";
+        String expectedContent = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\":\"no\",\"description\":\"some description\"}}";
+
+        JsonNode jsonTree = mapper.readTree(content);
+        aggregator.aggregate(jsonTree);
+        String actualContent = mapper.writeValueAsString(jsonTree);
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void testAggregate_ReturnsUnodifiedJson_WhenExtensibleIsPartiallyPopulated() throws Exception {
+        JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
+
+        String content = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\":\"no\",\"description\":null}}";
+        String expectedContent = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\":\"no\",\"description\":null}}";
+
+        JsonNode jsonTree = mapper.readTree(content);
+        aggregator.aggregate(jsonTree);
+        String actualContent = mapper.writeValueAsString(jsonTree);
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void testAggregate_ReturnsModifiedJson_WhenExtensibleIsEmpty() throws Exception {
+        JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
+
+        String content = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\": null,\"description\":null}}";
+        String expectedContent = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":null}";
+
+        JsonNode jsonTree = mapper.readTree(content);
+        aggregator.aggregate(jsonTree);
+        String actualContent = mapper.writeValueAsString(jsonTree);
+
+        assertEquals(expectedContent, actualContent);
+    }
 }
