@@ -8,6 +8,6 @@ public class Extensible {
     @Column(name = "extensible_supported")
     private String supported;
 
-    @Column(name = "extensible_description", length = Integer.MAX_VALUE, nullable = true)
+    @Column(name = "extensible_description", length = Integer.MAX_VALUE)
     private String description;
 }
