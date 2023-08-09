@@ -10,6 +10,7 @@ public class JsonArrayElementsAggregator {
 
     private static final String[] subresources = new String[]{"value" /*This is the key returned when you list objects*/, "products", "packages", "consumptionBundles", "apis", "events", "vendors", "systemInstances"};
     private static final String[] arrays = new String[]{"tags", "countries", "lineOfBusiness", "industry", "entryPoints", "successors", "correlationIds", "partners"};
+    private static final String[] labels = new String[]{"labels", "documentationLabels"};
 
     private ObjectMapper mapper;
 
@@ -54,10 +55,12 @@ public class JsonArrayElementsAggregator {
             }
         }
 
-        JsonNode labels = resource.get("labels");
-        if (labels != null && labels.isArray()) {
-            JsonNode convertedLabels = convertLabels(labels);
-            ((ObjectNode) resource).replace("labels", convertedLabels);
+        for (String labelResource : labels) {
+            JsonNode labels = resource.get(labelResource);
+            if (labels != null && labels.isArray()) {
+                JsonNode convertedLabels = convertLabels(labels);
+                ((ObjectNode) resource).replace(labelResource, convertedLabels);
+            }
         }
     }
 
