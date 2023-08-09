@@ -67,6 +67,20 @@ public class JsonArrayElementsAggregatorTest {
     }
 
     @Test
+    public void testAggregate_ReturnsModifiedJson_WhenDocumentationLabelsFound() throws Exception {
+        JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
+
+        String content = "{\"@odata.context\":\"$metadata#apis\",\"value\":[{\"documentationLabels\":[{\"key\":\"Some Key\",\"value\":\"Some text line 1\"},{\"key\":\"Some Key\",\"value\":\"Some text line 2\"}]}]}";
+        String expectedContent = "{\"@odata.context\":\"$metadata#apis\",\"value\":[{\"documentationLabels\":{\"Some Key\":[\"Some text line 1\",\"Some text line 2\"]}}]}";
+
+        JsonNode jsonTree = mapper.readTree(content);
+        aggregator.aggregate(jsonTree);
+        String actualContent = mapper.writeValueAsString(jsonTree);
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
     public void testAggregate_ReturnsModifiedJson_WhenLabelsAndArrayElementFound() throws Exception {
         JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
 
