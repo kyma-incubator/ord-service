@@ -62,6 +62,21 @@ public class JsonArrayElementsAggregator {
                 ((ObjectNode) resource).replace(labelResource, convertedLabels);
             }
         }
+        JsonNode extensible = resource.get("extensible");
+        if (extensible != null && extensible.isObject()) {
+            Boolean isEmpty = true;
+            Iterator<JsonNode> it = extensible.elements();
+            while (it.hasNext()) {
+                JsonNode el = it.next();
+                if (!el.isNull()) {
+                    isEmpty = false;
+                    break;
+                }
+            }
+            if (isEmpty) {
+                ((ObjectNode) resource).replace("extensible", null);
+            }
+        }
     }
 
     private JsonNode convertArray(JsonNode array) {
