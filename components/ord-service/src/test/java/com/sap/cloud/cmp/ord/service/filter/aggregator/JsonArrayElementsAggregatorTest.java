@@ -265,7 +265,7 @@ public class JsonArrayElementsAggregatorTest {
     }
 
     @Test
-    public void testAggregate_ReturnsUnodifiedJson_WhenExtensiblePopulated() throws Exception {
+    public void testAggregate_ReturnsUnmodifiedJson_WhenExtensiblePopulated() throws Exception {
         JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
 
         String content = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\":\"no\",\"description\":\"some description\"}}";
@@ -279,7 +279,7 @@ public class JsonArrayElementsAggregatorTest {
     }
 
     @Test
-    public void testAggregate_ReturnsUnodifiedJson_WhenExtensibleIsPartiallyPopulated() throws Exception {
+    public void testAggregate_ReturnsUnmodifiedJson_WhenExtensibleIsPartiallyPopulated() throws Exception {
         JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
 
         String content = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\":\"no\",\"description\":null}}";
