@@ -52,6 +52,10 @@ public class EventEntity {
     @Column(name = "custom_policy_level", length = 256)
     private String customPolicyLevel;
 
+    @ElementCollection
+    @CollectionTable(name = "correlation_ids_events", joinColumns = @JoinColumn(name = "event_id", referencedColumnName= "id"))
+    private List<ArrayElement> correlationIds;
+
     @Column(name = "local_tenant_id", length = 256)
     private String localId;
 
@@ -130,9 +134,8 @@ public class EventEntity {
     @CollectionTable(name = "ord_documentation_labels_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<Label> documentationLabels;
 
-    @ElementCollection
-    @CollectionTable(name = "event_api_definition_extensible", joinColumns = @JoinColumn(name = "event_definition_id"))
-    private List<Extensible> extensible;
+    @Embedded
+    private Extensible extensible;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)

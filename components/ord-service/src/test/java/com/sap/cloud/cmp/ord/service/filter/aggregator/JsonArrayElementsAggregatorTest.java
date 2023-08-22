@@ -67,6 +67,20 @@ public class JsonArrayElementsAggregatorTest {
     }
 
     @Test
+    public void testAggregate_ReturnsModifiedJson_WhenDocumentationLabelsFound() throws Exception {
+        JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
+
+        String content = "{\"@odata.context\":\"$metadata#apis\",\"value\":[{\"documentationLabels\":[{\"key\":\"Some Key\",\"value\":\"Some text line 1\"},{\"key\":\"Some Key\",\"value\":\"Some text line 2\"}]}]}";
+        String expectedContent = "{\"@odata.context\":\"$metadata#apis\",\"value\":[{\"documentationLabels\":{\"Some Key\":[\"Some text line 1\",\"Some text line 2\"]}}]}";
+
+        JsonNode jsonTree = mapper.readTree(content);
+        aggregator.aggregate(jsonTree);
+        String actualContent = mapper.writeValueAsString(jsonTree);
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
     public void testAggregate_ReturnsModifiedJson_WhenLabelsAndArrayElementFound() throws Exception {
         JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
 
@@ -242,6 +256,48 @@ public class JsonArrayElementsAggregatorTest {
 
         String content = "{\"@odata.context\":\"$metadata#packages(apis(id,tags))\",\"value\":[{\"labels\":[{\"key\":\"country\",\"value\":\"DE\"},{\"key\":\"country\",\"value\":\"US\"}],\"apis\":[{\"@odata.id\":\"apis(23834341-071f-4f5b-bb02-ea4971d8b719)\",\"id\":\"23834341-071f-4f5b-bb02-ea4971d8b719\",\"tags\":[{\"value\":\"automotive\"},{\"value\":\"finance\"}]}]}]}";
         String expectedContent = "{\"@odata.context\":\"$metadata#packages(apis(id,tags))\",\"value\":[{\"labels\":{\"country\":[\"DE\",\"US\"]},\"apis\":[{\"@odata.id\":\"apis(23834341-071f-4f5b-bb02-ea4971d8b719)\",\"id\":\"23834341-071f-4f5b-bb02-ea4971d8b719\",\"tags\":[\"automotive\",\"finance\"]}]}]}";
+
+        JsonNode jsonTree = mapper.readTree(content);
+        aggregator.aggregate(jsonTree);
+        String actualContent = mapper.writeValueAsString(jsonTree);
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void testAggregate_ReturnsUnmodifiedJson_WhenExtensiblePopulated() throws Exception {
+        JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
+
+        String content = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\":\"no\",\"description\":\"some description\"}}";
+        String expectedContent = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\":\"no\",\"description\":\"some description\"}}";
+
+        JsonNode jsonTree = mapper.readTree(content);
+        aggregator.aggregate(jsonTree);
+        String actualContent = mapper.writeValueAsString(jsonTree);
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void testAggregate_ReturnsUnmodifiedJson_WhenExtensibleIsPartiallyPopulated() throws Exception {
+        JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
+
+        String content = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\":\"no\",\"description\":null}}";
+        String expectedContent = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\":\"no\",\"description\":null}}";
+
+        JsonNode jsonTree = mapper.readTree(content);
+        aggregator.aggregate(jsonTree);
+        String actualContent = mapper.writeValueAsString(jsonTree);
+
+        assertEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    public void testAggregate_ReturnsModifiedJson_WhenExtensibleIsEmpty() throws Exception {
+        JsonArrayElementsAggregator aggregator = new JsonArrayElementsAggregator(mapper);
+
+        String content = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":{\"supported\": null,\"description\":null}}";
+        String expectedContent = "{\"@odata.context\":\"$metadata#apis\",\"extensible\":null}";
 
         JsonNode jsonTree = mapper.readTree(content);
         aggregator.aggregate(jsonTree);

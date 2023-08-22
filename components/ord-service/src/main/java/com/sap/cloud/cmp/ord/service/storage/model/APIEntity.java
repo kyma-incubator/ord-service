@@ -23,6 +23,10 @@ public class APIEntity {
     @Column(name = "ord_id", length = 256)
     private String ordId;
 
+    @ElementCollection
+    @CollectionTable(name = "correlation_ids_apis", joinColumns = @JoinColumn(name = "api_id", referencedColumnName= "id"))
+    private List<ArrayElement> correlationIds;
+
     @Column(name = "local_tenant_id", length = 256)
     private String localId;
 
@@ -105,7 +109,7 @@ public class APIEntity {
     @ElementCollection
     @CollectionTable(name = "links_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Link> links;
-
+    
     @ElementCollection
     @CollectionTable(name = "line_of_businesses_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> lineOfBusiness;
@@ -145,9 +149,8 @@ public class APIEntity {
     @CollectionTable(name = "ord_documentation_labels_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<Label> documentationLabels;
 
-    @ElementCollection
-    @CollectionTable(name = "api_definition_extensible", joinColumns = @JoinColumn(name = "api_definition_id"))
-    private List<Extensible> extensible;
+    @Embedded
+    private Extensible extensible;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
