@@ -1,15 +1,15 @@
 package com.sap.cloud.cmp.ord.service.token;
 
-import com.sap.cloud.cmp.ord.service.repository.SelfRegisteredRuntimeRepository;
+import com.sap.cloud.cmp.ord.service.repository.SelfRegisteredRepository;
 
 public class SubscriptionHelper {
 
     private String selfRegKey;
     private String regionKey;
     private String tokenPrefix;
-    private SelfRegisteredRuntimeRepository repo;
+    private SelfRegisteredRepository repo;
 
-    public SubscriptionHelper(String selfRegKey, String regionKey, String tokenPrefix, SelfRegisteredRuntimeRepository repo) {
+    public SubscriptionHelper(String selfRegKey, String regionKey, String tokenPrefix, SelfRegisteredRepository repo) {
         this.selfRegKey = selfRegKey;
         this.regionKey = regionKey;
         this.tokenPrefix = tokenPrefix;
@@ -28,7 +28,7 @@ public class SubscriptionHelper {
         return tokenPrefix;
     }
 
-    public SelfRegisteredRuntimeRepository getRepo() {
+    public SelfRegisteredRepository getRepo() {
         return repo;
     }
 }
