@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sap.cloud.cmp.ord.service.repository.SelfRegisteredRuntimeRepository;
+import com.sap.cloud.cmp.ord.service.repository.SelfRegisteredRepository;
 
 public class Token {
     private static final Logger logger = LoggerFactory.getLogger(Token.class);
@@ -79,7 +79,7 @@ public class Token {
                 return "";
             }
 
-            SelfRegisteredRuntimeRepository repo = subscriptionHelper.getRepo();
+            SelfRegisteredRepository repo = subscriptionHelper.getRepo();
             Set<String> runtimeIds = repo.findSelfRegisteredRuntimesByLabels(providerTenantID, subscriptionHelper.getSelfRegKey(),
                 tokenClientId, subscriptionHelper.getRegionKey(), tokenRegion);
             for (String runtimeId : runtimeIds) {
@@ -90,6 +90,18 @@ public class Token {
                     return tenant;
                 }
             }
+
+            Set<String> appTemplateIds = repo.findSelfRegisteredApplicationTemplatesByLabels(providerTenantID, subscriptionHelper.getSelfRegKey(),
+                    tokenClientId, subscriptionHelper.getRegionKey(), tokenRegion);
+            for (String appTemplateId : appTemplateIds) {
+                String applicationSubscriptionAvailableInTenant = repo.getApplicationSubscriptionAvailableInTenant(tenant, appTemplateId);
+                if (applicationSubscriptionAvailableInTenant != null && !applicationSubscriptionAvailableInTenant.isEmpty()) {
+                    Set<String> formationIDs = repo.getFormationsThatApplicationSubscriptionAvailableInTenantIsPartOf(applicationSubscriptionAvailableInTenant);
+                    this.formationIDsClaims.addAll(formationIDs);
+                    return tenant;
+                }
+            }
+
         } catch (IOException ignored) {}
 
         this.formationIDsClaims.add(DEFAULT_FORMATION_ID_CLAIM);

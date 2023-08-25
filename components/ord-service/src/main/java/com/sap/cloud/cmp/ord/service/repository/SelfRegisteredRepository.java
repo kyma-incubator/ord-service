@@ -9,9 +9,9 @@ import java.util.Set;
 
 
 // JPARepository is not needed in this case because there is not a specific Entity associated with the defined queries.
-// However, Spring require that in order to instantiate the repository object in its context.
+// However, Spring requires that in order to instantiate the repository object in its context.
 // That’s why we use a random entity just to extend the interface and make the autowiring work.
-public interface SelfRegisteredRuntimeRepository extends JpaRepository<RootEntity, Integer> {
+public interface SelfRegisteredRepository extends JpaRepository<RootEntity, Integer> {
     @Query(nativeQuery = true, value = "SELECT l1.runtime_id FROM labels l1 JOIN labels l2 ON l1.runtime_id = l2.runtime_id WHERE l1.runtime_id IS NOT NULL AND l1.runtime_id IN (SELECT id FROM tenant_runtimes WHERE tenant_id = uuid(?1) AND owner = true) AND l1.key = ?2 AND l1.value = to_jsonb(?3) AND l2.key = ?4 AND l2.value = to_jsonb(?5)")
     Set<String> findSelfRegisteredRuntimesByLabels(String providerTenantId, String selfRegKey, String selfRegValue, String regionKey, String regionValue);
 
@@ -20,4 +20,13 @@ public interface SelfRegisteredRuntimeRepository extends JpaRepository<RootEntit
 
     @Query(nativeQuery = true, value = "SELECT id FROM formations where name IN (SELECT elements.value AS formation_name FROM labels, jsonb_array_elements_text(labels.value) AS elements WHERE key = 'scenarios' and runtime_context_id = uuid(?1))")
     Set<String> getFormationsThatRuntimeSubscriptionAvailableInTenantIsPartOf(String rtCtxID);
+
+    @Query(nativeQuery = true, value = "SELECT l1.app_template_id FROM labels l1 JOIN labels l2 ON l1.app_template_id = l2.app_template_id JOIN labels l3 ON l2.app_template_id = l3.app_template_id WHERE l1.app_template_id IS NOT NULL AND l1.key = ?2 AND l1.value = to_jsonb(?3) AND l2.key = ?4 AND l2.value = to_jsonb(?5) AND l3.key = 'global_subaccount_id' AND l3.value IN (SELECT to_jsonb(external_tenant) FROM business_tenant_mappings WHERE id = uuid(?1))")
+    Set<String> findSelfRegisteredApplicationTemplatesByLabels(String providerTenantId, String selfRegKey, String selfRegValue, String regionKey, String regionValue);
+
+    @Query(nativeQuery = true, value = "SELECT id FROM tenant_applications ta WHERE ta.tenant_id = uuid(?1) AND ta.id IN (SELECT id FROM applications WHERE app_template_id = uuid(?2)) AND ta.owner = true")
+    String getApplicationSubscriptionAvailableInTenant(String consumerTenantId, String appTmplId);
+
+    @Query(nativeQuery = true, value = "SELECT id FROM formations where name IN (SELECT elements.value AS formation_name FROM labels, jsonb_array_elements_text(labels.value) AS elements WHERE key = 'scenarios' and app_id = uuid(?1))")
+    Set<String> getFormationsThatApplicationSubscriptionAvailableInTenantIsPartOf(String appId);
 }

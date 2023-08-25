@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import com.sap.cloud.cmp.ord.service.repository.SelfRegisteredRuntimeRepository;
+import com.sap.cloud.cmp.ord.service.repository.SelfRegisteredRepository;
 import com.sap.cloud.cmp.ord.service.token.SubscriptionHelper;
 import com.sap.cloud.cmp.ord.service.token.TokenParser;
 
@@ -21,7 +21,7 @@ public class TokenParserConfig {
     private String tokenPrefix;
 
     @Bean
-    public TokenParser tokenParser(SelfRegisteredRuntimeRepository repo) {
+    public TokenParser tokenParser(SelfRegisteredRepository repo) {
         return new TokenParser(new SubscriptionHelper(selfRegKey, regionKey, tokenPrefix, repo));
     }
 }
