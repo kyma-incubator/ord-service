@@ -134,6 +134,15 @@ public class EventEntity {
     @CollectionTable(name = "ord_documentation_labels_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<Label> documentationLabels;
 
+    @Column(name = "implementation_standard")
+    private String implementationStandard;
+
+    @Column(name = "custom_implementation_standard")
+    private String customImplementationStandard;
+
+    @Column(name = "custom_implementation_standard_description")
+    private String customImplementationStandardDescription;
+    
     @Embedded
     private Extensible extensible;
 

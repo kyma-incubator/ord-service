@@ -178,4 +178,7 @@ public class APIEntity {
 
     @Column(name = "custom_implementation_standard_description")
     private String customImplementationStandardDescription;
+
+    @Column(name = "direction")
+    private String direction;
 }
