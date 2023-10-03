@@ -32,6 +32,9 @@ public class ProductEntity {
     @NotNull
     private String shortDescription;
 
+    @Column(name = "description", length = Integer.MAX_VALUE)
+    private String description;
+
     @Column(name = "vendor")
     @NotNull
     @EdmIgnore
