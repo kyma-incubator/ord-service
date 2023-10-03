@@ -1,0 +1,36 @@
+aliases:
+  team-dragon:
+    - desislavaa
+    - StefanCholakov
+    - krasish
+    - KirilKabakchiev
+    - SvetlinZarev-SAP
+  team-raptor:
+    - DimitarPetrov
+    - PetarTodorovv
+    - nyordanoff
+    - StanislavStefanov
+    - la4ezar
+    - KirilKabakchiev
+    - ivantenevvasilev
+    - ognyvrac
+  team-falcon:
+    - NickyMateev
+    - dzahariev
+    - alextargov
+    - kaloyanspiridonov
+    - KirilKabakchiev
+    - dragobt
+    - emmakarova
+  team-atlas:
+    - KirilKabakchiev
+    - ZdravkoGyurov
+    - petar-iv
+    - stefan-sto
+    - georgifarashev
+    - yordanovagabriela
+    - alexpenev-s
+  technical-writers: # Special value respected by kyma's prow installation.
+    - Peteva
+    - ekaterina-mitova
+    - nkanchev
