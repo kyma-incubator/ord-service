@@ -1,4 +1,4 @@
-FROM maven:3.9.3-eclipse-temurin-17-focal AS builder
+FROM maven:3.9.4-eclipse-temurin-17-focal AS builder
 
 ENV BASE_APP_DIR /go/src/github.com/kyma-incubator/ord-service/components/ord-service
 WORKDIR ${BASE_APP_DIR}
@@ -28,7 +28,7 @@ RUN ./run.sh --skip-deps --no-start --skip-tests && \
     VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -DforceStdout -q) && \
     mkdir /app && mv ./target/ord-service-$VERSION.jar /app/ord-service.jar
 
-FROM eclipse-temurin:17.0.8_7-jre-alpine
+FROM eclipse-temurin:17.0.8.1_1-jre-alpine
 LABEL source = git@github.com:kyma-incubator/compass.git
 WORKDIR /app
 
