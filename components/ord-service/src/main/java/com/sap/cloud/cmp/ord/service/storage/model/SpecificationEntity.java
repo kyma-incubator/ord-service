@@ -36,10 +36,10 @@ public class SpecificationEntity {
     @Column(name = "event_spec_format")
     private String eventSpecFormat;
 
-    @Column(name = "capability_id")
+    @Column(name = "capability_def_id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID capabilityId;
+    private UUID capabilityDefinitionId;
 
     @Column(name = "capability_spec_format")
     private String capabilitySpecFormat;

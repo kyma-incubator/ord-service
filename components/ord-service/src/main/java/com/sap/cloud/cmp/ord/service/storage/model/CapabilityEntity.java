@@ -82,6 +82,6 @@ public class CapabilityEntity {
     private List<ArrayElement> correlationIds;
 
     @ElementCollection
-    @CollectionTable(name = "capability_definitions", joinColumns = @JoinColumn(name = "capability_id"))
+    @CollectionTable(name = "capability_definitions", joinColumns = @JoinColumn(name = "capability_def_id"))
     private List<CapabilityDefinition> capabilityDefinitions;
 }
