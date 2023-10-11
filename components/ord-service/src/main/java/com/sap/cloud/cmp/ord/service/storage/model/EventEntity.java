@@ -142,6 +142,9 @@ public class EventEntity {
     @Embedded
     private Extensible extensible;
 
+    @Column(name = "last_update")
+    private String lastUpdate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
     private PackageEntity pkg;

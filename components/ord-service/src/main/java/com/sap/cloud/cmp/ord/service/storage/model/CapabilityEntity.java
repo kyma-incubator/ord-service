@@ -70,9 +70,6 @@ public class CapabilityEntity {
     @EdmProtectedBy(name = "visibility_scope")
     @Column(name = "visibility")
     private String visibility;
-
-    //resource hash
-
     @ElementCollection
     @CollectionTable(name = "ord_documentation_labels_capabilities", joinColumns = @JoinColumn(name = "capability_id"))
     private List<Label> documentationLabels;
@@ -80,6 +77,9 @@ public class CapabilityEntity {
     @ElementCollection
     @CollectionTable(name = "correlation_ids_capabilities", joinColumns = @JoinColumn(name = "capability_id", referencedColumnName= "id"))
     private List<ArrayElement> correlationIds;
+
+    @Column(name = "last_update")
+    private String lastUpdate;
 
     @ElementCollection
     @CollectionTable(name = "capability_definitions", joinColumns = @JoinColumn(name = "capability_def_id"))
