@@ -84,4 +84,8 @@ public class CapabilityEntity {
     @ElementCollection
     @CollectionTable(name = "capability_definitions", joinColumns = @JoinColumn(name = "capability_def_id"))
     private List<CapabilityDefinition> capabilityDefinitions;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "package_id", insertable = false, updatable = false)
+    private PackageEntity pkg;
 }
