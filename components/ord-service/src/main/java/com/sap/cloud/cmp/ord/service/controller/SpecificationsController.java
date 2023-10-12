@@ -117,7 +117,7 @@ public class SpecificationsController {
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(name = "example", value = UNAUTHORIZED_MSG), schema = @Schema(implementation = String.class))),
             @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
     })
-    public void getCapabilitySpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "Capability ID") @PathVariable final String capabilityDefinitionId, @Parameter(description = "Capability specification ID") @PathVariable final String specId) throws IOException {
+    public void getCapabilitySpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "Capability ID") @PathVariable final String capabilityId, @Parameter(description = "Capability specification ID") @PathVariable final String specId) throws IOException {
         Token token = tokenParser.fromRequest(request);
         String tenantID = token == null ? "" : token.extractTenant();
 
@@ -127,7 +127,8 @@ public class SpecificationsController {
         }
 
         try {
-            SpecificationEntity capabilitySpec = specRepository.getBySpecIdAndCapabilityDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(capabilityDefinitionId), UUID.fromString(tenantID));
+            SpecificationEntity capabilitySpec = specRepository.getBySpecIdAndCapabilityIdAndTenant(UUID.fromString(specId), UUID.fromString(capabilityId), UUID.fromString(tenantID));
+            System.out.printf("capabilityID: %s", capabilityId)
             if (capabilitySpec == null) {
                 respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
                 return;
