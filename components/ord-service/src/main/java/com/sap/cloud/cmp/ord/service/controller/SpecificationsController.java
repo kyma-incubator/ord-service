@@ -128,7 +128,6 @@ public class SpecificationsController {
 
         try {
             SpecificationEntity capabilitySpec = specRepository.getBySpecIdAndCapabilityDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(capabilityId), UUID.fromString(tenantID));
-            System.out.printf("capabilityID: %s", capabilityId);
             if (capabilitySpec == null) {
                 respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
                 return;
