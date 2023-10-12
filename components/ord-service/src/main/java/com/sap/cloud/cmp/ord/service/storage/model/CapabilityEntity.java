@@ -83,7 +83,7 @@ public class CapabilityEntity {
 
     @ElementCollection
     @CollectionTable(name = "capability_definitions", joinColumns = @JoinColumn(name = "capability_def_id"))
-    private List<CapabilityDefinition> capabilityDefinitions;
+    private List<CapabilityDefinition> definitions;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
