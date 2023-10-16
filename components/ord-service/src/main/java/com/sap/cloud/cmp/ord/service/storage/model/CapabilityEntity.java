@@ -70,6 +70,7 @@ public class CapabilityEntity {
     @EdmProtectedBy(name = "visibility_scope")
     @Column(name = "visibility")
     private String visibility;
+
     @ElementCollection
     @CollectionTable(name = "ord_documentation_labels_capabilities", joinColumns = @JoinColumn(name = "capability_id"))
     private List<Label> documentationLabels;
