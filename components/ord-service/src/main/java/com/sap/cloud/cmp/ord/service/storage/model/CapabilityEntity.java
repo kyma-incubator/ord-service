@@ -1,5 +1,6 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import org.eclipse.persistence.annotations.TypeConverter;
 
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
@@ -89,4 +90,14 @@ public class CapabilityEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
     private PackageEntity pkg;
+
+    @EdmIgnore
+    @Column(name = "app_id", length = 256)
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID appId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    private SystemInstanceEntity systemInstance;
 }
