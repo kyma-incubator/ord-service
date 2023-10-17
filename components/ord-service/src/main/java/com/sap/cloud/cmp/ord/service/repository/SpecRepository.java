@@ -11,4 +11,6 @@ public interface SpecRepository extends JpaRepository<SpecificationEntity, UUID>
     SpecificationEntity getBySpecIdAndApiDefinitionIdAndTenant(UUID id, UUID apiDefId, UUID tenant);
 
     SpecificationEntity getBySpecIdAndEventDefinitionIdAndTenant(UUID id, UUID apiDefId, UUID tenant);
+
+    SpecificationEntity getBySpecIdAndCapabilityDefinitionIdAndTenant(UUID id, UUID capabilityDefinitionId, UUID tenant);
 }

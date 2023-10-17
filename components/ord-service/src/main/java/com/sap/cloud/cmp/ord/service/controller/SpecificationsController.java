@@ -108,6 +108,37 @@ public class SpecificationsController {
         }
     }
 
+    @RequestMapping(value = "/${static.request_mapping_path}/capability/{capabilityId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @ResponseBody
+    @Parameter(name = "Tenant", description = "Tenant GUID", required = true, allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "uuid")))
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "<capability specification in appropriate standard>"), schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "400", description = "Missing or invalid tenantID", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Missing or invalid tenantID"), schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE, examples = @ExampleObject(name = "example", value = UNAUTHORIZED_MSG), schema = @Schema(implementation = String.class))),
+            @ApiResponse(responseCode = "404", description = "Not Found", content = @Content(mediaType = MediaType.TEXT_PLAIN_VALUE, examples = @ExampleObject(name = "example", value = "Not Found"), schema = @Schema(implementation = String.class)))
+    })
+    public void getCapabilitySpec(HttpServletRequest request, HttpServletResponse response, @Parameter(description = "Capability ID") @PathVariable final String capabilityId, @Parameter(description = "Capability specification ID") @PathVariable final String specId) throws IOException {
+        Token token = tokenParser.fromRequest(request);
+        String tenantID = token == null ? "" : token.extractTenant();
+
+        if (token == null || tenantID == null || tenantID.isEmpty()) {
+            respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, INVALID_TENANT_ID_ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            SpecificationEntity capabilitySpec = specRepository.getBySpecIdAndCapabilityDefinitionIdAndTenant(UUID.fromString(specId), UUID.fromString(capabilityId), UUID.fromString(tenantID));
+            if (capabilitySpec == null) {
+                respond(response, HttpServletResponse.SC_NOT_FOUND, MediaType.TEXT_PLAIN_VALUE, NOT_FOUND_MESSAGE);
+                return;
+            }
+
+            respond(response, HttpServletResponse.SC_OK, capabilitySpec.getCapabilitySpecFormat(), capabilitySpec.getSpecData());
+        } catch (IllegalArgumentException e) {
+            respond(response, HttpServletResponse.SC_BAD_REQUEST, MediaType.TEXT_PLAIN_VALUE, e.getMessage());
+        }
+    }
+
     private void respond(HttpServletResponse response, int statusCode, String contentType, String body) throws IOException {
         response.setStatus(statusCode);
         response.setContentType(contentType);

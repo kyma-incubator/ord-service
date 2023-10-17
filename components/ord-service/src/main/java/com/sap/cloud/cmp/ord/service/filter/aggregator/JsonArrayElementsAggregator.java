@@ -8,7 +8,7 @@ import java.util.*;
 
 public class JsonArrayElementsAggregator {
 
-    private static final String[] subresources = new String[]{"value" /*This is the key returned when you list objects*/, "products", "packages", "consumptionBundles", "apis", "events", "vendors", "systemInstances"};
+    private static final String[] subresources = new String[]{"value" /*This is the key returned when you list objects*/, "products", "packages", "consumptionBundles", "apis", "events", "capabilities", "vendors", "systemInstances"};
     private static final String[] arrays = new String[]{"tags", "countries", "lineOfBusiness", "industry", "entryPoints", "successors", "correlationIds", "partners"};
     private static final String[] labels = new String[]{"labels", "documentationLabels"};
     private static final String[] embeddedResources = new String[]{"extensible"};
