@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-@Entity(name = "entity_type")
+@Entity(name = "entityType")
 @Table(name = "tenants_entity_types")
 public class EntityTypeEntity {
     @javax.persistence.Id
