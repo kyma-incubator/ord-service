@@ -60,7 +60,7 @@ public class EntityTypeEntity {
     @CollectionTable(name = "changelog_entries_entity_types", joinColumns = @JoinColumn(name = "entity_type_id"))
     private List<ChangelogEntry> changelogEntries;
 
-    @Column(name = "part_of_package")
+    @Column(name = "package_id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     @NotNull
