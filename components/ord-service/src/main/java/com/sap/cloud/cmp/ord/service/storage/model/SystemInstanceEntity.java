@@ -50,6 +50,9 @@ public class SystemInstanceEntity {
     private Set<ProductEntity> products;
 
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<EntityTypeEntity> entityTypes;
+
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<TombstoneEntity> tombstones;
 
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
