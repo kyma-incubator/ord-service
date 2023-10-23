@@ -105,6 +105,9 @@ public class EntityTypeEntity {
     @Embedded
     private Extensible extensible;
 
+    @Column(name = "last_update")
+    private String lastUpdate;
+
     @ElementCollection
     @CollectionTable(name = "ord_tags_entity_types", joinColumns = @JoinColumn(name = "entity_type_id", referencedColumnName = "id"))
     private List<ArrayElement> tags;
