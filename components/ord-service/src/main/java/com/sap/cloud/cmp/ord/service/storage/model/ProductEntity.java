@@ -84,6 +84,9 @@ public class ProductEntity {
     @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY)
     private Set<EventEntity> events;
 
+    @ManyToMany(mappedBy = "products", fetch = FetchType.LAZY) 
+    private Set<EntityTypeEntity> entityTypes;
+
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)

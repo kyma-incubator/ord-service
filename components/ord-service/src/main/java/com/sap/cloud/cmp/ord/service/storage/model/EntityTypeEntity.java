@@ -66,6 +66,10 @@ public class EntityTypeEntity {
     @NotNull
     private UUID partOfPackage;
 
+    @ManyToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "package_id", insertable = false, updatable = false) 
+    private PackageEntity pkg;
+
     @EdmProtectedBy(name = "visibility_scope")
     @Column(name = "visibility")
     private String visibility;
@@ -112,7 +116,6 @@ public class EntityTypeEntity {
     @ElementCollection
     @CollectionTable(name = "ord_documentation_labels_entity_types", joinColumns = @JoinColumn(name = "entity_type_id", referencedColumnName = "id"))
     private List<Label> documentationLabels;
-
 
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
