@@ -132,4 +132,7 @@ public class PackageEntity {
 
     @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY) 
     private Set<EntityTypeEntity> entityTypes;
+
+    @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)
+    private Set<CapabilityEntity> capabilities;
 }

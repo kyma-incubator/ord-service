@@ -177,4 +177,7 @@ public class APIEntity {
 
     @Column(name = "direction")
     private String direction;
+
+    @Column(name = "last_update")
+    private String lastUpdate;
 }
