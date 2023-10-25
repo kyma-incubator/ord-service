@@ -86,6 +86,9 @@ public class APIEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID formationID;
 
+    @OneToMany(mappedBy = "apiResource", fetch = FetchType.LAZY)
+    private Set<EntityTypeMappingEntity> entityTypeMappings;
+
     @ElementCollection
     @CollectionTable(name = "ord_supported_use_cases_api_definitions", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ArrayElement> supportedUseCases;
