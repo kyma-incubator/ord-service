@@ -20,7 +20,7 @@ import com.sap.cloud.cmp.ord.service.storage.model.helperentities.EntityTypeTarg
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 
 @Entity(name = "entityTypeMapping")
-@Table(name = "tenants_entity_types")
+@Table(name = "tenants_entity_type_mappings")
 public class EntityTypeMappingEntity {
     @javax.persistence.Id
     @Column(name = "id")

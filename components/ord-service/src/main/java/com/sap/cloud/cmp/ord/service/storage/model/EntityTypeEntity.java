@@ -30,7 +30,7 @@ public class EntityTypeEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID appId;
 
-    @Column(name = "local_id", length = 256)
+    @Column(name = "local_tenant_id", length = 256)
     @NotNull
     private String localId;
 
