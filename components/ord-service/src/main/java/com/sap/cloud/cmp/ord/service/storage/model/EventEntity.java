@@ -130,6 +130,10 @@ public class EventEntity {
     @CollectionTable(name = "ord_documentation_labels_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<Label> documentationLabels;
 
+    @ElementCollection
+    @CollectionTable(name = "event_resource_links", joinColumns = @JoinColumn(name = "event_definition_id"))
+    private List<ResourceLink> eventResourceLinks;
+
     @Column(name = "implementation_standard")
     private String implementationStandard;
 

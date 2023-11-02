@@ -116,7 +116,7 @@ public class APIEntity {
 
     @ElementCollection
     @CollectionTable(name = "api_resource_links", joinColumns = @JoinColumn(name = "api_definition_id"))
-    private List<APIResourceLink> apiResourceLinks;
+    private List<ResourceLink> apiResourceLinks;
 
     @Column(name = "release_status")
     @NotNull
