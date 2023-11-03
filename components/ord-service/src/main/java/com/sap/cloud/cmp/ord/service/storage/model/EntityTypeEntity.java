@@ -108,6 +108,9 @@ public class EntityTypeEntity {
     @Column(name = "last_update")
     private String lastUpdate;
 
+    @Column(name = "deprecation_date")
+    private String deprecationDate;
+
     @ElementCollection
     @CollectionTable(name = "ord_tags_entity_types", joinColumns = @JoinColumn(name = "entity_type_id", referencedColumnName = "id"))
     private List<ArrayElement> tags;

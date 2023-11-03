@@ -149,6 +149,9 @@ public class EventEntity {
     @Column(name = "last_update")
     private String lastUpdate;
 
+    @Column(name = "deprecation_date")
+    private String deprecationDate;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
     private PackageEntity pkg;

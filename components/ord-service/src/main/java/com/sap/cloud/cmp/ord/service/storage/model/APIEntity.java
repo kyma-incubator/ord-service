@@ -180,4 +180,7 @@ public class APIEntity {
 
     @Column(name = "last_update")
     private String lastUpdate;
+
+    @Column(name = "deprecation_date")
+    private String deprecationDate;
 }
