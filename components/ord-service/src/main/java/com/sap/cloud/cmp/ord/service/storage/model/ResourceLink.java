@@ -4,7 +4,7 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 @Embeddable
-public class APIResourceLink {
+public class ResourceLink {
     @Column(name = "type", length = Integer.MAX_VALUE)
     private String type;
 

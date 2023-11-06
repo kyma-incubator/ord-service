@@ -130,6 +130,10 @@ public class EventEntity {
     @CollectionTable(name = "ord_documentation_labels_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<Label> documentationLabels;
 
+    @ElementCollection
+    @CollectionTable(name = "event_resource_links", joinColumns = @JoinColumn(name = "event_definition_id"))
+    private List<ResourceLink> eventResourceLinks;
+
     @Column(name = "implementation_standard")
     private String implementationStandard;
 
@@ -144,6 +148,9 @@ public class EventEntity {
 
     @Column(name = "last_update")
     private String lastUpdate;
+
+    @Column(name = "deprecation_date")
+    private String deprecationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "package_id", insertable = false, updatable = false)
