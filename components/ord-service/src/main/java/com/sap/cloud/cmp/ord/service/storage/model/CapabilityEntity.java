@@ -57,6 +57,10 @@ public class CapabilityEntity {
     private List<ArrayElement> tags;
 
     @ElementCollection
+    @CollectionTable(name = "entity_types_capabilities", joinColumns = @JoinColumn(name = "capability_id"))
+    private List<ArrayElement> relatedEntityTypes;
+
+    @ElementCollection
     @CollectionTable(name = "links_capabilities", joinColumns = @JoinColumn(name = "capability_id"))
     private List<Link> links;
 
