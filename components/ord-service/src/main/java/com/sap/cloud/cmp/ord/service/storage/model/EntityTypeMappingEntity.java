@@ -15,9 +15,8 @@ import javax.persistence.Table;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
-import com.sap.cloud.cmp.ord.service.storage.model.helperentities.APIModelSelector;
-import com.sap.cloud.cmp.ord.service.storage.model.helperentities.EntityTypeTarget;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 
 @Entity(name = "entityTypeMapping")
 @Table(name = "tenants_entity_type_mappings")
@@ -27,6 +26,13 @@ public class EntityTypeMappingEntity {
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
+
+    @EdmProtectedBy(name = "tenant_id")
+    @EdmIgnore
+    @Column(name = "tenant_id", length = 256)
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
 
     @EdmIgnore
     @Column(name = "api_definition_id", length = 256)

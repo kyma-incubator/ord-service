@@ -1,4 +1,4 @@
-package com.sap.cloud.cmp.ord.service.storage.model.helperentities;
+package com.sap.cloud.cmp.ord.service.storage.model;
 
 import java.io.Serializable;
 
