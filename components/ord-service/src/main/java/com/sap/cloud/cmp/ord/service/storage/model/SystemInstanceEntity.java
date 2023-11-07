@@ -61,6 +61,9 @@ public class SystemInstanceEntity {
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<CapabilityEntity> capabilities;
 
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<IntegrationDependencyEntity> integrationDependencies;
+
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)

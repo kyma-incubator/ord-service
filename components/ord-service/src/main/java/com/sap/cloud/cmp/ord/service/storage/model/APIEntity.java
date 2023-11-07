@@ -119,7 +119,7 @@ public class APIEntity {
 
     @ElementCollection
     @CollectionTable(name = "api_resource_links", joinColumns = @JoinColumn(name = "api_definition_id"))
-    private List<APIResourceLink> apiResourceLinks;
+    private List<ResourceLink> apiResourceLinks;
 
     @Column(name = "release_status")
     @NotNull
@@ -183,4 +183,7 @@ public class APIEntity {
 
     @Column(name = "last_update")
     private String lastUpdate;
+
+    @Column(name = "deprecation_date")
+    private String deprecationDate;
 }
