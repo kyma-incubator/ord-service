@@ -77,6 +77,10 @@ public class PackageEntity {
     @EdmIgnore
     private String vendorReference;
 
+    @Column(name = "runtime_restriction")
+    @EdmIgnore
+    private String runtimeRestriction;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "vendor", referencedColumnName= "ord_id", insertable = false, updatable = false),
