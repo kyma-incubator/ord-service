@@ -1,19 +1,20 @@
 package com.sap.cloud.cmp.ord.service.config;
 
-import com.sap.olingo.jpa.processor.core.api.JPAErrorProcessor;
-import com.sap.olingo.jpa.processor.core.exception.ODataJPAQueryException;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataServerError;
 
-import javax.servlet.http.HttpServletResponse;
+import com.sap.olingo.jpa.processor.core.api.JPAErrorProcessor;
+import com.sap.olingo.jpa.processor.core.exception.ODataJPAQueryException;
 
 public class CustomErrorProcessor implements JPAErrorProcessor {
 
-    public final static String ADDITIONAL_ERR_MESSAGE = " Use odata-debug query parameter with value one of the following formats: json,html,download for more information.";
+    public static final String ADDITIONAL_ERR_MESSAGE = " Use odata-debug query parameter with value one of the following formats: json,html,download for more information.";
 
-    public final String INVALID_TENANT_ID_ERROR_MESSAGE = "Missing or invalid tenantID.";
-    public final String INVALID_TENANT_ID_ERROR_CODE = "INVALID_TENANT_ID";
-    public final String JPA_EXCEPTION_ERROR_ID = "MISSING_CLAIM";
+    public static final String INVALID_TENANT_ID_ERROR_MESSAGE = "Missing or invalid tenantID.";
+    public static final String INVALID_TENANT_ID_ERROR_CODE = "INVALID_TENANT_ID";
+    public static final String JPA_EXCEPTION_ERROR_ID = "MISSING_CLAIM";
 
 
     @Override

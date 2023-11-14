@@ -16,7 +16,7 @@ then
     cd "$COMPONENT_DIR"
 else
     log_section "Pulling Olingo JPA library..."
-    git clone --single-branch --branch "$OLINGO_VERSION_TAG" https://github.com/DimitarPetrov/olingo-jpa-processor-v4.git "$OLINGO_JPA_LIB_DIR"
+    git clone --single-branch --branch "$OLINGO_VERSION_TAG" https://github.com/SAP/olingo-jpa-processor-v4.git "$OLINGO_JPA_LIB_DIR"
 fi
 
 cd "$OLINGO_JPA_LIB_DIR/jpa/"

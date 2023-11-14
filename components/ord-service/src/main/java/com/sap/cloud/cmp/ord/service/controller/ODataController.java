@@ -1,25 +1,29 @@
 package com.sap.cloud.cmp.ord.service.controller;
 
-import com.sap.cloud.cmp.ord.service.common.Common;
-import com.sap.cloud.cmp.ord.service.token.Token;
-import com.sap.cloud.cmp.ord.service.token.TokenParser;
-import com.sap.olingo.jpa.processor.core.api.JPAClaimsPair;
-import com.sap.olingo.jpa.processor.core.api.JPAODataCRUDContextAccess;
-import com.sap.olingo.jpa.processor.core.api.JPAODataClaimsProvider;
-import com.sap.olingo.jpa.processor.core.api.JPAODataGetHandler;
+import java.io.IOException;
+import java.util.UUID;
+
 import org.apache.olingo.commons.api.ex.ODataException;
 import org.apache.olingo.server.api.debug.DefaultDebugSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.UUID;
+import com.sap.cloud.cmp.ord.service.common.Common;
+import com.sap.cloud.cmp.ord.service.token.Token;
+import com.sap.cloud.cmp.ord.service.token.TokenParser;
+import com.sap.olingo.jpa.processor.core.api.JPAClaimsPair;
+import com.sap.olingo.jpa.processor.core.api.JPAODataClaimsProvider;
+import com.sap.olingo.jpa.processor.core.api.JPAODataRequestContext;
+import com.sap.olingo.jpa.processor.core.api.JPAODataRequestHandler;
+import com.sap.olingo.jpa.processor.core.api.JPAODataSessionContextAccess;
+import com.sap.olingo.jpa.processor.core.api.example.JPAExampleCUDRequestHandler;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 
 @Controller
@@ -30,27 +34,24 @@ public class ODataController {
     private TokenParser tokenParser;
 
     @Autowired
-    private JPAODataCRUDContextAccess serviceContext;
+    private JPAODataSessionContextAccess serviceContext;
 
     private static final Logger logger = LoggerFactory.getLogger(ODataController.class);
-    private final String PUBLIC_VISIBILITY = "public";
-    private final String INTERNAL_VISIBILITY = "internal";
-    private final String PRIVATE_VISIBILITY = "private";
-    private final String EMPTY_FORMATIONS_DEFAULT_FORMATION_ID_CLAIM = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee";
+    private static final String PUBLIC_VISIBILITY = "public";
+    private static final String INTERNAL_VISIBILITY = "internal";
+    private static final String PRIVATE_VISIBILITY = "private";
+    private static final String EMPTY_FORMATIONS_DEFAULT_FORMATION_ID_CLAIM = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee";
 
-    @RequestMapping(value = "**", method = {RequestMethod.GET})
+    @GetMapping(value = "**")
     public void handleODataRequest(HttpServletRequest request, HttpServletResponse response) throws ODataException, IOException {
-        final JPAODataGetHandler handler = new JPAODataGetHandler(serviceContext);
-        handler.getJPAODataRequestContext().setDebugSupport(new DefaultDebugSupport()); // Use query parameter odata-debug=json to activate.
-
+        
+      
         Token token = tokenParser.fromRequest(request);
         String tenantId = token == null ? "" : token.extractTenant();
-
         // store the tenant id, so it is available to post-OData processing filters
         request.setAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID, tenantId);
-
-        handler.getJPAODataRequestContext().setClaimsProvider(createClaims(token, tenantId));
-        handler.process(request, response);
+        final JPAODataRequestContext requestContext = createRequestContext(createClaims(token, tenantId), tenantId);
+        new JPAODataRequestHandler(serviceContext, requestContext).process(request, response);
     }
 
     private JPAODataClaimsProvider createClaims(final Token token, String tenantID) throws IOException {
@@ -90,5 +91,14 @@ public class ODataController {
         }
 
         return claims;
+    }
+    
+    private JPAODataRequestContext createRequestContext(JPAODataClaimsProvider claimsProvider, String tenantId) {
+      return JPAODataRequestContext.with()
+          .setCUDRequestHandler(new JPAExampleCUDRequestHandler())
+          .setDebugSupport(new DefaultDebugSupport())
+          .setClaimsProvider(claimsProvider)
+          .setParameter(Common.REQUEST_ATTRIBUTE_TENANT_ID, tenantId)
+          .build();
     }
 }
