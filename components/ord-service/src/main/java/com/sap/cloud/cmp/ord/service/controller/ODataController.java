@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 
 @Controller
-@RequestMapping("/${odata.jpa.request_mapping_path}/**")
+@RequestMapping("/${odata.jpa.request_mapping_path}/")
 public class ODataController {
 
     @Autowired
