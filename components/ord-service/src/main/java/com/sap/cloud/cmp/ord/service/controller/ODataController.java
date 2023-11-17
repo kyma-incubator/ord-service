@@ -67,13 +67,15 @@ public class ODataController {
             return claims;
         }
 
-        boolean shouldUseDefaultTenant = false;
+        boolean shouldUseDefaultTenant = true;
         if (token.getFormationIDsClaims().isEmpty()) {
             logger.warn("Could not determine formation claim");
             claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(EMPTY_FORMATIONS_DEFAULT_FORMATION_ID_CLAIM))); // in the consumer-provider flow, if there are currently no formations the rtCtx is part of; we will return empty array this way instead of misleading claims error
         } else {
-            shouldUseDefaultTenant = true; // when we know that the filtering will be based on formation_id/s, we want to set a default tenant_id
             for (String formationID : token.getFormationIDsClaims()) {
+                if (formationID.equals(Token.DEFAULT_FORMATION_ID_CLAIM)) {
+                    shouldUseDefaultTenant = false; // if the DEFAULT_FORMATION_ID_CLAIM is present it means that we will be filtering by tenant_id, so we don't want to use the default tenant_id
+                }
                 claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(formationID)));
             }
         }
