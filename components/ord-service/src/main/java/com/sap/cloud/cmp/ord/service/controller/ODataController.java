@@ -67,6 +67,9 @@ public class ODataController {
             return claims;
         }
 
+        final JPAClaimsPair<UUID> destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
+        claims.add("destination_tenant_id", destinationTenantJPAPair);
+
         boolean shouldUseDefaultTenant = true;
         if (token.getFormationIDsClaims().isEmpty()) {
             logger.warn("Could not determine formation claim");
@@ -80,13 +83,13 @@ public class ODataController {
             }
         }
 
+        final JPAClaimsPair<UUID> tenantIDJPAPair;
         if (shouldUseDefaultTenant) {
-            final JPAClaimsPair<UUID> tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(DEFAULT_TENANT_ID));
-            claims.add("tenant_id", tenantIDJPAPair);
+            tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(DEFAULT_TENANT_ID));
         } else {
-            final JPAClaimsPair<UUID> tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
-            claims.add("tenant_id", tenantIDJPAPair);
+            tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
         }
+        claims.add("tenant_id", tenantIDJPAPair);
 
         final JPAClaimsPair<String> publicVisibilityScopeJPAPair = new JPAClaimsPair<>(PUBLIC_VISIBILITY);
         claims.add("visibility_scope", publicVisibilityScopeJPAPair);
