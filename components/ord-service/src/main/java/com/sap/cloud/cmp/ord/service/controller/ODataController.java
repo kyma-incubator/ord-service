@@ -37,6 +37,7 @@ public class ODataController {
     private final String INTERNAL_VISIBILITY = "internal";
     private final String PRIVATE_VISIBILITY = "private";
     private final String EMPTY_FORMATIONS_DEFAULT_FORMATION_ID_CLAIM = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee";
+    private final String DEFAULT_TENANT_ID = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb";
 
     @RequestMapping(value = "**", method = {RequestMethod.GET})
     public void handleODataRequest(HttpServletRequest request, HttpServletResponse response) throws ODataException, IOException {
@@ -66,17 +67,29 @@ public class ODataController {
             return claims;
         }
 
-        final JPAClaimsPair<UUID> tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
-        claims.add("tenant_id", tenantIDJPAPair);
+        final JPAClaimsPair<UUID> destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
+        claims.add("destination_tenant_id", destinationTenantJPAPair);
 
+        boolean shouldUseDefaultTenant = true;
         if (token.getFormationIDsClaims().isEmpty()) {
             logger.warn("Could not determine formation claim");
             claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(EMPTY_FORMATIONS_DEFAULT_FORMATION_ID_CLAIM))); // in the consumer-provider flow, if there are currently no formations the rtCtx is part of; we will return empty array this way instead of misleading claims error
         } else {
             for (String formationID : token.getFormationIDsClaims()) {
+                if (formationID.equals(Token.DEFAULT_FORMATION_ID_CLAIM)) {
+                    shouldUseDefaultTenant = false; // if the DEFAULT_FORMATION_ID_CLAIM is present it means that we will be filtering by tenant_id, so we don't want to use the default tenant_id
+                }
                 claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(formationID)));
             }
         }
+
+        final JPAClaimsPair<UUID> tenantIDJPAPair;
+        if (shouldUseDefaultTenant) {
+            tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(DEFAULT_TENANT_ID));
+        } else {
+            tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
+        }
+        claims.add("tenant_id", tenantIDJPAPair);
 
         final JPAClaimsPair<String> publicVisibilityScopeJPAPair = new JPAClaimsPair<>(PUBLIC_VISIBILITY);
         claims.add("visibility_scope", publicVisibilityScopeJPAPair);
