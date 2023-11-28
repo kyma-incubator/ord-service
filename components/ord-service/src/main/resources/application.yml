@@ -27,12 +27,12 @@ spring:
       - org.springframework.boot.actuate.autoconfigure.metrics.orm.jpa.HibernateMetricsAutoConfiguration
   datasource:
     driver-class-name: org.postgresql.Driver
-    password: pgsql@12345
+    password: fBD5TidTVT0K8e
     url: jdbc:postgresql://${spring.datasource.host}:${spring.datasource.port}/${spring.datasource.db_name}
     port: 5432
     host: localhost
-    db_name: compass
-    username: postgres
+    db_name: director
+    username: director
     hikari:
       minimumIdle: 1
       idleTimeout: 60000
