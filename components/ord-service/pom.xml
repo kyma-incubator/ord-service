@@ -18,7 +18,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>17</java.version>
-		<jpa-processor>2.0.0</jpa-processor>
+		<jpa-processor>2.0.2</jpa-processor>
 		<eclipselink.version>4.0.2</eclipselink.version>
 		<jpa.version>3.1.0</jpa.version>
 	</properties>
@@ -65,7 +65,6 @@
 		<dependency>
 			<groupId>jakarta.persistence</groupId>
 			<artifactId>jakarta.persistence-api</artifactId>
-			<version>${jpa.version}</version>
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
@@ -101,7 +100,6 @@
 		<dependency>
 			<groupId>org.yaml</groupId>
 			<artifactId>snakeyaml</artifactId>
-			<version>2.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -147,42 +145,34 @@
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-codec-http</artifactId>
-			<version>4.1.100.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-common</artifactId>
-			<version>4.1.100.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-buffer</artifactId>
-			<version>4.1.100.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-transport</artifactId>
-			<version>4.1.100.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-resolver</artifactId>
-			<version>4.1.100.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-codec</artifactId>
-			<version>4.1.100.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-handler</artifactId>
-			<version>4.1.100.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>io.netty</groupId>
 			<artifactId>netty-transport-native-unix-common</artifactId>
-			<version>4.1.100.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
