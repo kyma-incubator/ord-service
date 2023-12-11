@@ -31,7 +31,7 @@ public class Token {
     private final String INTERNAL_VISIBILITY_SCOPE = "internal_visibility:read";
 
     // In case single tenant is present (discovery based on tenancy) in the call, we use this default formation claim
-    public final String DEFAULT_FORMATION_ID_CLAIM = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
+    public final static String DEFAULT_FORMATION_ID_CLAIM = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
 
     private static final ObjectMapper mapper = new ObjectMapper();
 

@@ -36,7 +36,7 @@ public class DestinationEntity {
     @Column(name = "url", length = Integer.MAX_VALUE)
     private String url;
 
-    @EdmProtectedBy(name = "tenant_id")
+    @EdmProtectedBy(name = "destination_tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
     @Convert("uuidConverter")
