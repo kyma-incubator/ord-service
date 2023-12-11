@@ -42,11 +42,14 @@ public class SpecificationsController {
             "  }\n" +
             "}";
 
-    @Autowired
     private SpecRepository specRepository;
-
-    @Autowired
     private TokenParser tokenParser;
+
+    public SpecificationsController(@Autowired final SpecRepository specRepository, @Autowired final TokenParser tokenParser) {
+      super();
+      this.specRepository = specRepository;
+      this.tokenParser = tokenParser;
+    }
 
     @GetMapping(value = "/${static.request_mapping_path}/api/{apiId}/specification/{specId}", produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody

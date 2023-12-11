@@ -30,10 +30,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @RequestMapping("/${odata.jpa.request_mapping_path}/")
 public class ODataController {
 
-    @Autowired
     private TokenParser tokenParser;
-
-    @Autowired
     private JPAODataSessionContextAccess serviceContext;
 
     private static final Logger logger = LoggerFactory.getLogger(ODataController.class);
@@ -41,6 +38,12 @@ public class ODataController {
     private static final String INTERNAL_VISIBILITY = "internal";
     private static final String PRIVATE_VISIBILITY = "private";
     private static final String EMPTY_FORMATIONS_DEFAULT_FORMATION_ID_CLAIM = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee";
+
+    public ODataController(@Autowired final TokenParser tokenParser, @Autowired final JPAODataSessionContextAccess serviceContext) {
+      super();
+      this.tokenParser = tokenParser;
+      this.serviceContext = serviceContext;
+    }
 
     @GetMapping(value = "**")
     public void handleODataRequest(HttpServletRequest request, HttpServletResponse response) throws ODataException, IOException {
