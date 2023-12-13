@@ -64,12 +64,6 @@ public class SystemInstanceEntity {
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<IntegrationDependencyEntity> integrationDependencies;
 
-    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
-    private Set<APIEntity> apis;
-
-    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
-    private Set<EventEntity> events;
-
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
