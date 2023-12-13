@@ -73,6 +73,16 @@ public class EventEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID formationID;
 
+    @EdmIgnore
+    @Column(name = "app_id", length = 256)
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID appId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    private SystemInstanceEntity systemInstance;
+
     @OneToMany(mappedBy = "eventResource", fetch = FetchType.LAZY)
     private Set<EntityTypeMappingEntity> entityTypeMappings;
 
