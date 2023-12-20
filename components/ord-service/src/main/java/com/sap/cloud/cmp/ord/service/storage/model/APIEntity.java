@@ -196,4 +196,10 @@ public class APIEntity {
 
     @Column(name = "deprecation_date")
     private String deprecationDate;
+
+    @Column(name = "responsible")
+    private String responsible;
+
+    @Column(name = "usage")
+    private String usage;
 }

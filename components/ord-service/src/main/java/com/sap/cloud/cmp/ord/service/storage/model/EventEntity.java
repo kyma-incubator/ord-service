@@ -182,4 +182,7 @@ public class EventEntity {
             joinColumns = {@JoinColumn(name = "event_definition_id")},
             inverseJoinColumns = {@JoinColumn(name = "product_id")})
     private Set<ProductEntity> products;
+
+    @Column(name = "responsible")
+    private String responsible;
 }

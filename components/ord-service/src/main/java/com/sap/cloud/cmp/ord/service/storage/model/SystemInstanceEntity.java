@@ -65,6 +65,9 @@ public class SystemInstanceEntity {
     private Set<IntegrationDependencyEntity> integrationDependencies;
 
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
+    private Set<DataProductEntity> dataProducts;
+
+    @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<APIEntity> apis;
 
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)

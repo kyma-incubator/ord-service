@@ -138,4 +138,7 @@ public class PackageEntity {
 
     @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)
     private Set<IntegrationDependencyEntity> integrationDependencies;
+
+    @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)
+    private Set<DataProductEntity> dataProducts;
 }
