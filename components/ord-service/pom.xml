@@ -18,7 +18,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>17</java.version>
-		<jpa-processor>2.0.2-SNAPSHOT</jpa-processor>
+		<jpa-processor>2.0.2</jpa-processor>
 		<eclipselink.version>4.0.2</eclipselink.version>
 		<jpa.version>3.1.0</jpa.version>
 	</properties>
