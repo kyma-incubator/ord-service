@@ -1,8 +1,6 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
-import java.util.List;
-import java.util.UUID;
-
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
@@ -18,15 +16,32 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
+import java.util.List;
+import java.util.UUID;
+
 @Entity(name = "aspectEventResource")
-@Table(name = "aspect_event_resources")
+@Table(name = "tenants_aspect_event_resources")
 public class AspectEventResource {
     // omit @EdmIgnore annotation so that the expanding between `aspects` and `aspectEventResource` can work (in both directions)
     @Id
-    @Column(name = "event_resource_id", length = 256)
+    @Column(name = "id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    private UUID eventId;
+    private UUID Id;
+
+    @EdmProtectedBy(name = "tenant_id")
+    @EdmIgnore
+    @Column(name = "tenant_id", length = 256)
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID tenant;
+
+    @EdmProtectedBy(name = "formation_scope")
+    @EdmIgnore
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
 
     @Column(name = "ord_id", length = Integer.MAX_VALUE)
     private String ordId;
