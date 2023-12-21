@@ -2,15 +2,15 @@ package com.sap.cloud.cmp.ord.service.common;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
 public class Common {
 
-    public static String REQUEST_ATTRIBUTE_TENANT_ID = "tenantId";
+    public static final String REQUEST_ATTRIBUTE_TENANT_ID = "tenantId";
 
     public static String buildRequestPath(HttpServletRequest request) {
         String pathInfo = request.getPathInfo();

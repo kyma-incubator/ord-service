@@ -1,5 +1,11 @@
 package com.sap.cloud.cmp.ord.service.config;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
+import javax.sql.DataSource;
+
 import org.eclipse.persistence.config.PersistenceUnitProperties;
 import org.eclipse.persistence.logging.SessionLog;
 import org.reflections8.Reflections;
@@ -10,18 +16,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration;
 import org.springframework.boot.autoconfigure.orm.jpa.JpaProperties;
 import org.springframework.boot.orm.jpa.EntityManagerFactoryBuilder;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.persistenceunit.PersistenceManagedTypes;
 import org.springframework.orm.jpa.vendor.AbstractJpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.EclipseLinkJpaVendorAdapter;
 import org.springframework.transaction.jta.JtaTransactionManager;
 
-import javax.persistence.Entity;
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import jakarta.persistence.Entity;
 
 @Configuration
 public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
@@ -57,13 +59,13 @@ public class EclipseLinkJpaConfiguration extends JpaBaseConfiguration {
          return map;
     }
 
-    @Bean
+    @Override
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
-            final EntityManagerFactoryBuilder builder, final DataSource ds) {
+            final EntityManagerFactoryBuilder builder, final PersistenceManagedTypes persistenceManagedTypes) {
         Set<Class<?>> entityClasses = getEntityClasses();
-
+        customizeVendorProperties(getVendorProperties());
         return builder
-                .dataSource(ds)
+                .dataSource(this.getDataSource())
                 .packages(entityClasses.toArray(new Class<?>[entityClasses.size()]))
                 .persistenceUnit(punit)
                 .properties(getVendorProperties())

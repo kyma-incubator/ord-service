@@ -1,5 +1,15 @@
 package com.sap.cloud.cmp.ord.service.controller;
 
+import java.io.IOException;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.sap.cloud.cmp.ord.service.repository.SpecRepository;
 import com.sap.cloud.cmp.ord.service.storage.model.SpecificationEntity;
 import com.sap.cloud.cmp.ord.service.token.Token;
@@ -12,26 +22,16 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.UUID;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Controller
 public class SpecificationsController {
 
     private static final String MEDIA_TYPE_YAML_VALUE = "text/yaml";
 
-    private final String NOT_FOUND_MESSAGE = "Not Found";
-    private final String INVALID_TENANT_ID_ERROR_MESSAGE = "Missing or invalid tenantID";
+    private static final String NOT_FOUND_MESSAGE = "Not Found";
+    private static final String INVALID_TENANT_ID_ERROR_MESSAGE = "Missing or invalid tenantID";
 
     private static final String UNAUTHORIZED_MSG = "{\n" +
             "  \"error\": {\n" +
@@ -42,13 +42,16 @@ public class SpecificationsController {
             "  }\n" +
             "}";
 
-    @Autowired
     private SpecRepository specRepository;
-
-    @Autowired
     private TokenParser tokenParser;
 
-    @RequestMapping(value = "/${static.request_mapping_path}/api/{apiId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    public SpecificationsController(@Autowired final SpecRepository specRepository, @Autowired final TokenParser tokenParser) {
+      super();
+      this.specRepository = specRepository;
+      this.tokenParser = tokenParser;
+    }
+
+    @GetMapping(value = "/${static.request_mapping_path}/api/{apiId}/specification/{specId}", produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     @Parameter(name = "Tenant", required = true, description = "Tenant GUID", allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "uuid")))
     @ApiResponses(value = {
@@ -78,7 +81,7 @@ public class SpecificationsController {
         }
     }
 
-    @RequestMapping(value = "/${static.request_mapping_path}/event/{eventId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @GetMapping(value = "/${static.request_mapping_path}/event/{eventId}/specification/{specId}", produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     @Parameter(name = "Tenant", description = "Tenant GUID", required = true, allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "uuid")))
     @ApiResponses(value = {
@@ -108,7 +111,7 @@ public class SpecificationsController {
         }
     }
 
-    @RequestMapping(value = "/${static.request_mapping_path}/capability/{capabilityId}/specification/{specId}", method = {RequestMethod.GET}, produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
+    @GetMapping(value = "/${static.request_mapping_path}/capability/{capabilityId}/specification/{specId}", produces = {MediaType.APPLICATION_JSON_VALUE, MEDIA_TYPE_YAML_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.TEXT_PLAIN_VALUE, MediaType.APPLICATION_OCTET_STREAM_VALUE})
     @ResponseBody
     @Parameter(name = "Tenant", description = "Tenant GUID", required = true, allowEmptyValue = false, in = ParameterIn.HEADER, content = @Content(schema = @Schema(type = "uuid")))
     @ApiResponses(value = {

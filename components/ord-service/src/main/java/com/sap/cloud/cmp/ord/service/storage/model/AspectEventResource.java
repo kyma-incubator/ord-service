@@ -1,18 +1,29 @@
 package com.sap.cloud.cmp.ord.service.storage.model;
 
-import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
-import javax.persistence.*;
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
+
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
 import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "aspectEventResource")
 @Table(name = "tenants_aspect_event_resources")
 public class AspectEventResource {
-    @javax.persistence.Id
+    // omit @EdmIgnore annotation so that the expanding between `aspects` and `aspectEventResource` can work (in both directions)
+    @Id
     @Column(name = "id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)

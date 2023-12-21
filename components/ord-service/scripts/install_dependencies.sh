@@ -3,7 +3,7 @@
 COMPONENT_DIR=${COMPONENT_DIR:-"$(pwd)/$(dirname $0)/../"}
 
 OLINGO_JPA_LIB_DIR="$COMPONENT_DIR/olingo-jpa-processor-v4"
-OLINGO_VERSION_TAG=$(sed -n '/jpa-processor/{s/.*<jpa-processor>//;s/-SNAPSHOT<\/jpa-processor.*//;p;}' $COMPONENT_DIR/pom.xml | head -1)
+OLINGO_VERSION_TAG=$(sed -n '/jpa-processor/{s/.*<jpa-processor>//;s/<\/jpa-processor.*//;p;}' $COMPONENT_DIR/pom.xml | head -1)
 
 source "$COMPONENT_DIR/scripts/commons.sh"
 
@@ -16,7 +16,7 @@ then
     cd "$COMPONENT_DIR"
 else
     log_section "Pulling Olingo JPA library..."
-    git clone --single-branch --branch "$OLINGO_VERSION_TAG" https://github.com/DimitarPetrov/olingo-jpa-processor-v4.git "$OLINGO_JPA_LIB_DIR"
+    git clone --single-branch --branch "$OLINGO_VERSION_TAG" https://github.com/SAP/olingo-jpa-processor-v4.git "$OLINGO_JPA_LIB_DIR"
 fi
 
 cd "$OLINGO_JPA_LIB_DIR/jpa/"

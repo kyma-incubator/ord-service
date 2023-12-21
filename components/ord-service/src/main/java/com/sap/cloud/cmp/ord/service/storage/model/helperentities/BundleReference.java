@@ -1,19 +1,22 @@
 package com.sap.cloud.cmp.ord.service.storage.model.helperentities;
 
-import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
+import java.util.UUID;
+
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import java.util.UUID;
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @EdmIgnore
 @Table(name = "bundle_references")
 @Entity(name = "bundleReference")
 public class BundleReference {
-    @javax.persistence.Id
+    @Id
     @Column(name = "id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
