@@ -2,11 +2,14 @@ package com.sap.cloud.cmp.ord.service.storage.model;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
+import jakarta.persistence.Column;
+import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class APIModelSelector implements Serializable {
+
+    private static final long serialVersionUID = -8149719418262015740L;
+
     @Column(name = "type", length = Integer.MAX_VALUE)
     private String type;
 

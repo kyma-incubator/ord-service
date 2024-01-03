@@ -7,10 +7,9 @@ import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
-import javax.persistence.AttributeConverter;
-import javax.persistence.Converter;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Iterator;
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Converter
 @Component
