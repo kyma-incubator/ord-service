@@ -2,18 +2,19 @@ package com.sap.cloud.cmp.ord.service.storage.model;
 
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
 @Entity(name = "dataProduct")
 @Table(name = "tenants_data_products")
 public class DataProductEntity {
-    @javax.persistence.Id
+    @jakarta.persistence.Id
     @Column(name = "id")
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
@@ -54,6 +55,7 @@ public class DataProductEntity {
     private List<ArrayElement> correlationIds;
 
     @Column(name = "title", length = 256)
+    @NotNull
     private String title;
 
     @Column(name = "short_description", length = 256)

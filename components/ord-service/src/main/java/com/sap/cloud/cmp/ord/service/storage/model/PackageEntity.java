@@ -128,6 +128,9 @@ public class PackageEntity {
     @CollectionTable(name = "ord_documentation_labels_packages", joinColumns = @JoinColumn(name = "package_id"))
     private List<Label> documentationLabels;
 
+    @Column(name = "runtime_restriction", length = Integer.MAX_VALUE)
+    private String runtimeRestriction;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "package_product",
