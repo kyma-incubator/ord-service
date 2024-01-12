@@ -88,6 +88,9 @@ public class BundleEntity {
     @CollectionTable(name = "correlation_ids_bundles", joinColumns = @JoinColumn(name = "bundle_id", referencedColumnName= "id"))
     private List<ArrayElement> correlationIds;
 
+    @Column(name = "last_update")
+    private String lastUpdate;
+
     @EdmIgnore
     @Column(name = "app_id", length = 256)
     @Convert("uuidConverter")
