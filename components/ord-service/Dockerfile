@@ -28,7 +28,7 @@ RUN ./run.sh --skip-deps --no-start --skip-tests && \
     VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate -Dexpression=project.version -DforceStdout -q) && \
     mkdir /app && mv ./target/ord-service-$VERSION.jar /app/ord-service.jar
 
-FROM eclipse-temurin:17.0.8.1_1-jre-alpine
+FROM eclipse-temurin:17.0.9_9-jre-alpine
 LABEL source = git@github.com:kyma-incubator/compass.git
 WORKDIR /app
 
