@@ -64,6 +64,29 @@ public class SystemInstanceEntity {
     @OneToMany(mappedBy = "systemInstance", fetch = FetchType.LAZY)
     private Set<IntegrationDependencyEntity> integrationDependencies;
 
+    @OneToMany(mappedBy = "sender", fetch = FetchType.LAZY)
+    private Set<TenantToTenantTechnicalIntegrationEntity> senderInTechnicalIntegrations;
+
+    @OneToMany(mappedBy = "receiver", fetch = FetchType.LAZY)
+    private Set<TenantToTenantTechnicalIntegrationEntity> receiverInTechnicalIntegrations;
+
+    @EdmIgnore
+    @Column(name = "app_template_id", length = 256)
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID appTemplateId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "app_template_id", insertable = false, updatable = false)
+    private SystemTypeEntity systemType;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "apps_business_tenants",
+            joinColumns = {@JoinColumn(name = "id")},
+            inverseJoinColumns = {@JoinColumn(name = "tenant_id")})
+    private Set<BusinessTenantEntity> businessTenants;
+
     @EdmProtectedBy(name = "tenant_id")
     @EdmIgnore
     @Column(name = "tenant_id", length = 256)
