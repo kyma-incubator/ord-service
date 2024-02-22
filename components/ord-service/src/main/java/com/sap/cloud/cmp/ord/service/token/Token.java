@@ -40,6 +40,8 @@ public class Token {
 
     private Set<String> formationIDsClaims;
 
+    private String callerID;
+
     public Token(SubscriptionHelper subscriptionHelper, String idTokenEncoded) throws JsonMappingException, JsonProcessingException {
         this.subscriptionHelper = subscriptionHelper;
         String idTokenDecoded = decodeIDToken(idTokenEncoded);
@@ -84,6 +86,7 @@ public class Token {
                 tokenClientId, subscriptionHelper.getRegionKey(), tokenRegion);
             for (String runtimeId : runtimeIds) {
                 String runtimeSubscriptionAvailableInTenant = repo.getRuntimeSubscriptionAvailableInTenant(tenant, runtimeId);
+                this.callerID = runtimeSubscriptionAvailableInTenant;
                 if (runtimeSubscriptionAvailableInTenant != null && !runtimeSubscriptionAvailableInTenant.isEmpty()) {
                     Set<String> formationIDs = repo.getFormationsThatRuntimeSubscriptionAvailableInTenantIsPartOf(runtimeSubscriptionAvailableInTenant);
                     this.formationIDsClaims.addAll(formationIDs);
@@ -95,6 +98,7 @@ public class Token {
                     tokenClientId, subscriptionHelper.getRegionKey(), tokenRegion);
             for (String appTemplateId : appTemplateIds) {
                 String applicationSubscriptionAvailableInTenant = repo.getApplicationSubscriptionAvailableInTenant(tenant, appTemplateId);
+                this.callerID = applicationSubscriptionAvailableInTenant;
                 if (applicationSubscriptionAvailableInTenant != null && !applicationSubscriptionAvailableInTenant.isEmpty()) {
                     Set<String> formationIDs = repo.getFormationsThatApplicationSubscriptionAvailableInTenantIsPartOf(applicationSubscriptionAvailableInTenant);
                     this.formationIDsClaims.addAll(formationIDs);
@@ -115,6 +119,10 @@ public class Token {
 
     public Set<String> getFormationIDsClaims() {
         return this.formationIDsClaims;
+    }
+
+    public String getCallerID() {
+        return this.callerID;
     }
 
     private String decodeIDToken(String idTokenEncoded) {
