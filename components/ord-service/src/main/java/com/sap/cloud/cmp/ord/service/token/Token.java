@@ -26,6 +26,7 @@ public class Token {
 
     private static final String TOKEN_CLIENT_ID_KEY = "tokenClientID";
     private static final String TOKEN_REGION_KEY = "region";
+    private static final String CONSUMER_ID_KEY = "consumerID";
 
     private static final String SCOPES_KEY = "scopes";
     private final String INTERNAL_VISIBILITY_SCOPE = "internal_visibility:read";
@@ -40,11 +41,14 @@ public class Token {
 
     private Set<String> formationIDsClaims;
 
-    public Token(SubscriptionHelper subscriptionHelper, String idTokenEncoded) throws JsonMappingException, JsonProcessingException {
+    private String applicationTenantId;
+
+    public Token(SubscriptionHelper subscriptionHelper, String idTokenEncoded, String applicationTenantId) throws JsonMappingException, JsonProcessingException {
         this.subscriptionHelper = subscriptionHelper;
         String idTokenDecoded = decodeIDToken(idTokenEncoded);
         this.content = mapper.readTree(idTokenDecoded);
         this.formationIDsClaims = new HashSet<>();
+        this.applicationTenantId = applicationTenantId;
     }
 
     public String extractTenant() {
@@ -52,11 +56,22 @@ public class Token {
 
         String providerTenantID = "";
         try {
+            SelfRegisteredRepository repo = subscriptionHelper.getRepo();
+
             JsonNode tenantsTree = mapper.readTree(unescapedTenants);
 
             String tenant = tenantsTree.path(CONSUMER_TENANT_KEY).asText();
             providerTenantID = tenantsTree.path(PROVIDER_TENANT_KEY).asText();
+            String consumerID = tenantsTree.path(CONSUMER_ID_KEY).asText();
             if (providerTenantID == null || providerTenantID.isEmpty() || providerTenantID.equals(tenant)) {
+                if (!applicationTenantId.isEmpty()) {
+                    logger.info("Application local tenant ID is provided through header. Checking for application with local tenant ID {} and app template ID {}", applicationTenantId, consumerID);
+                    String appId = repo.findApplicationByLocalTenantIdAndApplicationTemplateId(applicationTenantId, consumerID);
+                    Set<String> formationIDs = repo.getFormationsThatApplicationSubscriptionAvailableInTenantIsPartOf(appId);
+                    this.formationIDsClaims.addAll(formationIDs);
+                    return tenant;
+                }
+
                 this.formationIDsClaims.add(DEFAULT_FORMATION_ID_CLAIM);
                 return tenant;
             }
@@ -79,7 +94,6 @@ public class Token {
                 return "";
             }
 
-            SelfRegisteredRepository repo = subscriptionHelper.getRepo();
             Set<String> runtimeIds = repo.findSelfRegisteredRuntimesByLabels(providerTenantID, subscriptionHelper.getSelfRegKey(),
                 tokenClientId, subscriptionHelper.getRegionKey(), tokenRegion);
             for (String runtimeId : runtimeIds) {

@@ -29,4 +29,7 @@ public interface SelfRegisteredRepository extends JpaRepository<RootEntity, Inte
 
     @Query(nativeQuery = true, value = "SELECT f.id FROM formations f WHERE jsonb_exists((SELECT l.value FROM labels l WHERE l.key = 'scenarios' and l.app_id = uuid(?1)), f.name) AND f.formation_template_id IN (SELECT ft.id FROM formation_templates ft WHERE jsonb_exists(ft.discovery_consumers, (SELECT l.value->>0 FROM labels l WHERE l.key = 'applicationType' AND l.app_id = uuid(?1))))")
     Set<String> getFormationsThatApplicationSubscriptionAvailableInTenantIsPartOf(String appId);
+
+    @Query(nativeQuery = true, value = "SELECT id FROM applications WHERE local_tenant_id = uuid(?1) and app_template_id = uuid(?2)")
+    String findApplicationByLocalTenantIdAndApplicationTemplateId(String appLocalTenantId, String appTemplateId);
 }

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 public class TokenParser {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String APPLICATION_TENANT_ID_HEADER_KEY = "applicationTenantId";
 
     private SubscriptionHelper subscriptionHelper;
 
@@ -21,6 +22,8 @@ public class TokenParser {
             return null;
         }
 
-        return new Token(subscriptionHelper, idToken);
+        final String applicationTenantId = request.getHeader(APPLICATION_TENANT_ID_HEADER_KEY);
+
+        return new Token(subscriptionHelper, idToken, applicationTenantId);
     }
 }
