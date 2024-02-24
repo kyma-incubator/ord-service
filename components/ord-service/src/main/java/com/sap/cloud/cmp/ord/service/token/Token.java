@@ -62,10 +62,14 @@ public class Token {
 
             String tenant = tenantsTree.path(CONSUMER_TENANT_KEY).asText();
             providerTenantID = tenantsTree.path(PROVIDER_TENANT_KEY).asText();
-            String consumerID = tenantsTree.path(CONSUMER_ID_KEY).asText();
+            String consumerID = content.get(CONSUMER_ID_KEY).asText();
             if (providerTenantID == null || providerTenantID.isEmpty() || providerTenantID.equals(tenant)) {
                 if (applicationTenantId != null && !applicationTenantId.isEmpty()) {
-                    logger.info("Application local tenant ID is provided through header. Checking for application with local tenant ID {} and app template ID {}", applicationTenantId, consumerID);
+                    logger.info("Application local tenant ID is provided through header");
+                    if (consumerID == null || consumerID.isEmpty()) {
+                        logger.error("consumer ID could not be empty");
+                    }
+                    logger.info("Checking for application with local tenant ID {} and app template ID {}", applicationTenantId, consumerID);
                     String appId = repo.findApplicationByLocalTenantIdAndApplicationTemplateId(applicationTenantId, consumerID);
                     Set<String> formationIDs = repo.getFormationsThatApplicationSubscriptionAvailableInTenantIsPartOf(appId);
                     this.formationIDsClaims.addAll(formationIDs);
