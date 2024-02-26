@@ -25,7 +25,6 @@ import com.sap.olingo.jpa.processor.core.api.example.JPAExampleCUDRequestHandler
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-
 @Controller
 @RequestMapping("/${odata.jpa.request_mapping_path}/")
 public class ODataController {
@@ -41,9 +40,9 @@ public class ODataController {
     private final String DEFAULT_TENANT_ID = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb";
 
     public ODataController(@Autowired final TokenParser tokenParser, @Autowired final JPAODataSessionContextAccess serviceContext) {
-      super();
-      this.tokenParser = tokenParser;
-      this.serviceContext = serviceContext;
+        super();
+        this.tokenParser = tokenParser;
+        this.serviceContext = serviceContext;
     }
 
     @GetMapping(value = "**")
@@ -66,12 +65,14 @@ public class ODataController {
         }
 
         if (tenantID == null || tenantID.isEmpty()) {
-            logger.warn("Could not determine tenant claim");
-            return claims;
+            if (token.applicationTenantId != null && !token.applicationTenantId.isEmpty()) {
+                logger.warn("Application tenant ID is provided through header and tenant ID is empty");
+                tenantID = "";
+            } else {
+                logger.warn("Could not determine tenant claim");
+                return claims;
+            }
         }
-
-        final JPAClaimsPair<UUID> destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
-        claims.add("destination_tenant_id", destinationTenantJPAPair);
 
         boolean shouldUseDefaultTenant = true;
         if (token.getFormationIDsClaims().isEmpty()) {
@@ -87,12 +88,16 @@ public class ODataController {
         }
 
         final JPAClaimsPair<UUID> tenantIDJPAPair;
+        final JPAClaimsPair<UUID> destinationTenantJPAPair;
         if (shouldUseDefaultTenant) {
             tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(DEFAULT_TENANT_ID));
+            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(DEFAULT_TENANT_ID));
         } else {
             tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
+            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
         }
         claims.add("tenant_id", tenantIDJPAPair);
+        claims.add("destination_tenant_id", destinationTenantJPAPair);
 
         final JPAClaimsPair<String> publicVisibilityScopeJPAPair = new JPAClaimsPair<>(PUBLIC_VISIBILITY);
         claims.add("visibility_scope", publicVisibilityScopeJPAPair);
@@ -107,13 +112,13 @@ public class ODataController {
 
         return claims;
     }
-    
+
     private JPAODataRequestContext createRequestContext(JPAODataClaimsProvider claimsProvider, String tenantId) {
-      return JPAODataRequestContext.with()
-          .setCUDRequestHandler(new JPAExampleCUDRequestHandler())
-          .setDebugSupport(new DefaultDebugSupport())
-          .setClaimsProvider(claimsProvider)
-          .setParameter(Common.REQUEST_ATTRIBUTE_TENANT_ID, tenantId)
-          .build();
+        return JPAODataRequestContext.with()
+                                     .setCUDRequestHandler(new JPAExampleCUDRequestHandler())
+                                     .setDebugSupport(new DefaultDebugSupport())
+                                     .setClaimsProvider(claimsProvider)
+                                     .setParameter(Common.REQUEST_ATTRIBUTE_TENANT_ID, tenantId)
+                                     .build();
     }
 }

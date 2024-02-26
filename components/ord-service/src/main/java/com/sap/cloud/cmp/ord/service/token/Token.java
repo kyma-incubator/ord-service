@@ -41,7 +41,7 @@ public class Token {
 
     private Set<String> formationIDsClaims;
 
-    private String applicationTenantId;
+    public String applicationTenantId;
 
     public Token(SubscriptionHelper subscriptionHelper, String idTokenEncoded, String applicationTenantId) throws JsonMappingException, JsonProcessingException {
         this.subscriptionHelper = subscriptionHelper;
@@ -68,6 +68,7 @@ public class Token {
                     logger.info("Application local tenant ID is provided through header");
                     if (consumerID == null || consumerID.isEmpty()) {
                         logger.error("consumer ID could not be empty");
+                        return tenant;
                     }
                     logger.info("Checking for application with local tenant ID {} and app template ID {}", applicationTenantId, consumerID);
                     String appId = repo.findApplicationByLocalTenantIdAndApplicationTemplateId(applicationTenantId, consumerID);
