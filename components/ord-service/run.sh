@@ -62,6 +62,9 @@ if [[ ${SKIP_TESTS} = true ]]; then
 else
     log_section "Proceeding with installing Open Resource Discovery Service..."
     source "$COMPONENT_DIR/scripts/build.sh"
+    EXIT_STATUS=$?
+    if [[ ${EXIT_STATUS} -ne 0 ]]; then MSG="(exit status: ${EXIT_STATUS})"; fi
+    exit ${EXIT_STATUS}
 fi
 
 if [[ ${NO_START} = true ]]; then
