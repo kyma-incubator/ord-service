@@ -4,6 +4,9 @@ COMPONENT_DIR="$(pwd)/$(dirname $0)"
 
 source "$COMPONENT_DIR/scripts/commons.sh"
 
+# exit on error
+set -e
+
 NO_START=false
 SKIP_TESTS=false
 SKIP_DEPS=false

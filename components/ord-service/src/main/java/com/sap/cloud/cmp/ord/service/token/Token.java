@@ -34,6 +34,8 @@ public class Token {
     // In case single tenant is present (discovery based on tenancy) in the call, we use this default formation claim
     public final static String DEFAULT_FORMATION_ID_CLAIM = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa";
 
+    public static final String EMPTY_TENANT_DUE_TO_MISSING_CONSUMER_ID = "emptyTenant";
+
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private SubscriptionHelper subscriptionHelper;
@@ -68,12 +70,15 @@ public class Token {
                     String consumerID = content.get(CONSUMER_ID_KEY).asText();
                     if (consumerID == null || consumerID.isEmpty()) {
                         logger.error("consumer ID could not be empty");
-                        return tenant;
+                        return Token.EMPTY_TENANT_DUE_TO_MISSING_CONSUMER_ID;
                     }
                     logger.info("Checking for application with local tenant ID {} and app template ID {}", applicationTenantId, consumerID);
                     String appId = repo.findApplicationByLocalTenantIdAndApplicationTemplateId(applicationTenantId, consumerID);
-                    Set<String> formationIDs = repo.getFormationsThatApplicationSubscriptionAvailableInTenantIsPartOf(appId);
-                    this.formationIDsClaims.addAll(formationIDs);
+                    if (appId != null && !appId.isEmpty()) {
+                        Set<String> formationIDs = repo.getFormationsThatApplicationIsPartOf(appId);
+                        this.formationIDsClaims.addAll(formationIDs);
+                        return tenant;
+                    }
                     return tenant;
                 }
 
@@ -115,13 +120,14 @@ public class Token {
             for (String appTemplateId : appTemplateIds) {
                 String applicationSubscriptionAvailableInTenant = repo.getApplicationSubscriptionAvailableInTenant(tenant, appTemplateId);
                 if (applicationSubscriptionAvailableInTenant != null && !applicationSubscriptionAvailableInTenant.isEmpty()) {
-                    Set<String> formationIDs = repo.getFormationsThatApplicationSubscriptionAvailableInTenantIsPartOf(applicationSubscriptionAvailableInTenant);
+                    Set<String> formationIDs = repo.getFormationsThatApplicationIsPartOf(applicationSubscriptionAvailableInTenant);
                     this.formationIDsClaims.addAll(formationIDs);
                     return tenant;
                 }
             }
 
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
 
         this.formationIDsClaims.add(DEFAULT_FORMATION_ID_CLAIM);
         return providerTenantID;

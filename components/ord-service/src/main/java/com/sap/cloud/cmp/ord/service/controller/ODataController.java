@@ -64,14 +64,24 @@ public class ODataController {
             return claims;
         }
 
+        if (tenantID.equals(Token.EMPTY_TENANT_DUE_TO_MISSING_CONSUMER_ID)) {
+            return claims;
+        }
+
         if (tenantID == null || tenantID.isEmpty()) {
             if (token.applicationTenantId != null && !token.applicationTenantId.isEmpty()) {
                 logger.warn("Application tenant ID is provided through header and tenant ID is empty");
-                tenantID = "";
             } else {
                 logger.warn("Could not determine tenant claim");
                 return claims;
             }
+        }
+
+        final JPAClaimsPair<UUID> destinationTenantJPAPair;
+        if (tenantID == null || tenantID.isEmpty()) {
+            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(DEFAULT_TENANT_ID));
+        } else {
+            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
         }
 
         boolean shouldUseDefaultTenant = true;
@@ -88,13 +98,10 @@ public class ODataController {
         }
 
         final JPAClaimsPair<UUID> tenantIDJPAPair;
-        final JPAClaimsPair<UUID> destinationTenantJPAPair;
         if (shouldUseDefaultTenant) {
             tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(DEFAULT_TENANT_ID));
-            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(DEFAULT_TENANT_ID));
         } else {
             tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
-            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
         }
         claims.add("tenant_id", tenantIDJPAPair);
         claims.add("destination_tenant_id", destinationTenantJPAPair);
