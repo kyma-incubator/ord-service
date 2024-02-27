@@ -170,7 +170,7 @@ public class FetchingDestinationsTest {
     @Test
     public void testReloadFilter_ReturnsODataResponse_WhenCallToDestinationFetcherSucceeds() throws Exception {
         String odataResponse = "{}";
-        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE, null)); // todo::: adapt
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
 
         TestLogic testLogic = () -> {
             mvc.perform(
