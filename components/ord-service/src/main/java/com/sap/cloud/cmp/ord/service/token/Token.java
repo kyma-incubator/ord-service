@@ -40,6 +40,8 @@ public class Token {
 
     private Set<String> formationIDsClaims;
 
+    private String callerID;
+
     public Token(SubscriptionHelper subscriptionHelper, String idTokenEncoded) throws JsonMappingException, JsonProcessingException {
         this.subscriptionHelper = subscriptionHelper;
         String idTokenDecoded = decodeIDToken(idTokenEncoded);
@@ -85,6 +87,7 @@ public class Token {
             for (String runtimeId : runtimeIds) {
                 String runtimeSubscriptionAvailableInTenant = repo.getRuntimeSubscriptionAvailableInTenant(tenant, runtimeId);
                 if (runtimeSubscriptionAvailableInTenant != null && !runtimeSubscriptionAvailableInTenant.isEmpty()) {
+                    this.callerID = runtimeSubscriptionAvailableInTenant;
                     Set<String> formationIDs = repo.getFormationsThatRuntimeSubscriptionAvailableInTenantIsPartOf(runtimeSubscriptionAvailableInTenant);
                     this.formationIDsClaims.addAll(formationIDs);
                     return tenant;
@@ -96,6 +99,7 @@ public class Token {
             for (String appTemplateId : appTemplateIds) {
                 String applicationSubscriptionAvailableInTenant = repo.getApplicationSubscriptionAvailableInTenant(tenant, appTemplateId);
                 if (applicationSubscriptionAvailableInTenant != null && !applicationSubscriptionAvailableInTenant.isEmpty()) {
+                    this.callerID = applicationSubscriptionAvailableInTenant;
                     Set<String> formationIDs = repo.getFormationsThatApplicationSubscriptionAvailableInTenantIsPartOf(applicationSubscriptionAvailableInTenant);
                     this.formationIDsClaims.addAll(formationIDs);
                     return tenant;
@@ -115,6 +119,10 @@ public class Token {
 
     public Set<String> getFormationIDsClaims() {
         return this.formationIDsClaims;
+    }
+
+    public String getCallerID() {
+        return this.callerID;
     }
 
     private String decodeIDToken(String idTokenEncoded) {
