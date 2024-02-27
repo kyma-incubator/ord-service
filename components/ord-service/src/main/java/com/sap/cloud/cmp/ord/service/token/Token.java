@@ -40,10 +40,10 @@ public class Token {
 
     private SubscriptionHelper subscriptionHelper;
     private JsonNode content;
-
     private Set<String> formationIDsClaims;
-
     public String applicationTenantId;
+
+    private String callerID;
 
     public Token(SubscriptionHelper subscriptionHelper, String idTokenEncoded, String applicationTenantId) throws JsonMappingException, JsonProcessingException {
         this.subscriptionHelper = subscriptionHelper;
@@ -75,6 +75,7 @@ public class Token {
                     logger.info("Checking for application with local tenant ID {} and app template ID {}", applicationTenantId, consumerID);
                     String appId = repo.findApplicationByLocalTenantIdAndApplicationTemplateId(applicationTenantId, consumerID);
                     if (appId != null && !appId.isEmpty()) {
+                        this.callerID = appId;
                         Set<String> formationIDs = repo.getFormationsThatApplicationIsPartOf(appId);
                         this.formationIDsClaims.addAll(formationIDs);
                         return tenant;
@@ -109,6 +110,7 @@ public class Token {
             for (String runtimeId : runtimeIds) {
                 String runtimeSubscriptionAvailableInTenant = repo.getRuntimeSubscriptionAvailableInTenant(tenant, runtimeId);
                 if (runtimeSubscriptionAvailableInTenant != null && !runtimeSubscriptionAvailableInTenant.isEmpty()) {
+                    this.callerID = runtimeSubscriptionAvailableInTenant;
                     Set<String> formationIDs = repo.getFormationsThatRuntimeSubscriptionAvailableInTenantIsPartOf(runtimeSubscriptionAvailableInTenant);
                     this.formationIDsClaims.addAll(formationIDs);
                     return tenant;
@@ -120,14 +122,14 @@ public class Token {
             for (String appTemplateId : appTemplateIds) {
                 String applicationSubscriptionAvailableInTenant = repo.getApplicationSubscriptionAvailableInTenant(tenant, appTemplateId);
                 if (applicationSubscriptionAvailableInTenant != null && !applicationSubscriptionAvailableInTenant.isEmpty()) {
+                    this.callerID = applicationSubscriptionAvailableInTenant;
                     Set<String> formationIDs = repo.getFormationsThatApplicationIsPartOf(applicationSubscriptionAvailableInTenant);
                     this.formationIDsClaims.addAll(formationIDs);
                     return tenant;
                 }
             }
 
-        } catch (IOException ignored) {
-        }
+        } catch (IOException ignored) {}
 
         this.formationIDsClaims.add(DEFAULT_FORMATION_ID_CLAIM);
         return providerTenantID;
@@ -140,6 +142,10 @@ public class Token {
 
     public Set<String> getFormationIDsClaims() {
         return this.formationIDsClaims;
+    }
+
+    public String getCallerID() {
+        return this.callerID;
     }
 
     private String decodeIDToken(String idTokenEncoded) {

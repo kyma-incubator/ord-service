@@ -36,7 +36,7 @@ public class ODataController {
     private final String PUBLIC_VISIBILITY = "public";
     private final String INTERNAL_VISIBILITY = "internal";
     private final String PRIVATE_VISIBILITY = "private";
-    private final String EMPTY_FORMATIONS_DEFAULT_FORMATION_ID_CLAIM = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee";
+    private final String DEFAULT_EMPTY_ID_CLAIM = "eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee";
     private final String DEFAULT_TENANT_ID = "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb";
 
     public ODataController(@Autowired final TokenParser tokenParser, @Autowired final JPAODataSessionContextAccess serviceContext) {
@@ -84,10 +84,17 @@ public class ODataController {
             destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
         }
 
+        String callerID = token.getCallerID();
+        if (callerID == null || callerID.isEmpty()) {
+            claims.add("caller_id",new JPAClaimsPair<>(UUID.fromString(DEFAULT_EMPTY_ID_CLAIM))); // avoid returning misleading claims error
+        } else {
+            claims.add("caller_id",new JPAClaimsPair<>(UUID.fromString(callerID)));
+        }
+
         boolean shouldUseDefaultTenant = true;
         if (token.getFormationIDsClaims().isEmpty()) {
             logger.warn("Could not determine formation claim");
-            claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(EMPTY_FORMATIONS_DEFAULT_FORMATION_ID_CLAIM))); // in the consumer-provider flow, if there are currently no formations the rtCtx is part of; we will return empty array this way instead of misleading claims error
+            claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(DEFAULT_EMPTY_ID_CLAIM))); // in the consumer-provider flow, if there are currently no formations the rtCtx is part of; we will return empty array this way instead of misleading claims error
         } else {
             for (String formationID : token.getFormationIDsClaims()) {
                 if (formationID.equals(Token.DEFAULT_FORMATION_ID_CLAIM)) {
