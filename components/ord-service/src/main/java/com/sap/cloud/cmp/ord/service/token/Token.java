@@ -86,8 +86,8 @@ public class Token {
                 tokenClientId, subscriptionHelper.getRegionKey(), tokenRegion);
             for (String runtimeId : runtimeIds) {
                 String runtimeSubscriptionAvailableInTenant = repo.getRuntimeSubscriptionAvailableInTenant(tenant, runtimeId);
-                this.callerID = runtimeSubscriptionAvailableInTenant;
                 if (runtimeSubscriptionAvailableInTenant != null && !runtimeSubscriptionAvailableInTenant.isEmpty()) {
+                    this.callerID = runtimeSubscriptionAvailableInTenant;
                     Set<String> formationIDs = repo.getFormationsThatRuntimeSubscriptionAvailableInTenantIsPartOf(runtimeSubscriptionAvailableInTenant);
                     this.formationIDsClaims.addAll(formationIDs);
                     return tenant;
@@ -98,8 +98,8 @@ public class Token {
                     tokenClientId, subscriptionHelper.getRegionKey(), tokenRegion);
             for (String appTemplateId : appTemplateIds) {
                 String applicationSubscriptionAvailableInTenant = repo.getApplicationSubscriptionAvailableInTenant(tenant, appTemplateId);
-                this.callerID = applicationSubscriptionAvailableInTenant;
                 if (applicationSubscriptionAvailableInTenant != null && !applicationSubscriptionAvailableInTenant.isEmpty()) {
+                    this.callerID = applicationSubscriptionAvailableInTenant;
                     Set<String> formationIDs = repo.getFormationsThatApplicationSubscriptionAvailableInTenantIsPartOf(applicationSubscriptionAvailableInTenant);
                     this.formationIDsClaims.addAll(formationIDs);
                     return tenant;
