@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 
+import com.sap.cloud.cmp.ord.service.token.SubscriptionHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -54,7 +55,7 @@ import com.sap.olingo.jpa.processor.core.api.JPAODataSessionContextAccess;
 @SpringBootTest(classes = DestinationFetcherClient.class, properties = "spring.main.lazy-initialization=true")
 public class FetchingDestinationsTest {
 
-    private static final String TOKEN_VALUE = "eyAiYWxnIjogIlJTMjU2IiwgImtpZCI6ICI4NTQ3NzFlMi00MGFlLTQyMzctOTcwNi1kMTg5NDc2M2Y4N2IiLCAidHlwIjogIkpXVCIgfQo.eyAiY29uc3VtZXJzIjogIlt7XCJDb25zdW1lcklEXCI6XCJhZG1pblwiLFwiQ29uc3VtZXJUeXBlXCI6XCJTdGF0aWMgVXNlclwiLFwiRmxvd1wiOlwiSldUXCJ9XSIsICJleHAiOiAxNjMzMTAxNTI5LCAiaWF0IjogMTYzMzA5NzkyOSwgImlzcyI6ICJodHRwczovL29hdGhrZWVwZXIua3ltYS5sb2NhbC8iLCAianRpIjogIjg1NmNkNWU4LWQ4NzEtNDM5MS04MDI5LTI4NmRjZTcyMzRjZiIsICJuYmYiOiAxNjMzMDk3OTI5LCAic2NvcGVzIjogImFwcGxpY2F0aW9uOnJlYWQgYXBwbGljYXRpb246d3JpdGUgYXBwbGljYXRpb25fdGVtcGxhdGU6cmVhZCBhcHBsaWNhdGlvbl90ZW1wbGF0ZTp3cml0ZSBpbnRlZ3JhdGlvbl9zeXN0ZW06cmVhZCBpbnRlZ3JhdGlvbl9zeXN0ZW06d3JpdGUgcnVudGltZTpyZWFkIHJ1bnRpbWU6d3JpdGUgbGFiZWxfZGVmaW5pdGlvbjpyZWFkIGxhYmVsX2RlZmluaXRpb246d3JpdGUgZXZlbnRpbmc6bWFuYWdlIHRlbmFudDpyZWFkIGF1dG9tYXRpY19zY2VuYXJpb19hc3NpZ25tZW50OnJlYWQgYXV0b21hdGljX3NjZW5hcmlvX2Fzc2lnbm1lbnQ6d3JpdGUgYXBwbGljYXRpb24uYXV0aHM6cmVhZCBhcHBsaWNhdGlvbi53ZWJob29rczpyZWFkIGFwcGxpY2F0aW9uX3RlbXBsYXRlLndlYmhvb2tzOnJlYWQgYnVuZGxlLmluc3RhbmNlX2F1dGhzOnJlYWQgZG9jdW1lbnQuZmV0Y2hfcmVxdWVzdDpyZWFkIGV2ZW50X3NwZWMuZmV0Y2hfcmVxdWVzdDpyZWFkIGFwaV9zcGVjLmZldGNoX3JlcXVlc3Q6cmVhZCBpbnRlZ3JhdGlvbl9zeXN0ZW0uYXV0aHM6cmVhZCBydW50aW1lLmF1dGhzOnJlYWQgZmV0Y2gtcmVxdWVzdC5hdXRoOnJlYWQgd2ViaG9va3MuYXV0aDpyZWFkIGludGVybmFsX3Zpc2liaWxpdHk6cmVhZCIsICJzdWIiOiAiQ2lCcmQzbDNielUxY1hZek1UZGhNWGsxYjNKbGNUZGpaM1pxY3pNMk1XMXRieElGYkc5allXdyIsICJ0ZW5hbnQiOiJ7XCJjb25zdW1lclRlbmFudFwiOlwiM2U2NGViYWUtMzhiNS00NmEwLWIxZWQtOWNjZWUxNTNhMGFlXCIsXCJleHRlcm5hbFRlbmFudFwiOlwiM2U2NGViYWUtMzhiNS00NmEwLWIxZWQtOWNjZWUxNTNhMGFlXCJ9IiB9Cg.";
+    private static final String TOKEN_VALUE = "eyAiYWxnIjogIlJTMjU2IiwgImtpZCI6ICI4NTQ3NzFlMi00MGFlLTQyMzctOTcwNi1kMTg5NDc2M2Y4N2IiLCAidHlwIjogIkpXVCIgfQo.eyAiY29uc3VtZXJzIjogIlt7XCJDb25zdW1lcklEXCI6XCJhZG1pblwiLFwiQ29uc3VtZXJUeXBlXCI6XCJTdGF0aWMgVXNlclwiLFwiRmxvd1wiOlwiSldUXCJ9XSIsICJjb25zdW1lcklEIjogInRlc3RDb25zdW1lcklEIiwgImV4cCI6IDE2MzMxMDE1MjksICJpYXQiOiAxNjMzMDk3OTI5LCAiaXNzIjogImh0dHBzOi8vb2F0aGtlZXBlci5reW1hLmxvY2FsLyIsICJqdGkiOiAiODU2Y2Q1ZTgtZDg3MS00MzkxLTgwMjktMjg2ZGNlNzIzNGNmIiwgIm5iZiI6IDE2MzMwOTc5MjksICJzY29wZXMiOiAiYXBwbGljYXRpb246cmVhZCBhcHBsaWNhdGlvbjp3cml0ZSBhcHBsaWNhdGlvbl90ZW1wbGF0ZTpyZWFkIGFwcGxpY2F0aW9uX3RlbXBsYXRlOndyaXRlIGludGVncmF0aW9uX3N5c3RlbTpyZWFkIGludGVncmF0aW9uX3N5c3RlbTp3cml0ZSBydW50aW1lOnJlYWQgcnVudGltZTp3cml0ZSBsYWJlbF9kZWZpbml0aW9uOnJlYWQgbGFiZWxfZGVmaW5pdGlvbjp3cml0ZSBldmVudGluZzptYW5hZ2UgdGVuYW50OnJlYWQgYXV0b21hdGljX3NjZW5hcmlvX2Fzc2lnbm1lbnQ6cmVhZCBhdXRvbWF0aWNfc2NlbmFyaW9fYXNzaWdubWVudDp3cml0ZSBhcHBsaWNhdGlvbi5hdXRoczpyZWFkIGFwcGxpY2F0aW9uLndlYmhvb2tzOnJlYWQgYXBwbGljYXRpb25fdGVtcGxhdGUud2ViaG9va3M6cmVhZCBidW5kbGUuaW5zdGFuY2VfYXV0aHM6cmVhZCBkb2N1bWVudC5mZXRjaF9yZXF1ZXN0OnJlYWQgZXZlbnRfc3BlYy5mZXRjaF9yZXF1ZXN0OnJlYWQgYXBpX3NwZWMuZmV0Y2hfcmVxdWVzdDpyZWFkIGludGVncmF0aW9uX3N5c3RlbS5hdXRoczpyZWFkIHJ1bnRpbWUuYXV0aHM6cmVhZCBmZXRjaC1yZXF1ZXN0LmF1dGg6cmVhZCB3ZWJob29rcy5hdXRoOnJlYWQgaW50ZXJuYWxfdmlzaWJpbGl0eTpyZWFkIiwgInN1YiI6ICJDaUJyZDNsM2J6VTFjWFl6TVRkaE1YazFiM0psY1RkalozWnFjek0yTVcxdGJ4SUZiRzlqWVd3IiwgInRlbmFudCI6IntcImNvbnN1bWVyVGVuYW50XCI6XCIzZTY0ZWJhZS0zOGI1LTQ2YTAtYjFlZC05Y2NlZTE1M2EwYWVcIixcImV4dGVybmFsVGVuYW50XCI6XCIzZTY0ZWJhZS0zOGI1LTQ2YTAtYjFlZC05Y2NlZTE1M2EwYWVcIn0iIH0K.";
     private static final String TENANT = "3e64ebae-38b5-46a0-b1ed-9ccee153a0ae";
     private static final String X_REQUEST_ID = "xreqebae-38b5-46a0-b1ed-9ccee153a0ae";
 
@@ -73,6 +74,9 @@ public class FetchingDestinationsTest {
 
     @Mock
     private DestinationFetcherClient destsFetcherClient;
+
+    @Mock
+    private SubscriptionHelper subscriptionHelper;
 
     @InjectMocks
     private ODataController odataController;
@@ -147,7 +151,7 @@ public class FetchingDestinationsTest {
 
     @Test
     public void testReloadFilter_ReturnsInternalServerError_WhenCallToDestinationFetcherFails() throws Exception {
-        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE, null));
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
         doThrow(new RestClientResponseException("Request failed",
             HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
             null, null, null)
@@ -166,7 +170,7 @@ public class FetchingDestinationsTest {
     @Test
     public void testReloadFilter_ReturnsODataResponse_WhenCallToDestinationFetcherSucceeds() throws Exception {
         String odataResponse = "{}";
-        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE, null));
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE, null)); // todo::: adapt
 
         TestLogic testLogic = () -> {
             mvc.perform(
@@ -232,7 +236,7 @@ public class FetchingDestinationsTest {
 
     @Test
     public void testSensitiveDataFilter_ReturnsInternalServerError_WhenCallToDestinationFetcherFails() throws Exception {
-        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE, null));
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
 
         String odataResponse =
         "{" +
@@ -263,7 +267,7 @@ public class FetchingDestinationsTest {
 
      @Test
      public void testSensitiveDataFilter_ReturnsDestinationsWithSensitiveDataWhereAvailableInXML() throws Exception {
-         when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE, null));
+         when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
 
          String odataResponse =
          "<feed>" +
@@ -312,7 +316,7 @@ public class FetchingDestinationsTest {
 
     @Test
     public void testSensitiveDataFilter_ReturnsDestinationsWithSensitiveDataWhereAvailableInJSON() throws Exception {
-        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE, null));
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
 
         String odataResponse =
         "{" +
