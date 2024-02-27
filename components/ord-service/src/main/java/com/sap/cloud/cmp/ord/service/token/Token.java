@@ -62,10 +62,10 @@ public class Token {
 
             String tenant = tenantsTree.path(CONSUMER_TENANT_KEY).asText();
             providerTenantID = tenantsTree.path(PROVIDER_TENANT_KEY).asText();
-            String consumerID = content.get(CONSUMER_ID_KEY).asText();
             if (providerTenantID == null || providerTenantID.isEmpty() || providerTenantID.equals(tenant)) {
                 if (applicationTenantId != null && !applicationTenantId.isEmpty()) {
                     logger.info("Application local tenant ID is provided through header");
+                    String consumerID = content.get(CONSUMER_ID_KEY).asText();
                     if (consumerID == null || consumerID.isEmpty()) {
                         logger.error("consumer ID could not be empty");
                         return tenant;
