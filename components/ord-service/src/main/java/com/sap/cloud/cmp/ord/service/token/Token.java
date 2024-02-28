@@ -29,6 +29,9 @@ public class Token {
     private static final String CONSUMER_ID_KEY = "consumerID";
 
     private static final String SCOPES_KEY = "scopes";
+
+    private static final String GLOBAL_SUBACCOUNT_LABEL_KEY = "global_subaccount_id";
+
     private final String INTERNAL_VISIBILITY_SCOPE = "internal_visibility:read";
 
     // In case single tenant is present (discovery based on tenancy) in the call, we use this default formation claim
@@ -78,6 +81,11 @@ public class Token {
                         this.callerID = appId;
                         Set<String> formationIDs = repo.getFormationsThatApplicationIsPartOf(appId);
                         this.formationIDsClaims.addAll(formationIDs);
+
+                        String appTenantID = repo.findApplicationTenantByLabelKey(appId, GLOBAL_SUBACCOUNT_LABEL_KEY);
+                        if (appTenantID != null && !appTenantID.isEmpty()) {
+                            tenant = appTenantID;
+                        }
                         return tenant;
                     }
                     return tenant;
