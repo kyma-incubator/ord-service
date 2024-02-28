@@ -151,7 +151,7 @@ public class FetchingDestinationsTest {
 
     @Test
     public void testReloadFilter_ReturnsInternalServerError_WhenCallToDestinationFetcherFails() throws Exception {
-        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE, null));
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
         doThrow(new RestClientResponseException("Request failed",
             HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
             null, null, null)
