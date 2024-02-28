@@ -82,7 +82,7 @@ public class Token {
                         Set<String> formationIDs = repo.getFormationsThatApplicationIsPartOf(appId);
                         this.formationIDsClaims.addAll(formationIDs);
 
-                        String appTenantID = repo.findApplicationTenantByLabelKey(appId, GLOBAL_SUBACCOUNT_LABEL_KEY);
+                        String appTenantID = repo.findInternalApplicationTenantByLabelKey(appId, GLOBAL_SUBACCOUNT_LABEL_KEY);
                         if (appTenantID != null && !appTenantID.isEmpty()) {
                             logger.info("Application tenant ID from label is {}", appTenantID);
                             tenant = appTenantID;
