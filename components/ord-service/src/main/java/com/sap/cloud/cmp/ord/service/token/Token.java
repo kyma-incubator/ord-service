@@ -75,7 +75,7 @@ public class Token {
                         logger.error("consumer ID could not be empty");
                         return Token.EMPTY_TENANT_DUE_TO_MISSING_CONSUMER_ID;
                     }
-                    logger.info("Checking for application with local tenant ID {} and app template ID {}", applicationTenantId, consumerID);
+                    logger.info("Checking for application with local tenant ID: {} and app template ID: {}", applicationTenantId, consumerID);
                     String appId = repo.findApplicationByLocalTenantIdAndApplicationTemplateId(applicationTenantId, consumerID);
                     if (appId != null && !appId.isEmpty()) {
                         this.callerID = appId;
@@ -84,7 +84,6 @@ public class Token {
 
                         String appTenantID = repo.findInternalApplicationTenantByLabelKey(appId, GLOBAL_SUBACCOUNT_LABEL_KEY);
                         if (appTenantID != null && !appTenantID.isEmpty()) {
-                            logger.info("Application tenant ID from label is {}", appTenantID);
                             tenant = appTenantID;
                         }
                         return tenant;
