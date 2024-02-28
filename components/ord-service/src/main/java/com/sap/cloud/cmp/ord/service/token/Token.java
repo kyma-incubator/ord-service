@@ -84,6 +84,7 @@ public class Token {
 
                         String appTenantID = repo.findApplicationTenantByLabelKey(appId, GLOBAL_SUBACCOUNT_LABEL_KEY);
                         if (appTenantID != null && !appTenantID.isEmpty()) {
+                            logger.info("Application tenant ID from label is {}", appTenantID);
                             tenant = appTenantID;
                         }
                         return tenant;
