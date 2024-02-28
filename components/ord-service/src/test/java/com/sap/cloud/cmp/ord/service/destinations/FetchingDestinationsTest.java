@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.util.Arrays;
 
+import com.sap.cloud.cmp.ord.service.token.SubscriptionHelper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -73,6 +74,9 @@ public class FetchingDestinationsTest {
 
     @Mock
     private DestinationFetcherClient destsFetcherClient;
+
+    @Mock
+    private SubscriptionHelper subscriptionHelper;
 
     @InjectMocks
     private ODataController odataController;
@@ -147,7 +151,7 @@ public class FetchingDestinationsTest {
 
     @Test
     public void testReloadFilter_ReturnsInternalServerError_WhenCallToDestinationFetcherFails() throws Exception {
-        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
         doThrow(new RestClientResponseException("Request failed",
             HttpStatus.BAD_REQUEST.value(), HttpStatus.BAD_REQUEST.getReasonPhrase(),
             null, null, null)
@@ -166,7 +170,7 @@ public class FetchingDestinationsTest {
     @Test
     public void testReloadFilter_ReturnsODataResponse_WhenCallToDestinationFetcherSucceeds() throws Exception {
         String odataResponse = "{}";
-        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
 
         TestLogic testLogic = () -> {
             mvc.perform(
@@ -232,7 +236,7 @@ public class FetchingDestinationsTest {
 
     @Test
     public void testSensitiveDataFilter_ReturnsInternalServerError_WhenCallToDestinationFetcherFails() throws Exception {
-        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
 
         String odataResponse =
         "{" +
@@ -263,7 +267,7 @@ public class FetchingDestinationsTest {
 
      @Test
      public void testSensitiveDataFilter_ReturnsDestinationsWithSensitiveDataWhereAvailableInXML() throws Exception {
-         when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
+         when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
 
          String odataResponse =
          "<feed>" +
@@ -312,7 +316,7 @@ public class FetchingDestinationsTest {
 
     @Test
     public void testSensitiveDataFilter_ReturnsDestinationsWithSensitiveDataWhereAvailableInJSON() throws Exception {
-        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(null, TOKEN_VALUE));
+        when(tokenParser.fromRequest(any(HttpServletRequest.class))).thenReturn(new Token(subscriptionHelper, TOKEN_VALUE, null));
 
         String odataResponse =
         "{" +
