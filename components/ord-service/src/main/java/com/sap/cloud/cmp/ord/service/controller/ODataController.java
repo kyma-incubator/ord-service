@@ -83,6 +83,7 @@ public class ODataController {
         } else {
             destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
         }
+        claims.add("destination_tenant_id", destinationTenantJPAPair);
 
         String callerID = token.getCallerID();
         if (callerID == null || callerID.isEmpty()) {
@@ -111,7 +112,6 @@ public class ODataController {
             tenantIDJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
         }
         claims.add("tenant_id", tenantIDJPAPair);
-        claims.add("destination_tenant_id", destinationTenantJPAPair);
 
         final JPAClaimsPair<String> publicVisibilityScopeJPAPair = new JPAClaimsPair<>(PUBLIC_VISIBILITY);
         claims.add("visibility_scope", publicVisibilityScopeJPAPair);

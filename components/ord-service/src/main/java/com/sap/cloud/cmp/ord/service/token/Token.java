@@ -29,6 +29,9 @@ public class Token {
     private static final String CONSUMER_ID_KEY = "consumerID";
 
     private static final String SCOPES_KEY = "scopes";
+
+    private static final String GLOBAL_SUBACCOUNT_LABEL_KEY = "global_subaccount_id";
+
     private final String INTERNAL_VISIBILITY_SCOPE = "internal_visibility:read";
 
     // In case single tenant is present (discovery based on tenancy) in the call, we use this default formation claim
@@ -72,12 +75,17 @@ public class Token {
                         logger.error("consumer ID could not be empty");
                         return Token.EMPTY_TENANT_DUE_TO_MISSING_CONSUMER_ID;
                     }
-                    logger.info("Checking for application with local tenant ID {} and app template ID {}", applicationTenantId, consumerID);
+                    logger.info("Checking for application with local tenant ID: {} and app template ID: {}", applicationTenantId, consumerID);
                     String appId = repo.findApplicationByLocalTenantIdAndApplicationTemplateId(applicationTenantId, consumerID);
                     if (appId != null && !appId.isEmpty()) {
                         this.callerID = appId;
                         Set<String> formationIDs = repo.getFormationsThatApplicationIsPartOf(appId);
                         this.formationIDsClaims.addAll(formationIDs);
+
+                        String appTenantID = repo.findInternalApplicationTenantByLabelKey(appId, GLOBAL_SUBACCOUNT_LABEL_KEY);
+                        if (appTenantID != null && !appTenantID.isEmpty()) {
+                            tenant = appTenantID;
+                        }
                         return tenant;
                     }
                     return tenant;

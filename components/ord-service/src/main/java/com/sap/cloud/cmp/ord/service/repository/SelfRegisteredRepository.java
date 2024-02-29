@@ -32,4 +32,7 @@ public interface SelfRegisteredRepository extends JpaRepository<RootEntity, Inte
 
     @Query(nativeQuery = true, value = "SELECT id FROM applications WHERE local_tenant_id = ?1 and app_template_id = uuid(?2)")
     String findApplicationByLocalTenantIdAndApplicationTemplateId(String appLocalTenantId, String appTemplateId);
+
+    @Query(nativeQuery = true, value = "SELECT id FROM business_tenant_mappings WHERE external_tenant = (SELECT value->>0 FROM labels where app_id = uuid(?1) AND key = ?2)")
+    String findInternalApplicationTenantByLabelKey(String appId, String labelKey);
 }
