@@ -1,9 +1,9 @@
-FROM maven:3.9.4-eclipse-temurin-17-focal AS builder
+FROM maven:3.9.6-eclipse-temurin-17-alpine AS builder
 
 ENV BASE_APP_DIR /go/src/github.com/kyma-incubator/ord-service/components/ord-service
 WORKDIR ${BASE_APP_DIR}
 
-RUN apt-get update && apt-get install -y git
+RUN apk --no-cache add git
 
 COPY scripts ./scripts
 
