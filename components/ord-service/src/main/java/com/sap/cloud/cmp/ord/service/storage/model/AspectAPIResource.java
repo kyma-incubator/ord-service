@@ -2,16 +2,16 @@ package com.sap.cloud.cmp.ord.service.storage.model;
 
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
+import jakarta.persistence.*;
+import org.eclipse.persistence.annotations.Convert;
+import org.eclipse.persistence.annotations.TypeConverter;
+
+import java.util.UUID;
 
 @Entity(name = "aspectApiResource")
-@Table(name = "aspect_api_resources")
+//@Table(name = "aspect_api_resources")
+@Table(name = "aspect_api_resources_formation")
 public class AspectAPIResource {
     @Id
     @Column(name = "ord_id", length = Integer.MAX_VALUE)
@@ -24,7 +24,22 @@ public class AspectAPIResource {
     @EdmIgnore
     private String aspectId;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "aspect_id", insertable = false, updatable = false)
+//    private AspectEntity aspect;
+
+    @EdmProtectedBy(name = "formation_scope")
+    @EdmIgnore
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "aspect_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "aspect_id", referencedColumnName = "id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+            //@JoinColumn(name = "tenant_id", referencedColumnName = "tenant_id", insertable = false, updatable = false), //todo::: check whether to add tenant_id to the view
+    })
     private AspectEntity aspect;
 }

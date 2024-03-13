@@ -19,7 +19,8 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 
 @Entity(name = "destination")
-@Table(name = "tenants_destinations")
+//@Table(name = "tenants_destinations")
+@Table(name = "tenants_destinations_formation")
 public class DestinationEntity {
     @Id
     @Column(name = "id")
@@ -46,10 +47,30 @@ public class DestinationEntity {
     @Column(name = "sensitive_data", length = Integer.MAX_VALUE)
     private String sensitiveData;
 
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "destinations",
+//            joinColumns = @JoinColumn(name = "id"),
+//            inverseJoinColumns = @JoinColumn(name = "bundle_id"))
+//    private Set<BundleEntity> consumptionBundles;
+
+    @EdmIgnore
+    @Column(name = "formation_id")
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "destinations",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "bundle_id"))
+            name = "tenants_destinations_formation",
+            joinColumns = {
+                    @JoinColumn(name = "id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "bundle_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+            }
+    )
     private Set<BundleEntity> consumptionBundles;
 }

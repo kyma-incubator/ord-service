@@ -26,8 +26,16 @@ public class DataProductEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID appId;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+//    private SystemInstanceEntity systemInstance;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "app_id", referencedColumnName = "id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+           // @JoinColumn(name = "tenant_id", referencedColumnName = "tenant_id", insertable = false, updatable = false),
+    })
     private SystemInstanceEntity systemInstance;
 
     @EdmProtectedBy(name = "tenant_id")
@@ -70,8 +78,15 @@ public class DataProductEntity {
     @NotNull
     private UUID partOfPackage;
 
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "package_id", insertable = false, updatable = false)
+//    private PackageEntity pkg;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "package_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "package_id", referencedColumnName = "id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+    })
     private PackageEntity pkg;
 
     @Column(name = "last_update")

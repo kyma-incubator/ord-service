@@ -158,25 +158,69 @@ public class APIEntity {
     private UUID appId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "app_id", referencedColumnName = "id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+            //@JoinColumn(name = "tenant_id", referencedColumnName = "tenant_id", insertable = false, updatable = false),
+    })
     private SystemInstanceEntity systemInstance;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "package_id", insertable = false, updatable = false)
-    private PackageEntity pkg;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "package_id", insertable = false, updatable = false)
+//    private PackageEntity pkg;
+
+     @ManyToOne(fetch = FetchType.LAZY)
+     @JoinColumns({
+             @JoinColumn(name = "package_id", referencedColumnName = "id", insertable = false, updatable = false),
+             @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+             ///@JoinColumn(name = "tenant_id", referencedColumnName = "tenant_id", insertable = false, updatable = false),
+     })
+     private PackageEntity pkg;
+
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "bundle_references",
+//            joinColumns = @JoinColumn(name = "api_def_id"),
+//            inverseJoinColumns = @JoinColumn(name = "bundle_id"))
+//    private Set<BundleEntity> consumptionBundles;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "bundle_references",
-            joinColumns = @JoinColumn(name = "api_def_id"),
-            inverseJoinColumns = @JoinColumn(name = "bundle_id"))
+            name = "api_bundle_reference_formation",
+            joinColumns = {
+                    @JoinColumn(name = "api_definition_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+                  //  @JoinColumn(name = "tenant_id", referencedColumnName = "tenant_id"), todo::: do we need the tenant
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "bundle_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+                //    @JoinColumn(name = "tenant_id", referencedColumnName = "tenant_id"),
+            }
+    )
     private Set<BundleEntity> consumptionBundles;
 
+//    @ManyToMany(fetch = FetchType.LAZY)
+//    @JoinTable(
+//            name = "api_product",
+//            joinColumns = {@JoinColumn(name = "api_definition_id")},
+//            inverseJoinColumns = {@JoinColumn(name = "product_id")})
+//    private Set<ProductEntity> products;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "api_product",
-            joinColumns = {@JoinColumn(name = "api_definition_id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_id")})
+            name = "api_product_formation",
+            joinColumns = {
+                    @JoinColumn(name = "api_definition_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+                    //@JoinColumn(name = "tenant_id", referencedColumnName = "tenant_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "product_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+                    //@JoinColumn(name = "tenant_id", referencedColumnName = "tenant_id"),
+            }
+    )
     private Set<ProductEntity> products;
 
     @Column(name = "implementation_standard")

@@ -78,11 +78,12 @@ public class ODataController {
         }
 
         final JPAClaimsPair<UUID> destinationTenantJPAPair;
-        if (tenantID == null || tenantID.isEmpty()) {
-            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(DEFAULT_TENANT_ID));
-        } else {
-            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
-        }
+        destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString("3e64ebae-38b5-46a0-b1ed-9ccee153a0ae"));
+//        if (tenantID == null || tenantID.isEmpty()) {
+//            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(DEFAULT_TENANT_ID));
+//        } else {
+//            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
+//        }
 
         claims.add("caller_id",new JPAClaimsPair<>(UUID.fromString("4c63e3b2-3301-4796-bc95-9fb5b2780342")));
         /*String callerID = token.getCallerID();
