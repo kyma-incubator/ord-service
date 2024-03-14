@@ -85,18 +85,18 @@ public class ODataController {
 //            destinationTenantJPAPair = new JPAClaimsPair<>(UUID.fromString(tenantID));
 //        }
 
-        claims.add("caller_id",new JPAClaimsPair<>(UUID.fromString("4c63e3b2-3301-4796-bc95-9fb5b2780342")));
-        /*String callerID = token.getCallerID();
+       // claims.add("caller_id",new JPAClaimsPair<>(UUID.fromString("4c63e3b2-3301-4796-bc95-9fb5b2780342")));
+        String callerID = token.getCallerID();
         if (callerID == null || callerID.isEmpty()) {
             claims.add("caller_id",new JPAClaimsPair<>(UUID.fromString(DEFAULT_EMPTY_ID_CLAIM))); // avoid returning misleading claims error
         } else {
             claims.add("caller_id",new JPAClaimsPair<>(UUID.fromString(callerID)));
-        }*/
+        }
 
         boolean shouldUseDefaultTenant = true;
-        claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString("4160ee5b-e79c-428d-ab42-5e6692dc870c")));
-        claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString("76cef8a7-5d7a-40e7-a393-59e822c44663")));
-        /*if (token.getFormationIDsClaims().isEmpty()) {
+        //claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString("4160ee5b-e79c-428d-ab42-5e6692dc870c")));
+        //claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString("76cef8a7-5d7a-40e7-a393-59e822c44663")));
+        if (token.getFormationIDsClaims().isEmpty()) {
             logger.warn("Could not determine formation claim");
             claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(DEFAULT_EMPTY_ID_CLAIM))); // in the consumer-provider flow, if there are currently no formations the rtCtx is part of; we will return empty array this way instead of misleading claims error
         } else {
@@ -106,7 +106,7 @@ public class ODataController {
                 }
                 claims.add("formation_scope", new JPAClaimsPair<>(UUID.fromString(formationID)));
             }
-        }*/
+        }
 
         final JPAClaimsPair<UUID> tenantIDJPAPair;
         if (shouldUseDefaultTenant) {
