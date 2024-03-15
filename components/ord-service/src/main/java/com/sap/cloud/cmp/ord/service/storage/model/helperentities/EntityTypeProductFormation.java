@@ -10,14 +10,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
+
 @EdmIgnore
-@Table(name = "api_product_formation")
-@Entity(name = "apiProductFormation")
-@IdClass(APIProductFormation.class)
-public class APIProductFormation implements Serializable {
+@Table(name = "entity_type_product_formation")
+@Entity(name = "entityTypeProductFormation")
+@IdClass(EntityTypeProductFormation.class)
+public class EntityTypeProductFormation implements Serializable {
     @Id
-    @Column(name = "api_definition_id", length = 256)
-    private String apiDefID;
+    @Column(name = "entity_type_id", length = 256)
+    private String entityTypeID;
 
     @Id
     @Column(name = "product_id", length = 256)
