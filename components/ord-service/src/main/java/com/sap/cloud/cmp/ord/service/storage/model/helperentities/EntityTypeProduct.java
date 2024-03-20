@@ -23,4 +23,8 @@ public class EntityTypeProduct implements Serializable {
     @Id
     @Column(name = "product_id", length = 256)
     private String productID;
+
+    @Id
+    @Column(name = "formation_id", length = 256)
+    private String formationID;
 }
