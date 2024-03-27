@@ -47,7 +47,7 @@ public class DestinationEntity {
     private String sensitiveData;
 
     @EdmIgnore
-    @Column(name = "formation_id")
+    @Column(name = "formation_id", length = 256)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID formationID;

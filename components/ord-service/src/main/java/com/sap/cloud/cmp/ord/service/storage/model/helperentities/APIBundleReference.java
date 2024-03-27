@@ -23,6 +23,6 @@ public class APIBundleReference implements Serializable {
     @Column(name = "tenant_id", length = 256)
     private String tenantID;
 
-    @Column(name = "formation_id")
+    @Column(name = "formation_id", length = 256)
     private boolean formationID;
 }
