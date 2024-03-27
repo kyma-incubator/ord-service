@@ -55,6 +55,7 @@ public class ProductEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns({
             @JoinColumn(name = "vendor", referencedColumnName= "ord_id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
     })
     private VendorEntity vendor;
 
@@ -65,7 +66,10 @@ public class ProductEntity {
     private UUID appId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "app_id", referencedColumnName = "id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+    })
     private SystemInstanceEntity systemInstance;
 
     @Column(name = "parent", length = 256)

@@ -2,19 +2,20 @@ package com.sap.cloud.cmp.ord.service.storage.model;
 
 import java.util.UUID;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumns;
+import jakarta.persistence.JoinColumn;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "tombstone")
@@ -58,6 +59,9 @@ public class TombstoneEntity {
     private UUID appId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "app_id", referencedColumnName = "id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+    })
     private SystemInstanceEntity systemInstance;
 }

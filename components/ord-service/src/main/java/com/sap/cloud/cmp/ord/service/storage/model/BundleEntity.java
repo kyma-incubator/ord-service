@@ -4,21 +4,22 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumns;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ManyToMany;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "consumptionBundle")
@@ -98,7 +99,10 @@ public class BundleEntity {
     private UUID appId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "app_id", referencedColumnName = "id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+    })
     private SystemInstanceEntity systemInstance;
 
     @ManyToMany(mappedBy = "consumptionBundles", fetch = FetchType.LAZY)

@@ -4,24 +4,25 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumns;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "package")
@@ -91,7 +92,10 @@ public class PackageEntity {
     private String vendorReference;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vendor", referencedColumnName= "ord_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "vendor", referencedColumnName = "ord_id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+    })
     private VendorEntity vendor;
 
     @EdmIgnore
@@ -101,7 +105,10 @@ public class PackageEntity {
     private UUID appId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "app_id", referencedColumnName = "id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+    })
     private SystemInstanceEntity systemInstance;
 
     @ElementCollection
@@ -134,8 +141,15 @@ public class PackageEntity {
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "package_product",
-            joinColumns = {@JoinColumn(name = "package_id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_id")})
+            joinColumns = {
+                    @JoinColumn(name = "package_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "product_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+            }
+    )
     private Set<ProductEntity> products;
 
     @OneToMany(mappedBy = "pkg", fetch = FetchType.LAZY)

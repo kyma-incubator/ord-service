@@ -1,30 +1,28 @@
 package com.sap.cloud.cmp.ord.service.storage.model.helperentities;
 
-import java.io.Serializable;
-
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.IdClass;
 import jakarta.persistence.Table;
 
+import java.io.Serializable;
 
 @EdmIgnore
-@Table(name = "api_product")
-@Entity(name = "apiProduct")
-@IdClass(APIProduct.class)
-public class APIProduct implements Serializable {
+@Table(name = "tenants_api_bundle_reference")
+@Entity(name = "apiBundleReference")
+public class APIBundleReference implements Serializable {
     @Id
     @Column(name = "api_definition_id", length = 256)
     private String apiDefID;
 
-    @Id
-    @Column(name = "product_id", length = 256)
-    private String productID;
+    @Column(name = "bundle_id", length = 256)
+    private String bundleID;
 
-    @Id
+    @Column(name = "tenant_id", length = 256)
+    private String tenantID;
+
     @Column(name = "formation_id", length = 256)
-    private String formationID;
+    private boolean formationID;
 }

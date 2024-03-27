@@ -4,25 +4,26 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumns;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ElementCollection;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Embedded;
 import org.eclipse.persistence.annotations.Convert;
 import org.eclipse.persistence.annotations.TypeConverter;
 
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 
-import jakarta.persistence.CollectionTable;
-import jakarta.persistence.Column;
-import jakarta.persistence.ElementCollection;
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 
 @Entity(name = "event")
@@ -94,7 +95,10 @@ public class EventEntity {
     private UUID appId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "app_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "app_id", referencedColumnName = "id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+    })
     private SystemInstanceEntity systemInstance;
 
     @OneToMany(mappedBy = "eventResource", fetch = FetchType.LAZY)
@@ -180,21 +184,38 @@ public class EventEntity {
     private String deprecationDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "package_id", insertable = false, updatable = false)
+    @JoinColumns({
+            @JoinColumn(name = "package_id", referencedColumnName = "id", insertable = false, updatable = false),
+            @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
+    })
     private PackageEntity pkg;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "bundle_references",
-            joinColumns = @JoinColumn(name = "event_def_id"),
-            inverseJoinColumns = @JoinColumn(name = "bundle_id"))
+            name = "tenants_event_bundle_reference",
+            joinColumns = {
+                    @JoinColumn(name = "event_def_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "bundle_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+            }
+    )
     private Set<BundleEntity> consumptionBundles;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "event_product",
-            joinColumns = {@JoinColumn(name = "event_definition_id")},
-            inverseJoinColumns = {@JoinColumn(name = "product_id")})
+            joinColumns = {
+                    @JoinColumn(name = "event_definition_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "product_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+            }
+    )
     private Set<ProductEntity> products;
 
     @Column(name = "responsible")

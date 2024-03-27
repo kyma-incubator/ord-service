@@ -46,10 +46,23 @@ public class DestinationEntity {
     @Column(name = "sensitive_data", length = Integer.MAX_VALUE)
     private String sensitiveData;
 
+    @EdmIgnore
+    @Column(name = "formation_id", length = 256)
+    @Convert("uuidConverter")
+    @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
+    private UUID formationID;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
-            name = "destinations",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "bundle_id"))
+            name = "tenants_destinations",
+            joinColumns = {
+                    @JoinColumn(name = "id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+            },
+            inverseJoinColumns = {
+                    @JoinColumn(name = "bundle_id", referencedColumnName = "id"),
+                    @JoinColumn(name = "formation_id", referencedColumnName = "formation_id"),
+            }
+    )
     private Set<BundleEntity> consumptionBundles;
 }
