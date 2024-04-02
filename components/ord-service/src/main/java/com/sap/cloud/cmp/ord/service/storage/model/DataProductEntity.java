@@ -3,6 +3,7 @@ package com.sap.cloud.cmp.ord.service.storage.model;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 
+import jakarta.annotation.Nonnull;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.eclipse.persistence.annotations.Convert;
@@ -124,6 +125,7 @@ public class DataProductEntity {
 
     @ElementCollection
     @CollectionTable(name = "output_ports_data_products", joinColumns = @JoinColumn(name = "data_product_id"))
+    @Column(name = "output_ports", nullable = false)
     private List<OutputPort> outputPorts;
 
     @Column(name = "responsible")

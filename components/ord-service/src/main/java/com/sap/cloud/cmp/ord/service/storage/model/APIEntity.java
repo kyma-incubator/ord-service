@@ -20,7 +20,7 @@ public class APIEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
 
-    @Column(name = "ord_id", length = 256)
+    @Column(name = "ord_id", length = 256, nullable = false)
     private String ordId;
 
     @ElementCollection

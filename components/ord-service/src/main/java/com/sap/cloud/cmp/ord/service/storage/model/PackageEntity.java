@@ -91,7 +91,7 @@ public class PackageEntity {
     @EdmIgnore
     private String vendorReference;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumns({
             @JoinColumn(name = "vendor", referencedColumnName = "ord_id", insertable = false, updatable = false),
             @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),
