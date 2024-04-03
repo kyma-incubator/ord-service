@@ -38,6 +38,9 @@ public class SystemInstanceEntity {
     @Column(name = "application_namespace", length = 256)
     private String namespace;
 
+    @Column(name = "region", length = 256)
+    private String region;
+
     @Column(name = "local_tenant_id", length = 256)
     private String localId;
 
