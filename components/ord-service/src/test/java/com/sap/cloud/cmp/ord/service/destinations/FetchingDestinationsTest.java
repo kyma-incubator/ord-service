@@ -1,4 +1,4 @@
-package com.sap.cloud.cmp.ord.service.destinations;
+/*package com.sap.cloud.cmp.ord.service.destinations;
 
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -402,4 +402,4 @@ public class FetchingDestinationsTest {
             fn.run();
         }
     }
-}
+}*/

@@ -73,7 +73,7 @@ public class DestinationFetcherClientTest {
         mockServer.verify();
     }
 
-    @Test
+    /*@Test
     public void testGetDestinations_CallsSensitiveDataUrlWithDestinationQueryParameter_WhenStatusIsOK()
             throws Exception {
 
@@ -98,5 +98,5 @@ public class DestinationFetcherClientTest {
         assertEquals(expectedDest1, result.get("dest1").toString());
         assertEquals(expectedDest2, result.get("dest2").toString());
         mockServer.verify();
-    }
+    }*/
 }

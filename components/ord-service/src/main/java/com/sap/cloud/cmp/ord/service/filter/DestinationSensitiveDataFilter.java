@@ -68,15 +68,15 @@ public class DestinationSensitiveDataFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain)
             throws IOException, ServletException {
 
-        String fullPath = getFullPath((HttpServletRequest) request);
-
-        boolean isODataPath = fullPath.startsWith("/" + odataPath);
-        boolean hasDestinations = fullPath.contains(DESTINATIONS_ODATA_FILTER);
-
-        if (!isODataPath || !hasDestinations) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+//        String fullPath = getFullPath((HttpServletRequest) request);
+//
+//        boolean isODataPath = fullPath.startsWith("/" + odataPath);
+//        boolean hasDestinations = fullPath.contains(DESTINATIONS_ODATA_FILTER);
+//
+//        if (!isODataPath || !hasDestinations) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
 
         HttpServletResponse servletResponse = ((HttpServletResponse) response);
         CapturingResponseWrapper capturingResponseWrapper = new CapturingResponseWrapper(servletResponse);
@@ -86,7 +86,7 @@ public class DestinationSensitiveDataFilter implements Filter {
         String responseContentType = servletResponse.getContentType();
         String responseContent = capturingResponseWrapper.getCaptureAsString();
 
-        if (responseContentType != null) {
+      /*  if (responseContentType != null) {
             String tenantId = (String) request.getAttribute(Common.REQUEST_ATTRIBUTE_TENANT_ID);
             List<String> destinationNames = getDestinationNames(responseContent);
             String correlationId = ((HttpServletRequest) request).getHeader(correlationIdHeader);
@@ -107,7 +107,7 @@ public class DestinationSensitiveDataFilter implements Filter {
                 return;
             }
 
-        }
+        }*/
 
         response.setContentLength(responseContent.length());
         response.getWriter().write(responseContent);
