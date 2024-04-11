@@ -27,7 +27,6 @@ public class UrlConverter implements AttributeConverter<String, String> {
 
     public String convertToEntityAttribute(String s) {
         String protocol = env.getProperty("specification.protocol");
-        System.out.println("==== PROTOCOL: " + protocol + " ====");
 
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         HttpServletRequest req = ((ServletRequestAttributes) requestAttributes).getRequest();
