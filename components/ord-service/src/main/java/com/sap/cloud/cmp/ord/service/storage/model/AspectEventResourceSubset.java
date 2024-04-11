@@ -5,6 +5,6 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class AspectEventResourceSubset {
-    @Column(name = "event_type", length = Integer.MAX_VALUE)
+    @Column(name = "event_type", length = Integer.MAX_VALUE, nullable = false)
     private String eventType;
 }

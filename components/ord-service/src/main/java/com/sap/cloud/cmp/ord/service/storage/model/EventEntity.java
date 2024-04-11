@@ -35,27 +35,26 @@ public class EventEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
 
-    @Column(name = "ord_id", length = 256)
+    @Column(name = "ord_id", length = 256, nullable = false)
     private String ordId;
 
-    @Column(name = "name", length = 256)
-    @NotNull
+    @Column(name = "name", length = 256, nullable = false)
     private String title;
 
-    @Column(name = "short_description", length = 256)
+    @Column(name = "short_description", length = 256, nullable = false)
     private String shortDescription;
 
-    @Column(name = "description", length = Integer.MAX_VALUE)
+    @Column(name = "description", length = Integer.MAX_VALUE, nullable = false)
     private String description;
 
     @EdmProtectedBy(name = "visibility_scope")
-    @Column(name = "visibility")
+    @Column(name = "visibility", nullable = false)
     private String visibility;
 
     @Column(name = "disabled")
     private boolean disabled;
 
-    @Column(name = "version_value")
+    @Column(name = "version_value", nullable = false)
     private String version;
 
     @Column(name = "system_instance_aware")
@@ -108,10 +107,9 @@ public class EventEntity {
     @CollectionTable(name = "changelog_entries_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ChangelogEntry> changelogEntries;
 
-    @Column(name = "package_id")
+    @Column(name = "package_id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    @NotNull
     private UUID partOfPackage;
 
     @ElementCollection
@@ -138,8 +136,7 @@ public class EventEntity {
     @CollectionTable(name = "industries_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ArrayElement> industry;
 
-    @Column(name = "release_status")
-    @NotNull
+    @Column(name = "release_status", nullable = false)
     private String releaseStatus;
 
     @Column(name = "sunset_date")

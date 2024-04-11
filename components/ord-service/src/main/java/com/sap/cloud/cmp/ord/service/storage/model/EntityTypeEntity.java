@@ -34,8 +34,7 @@ public class EntityTypeEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
 
-    @Column(name = "ord_id", length = 256)
-    @NotNull
+    @Column(name = "ord_id", length = 256, nullable = false)
     private String ordId;
 
     @EdmIgnore
@@ -44,24 +43,20 @@ public class EntityTypeEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID appId;
 
-    @Column(name = "local_tenant_id", length = 256)
-    @NotNull
+    @Column(name = "local_tenant_id", length = 256, nullable = false)
     private String localId;
 
     @ElementCollection
     @CollectionTable(name = "correlation_ids_entity_types", joinColumns = @JoinColumn(name = "entity_type_id", referencedColumnName = "id"))
     private List<ArrayElement> correlationIds;
 
-    @Column(name = "level", length = 256)
-    @NotNull
+    @Column(name = "level", length = 256, nullable = false)
     private String level;
 
-    @Column(name = "title", length = 256)
-    @NotNull
+    @Column(name = "title", length = 256, nullable = false)
     private String title;
 
     @Column(name = "short_description", length = 256)
-    @NotNull
     private String shortDescription;
 
     @Column(name = "description", length = Integer.MAX_VALUE)
@@ -74,10 +69,9 @@ public class EntityTypeEntity {
     @CollectionTable(name = "changelog_entries_entity_types", joinColumns = @JoinColumn(name = "entity_type_id"))
     private List<ChangelogEntry> changelogEntries;
 
-    @Column(name = "package_id")
+    @Column(name = "package_id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    @NotNull
     private UUID partOfPackage;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -88,7 +82,7 @@ public class EntityTypeEntity {
     private PackageEntity pkg;
 
     @EdmProtectedBy(name = "visibility_scope")
-    @Column(name = "visibility")
+    @Column(name = "visibility", nullable = false)
     private String visibility;
 
     @ElementCollection
@@ -115,8 +109,7 @@ public class EntityTypeEntity {
     @Column(name = "custom_policy_level", length = 256)
     private String customPolicyLevel;
 
-    @Column(name = "release_status")
-    @NotNull
+    @Column(name = "release_status", nullable = false)
     private String releaseStatus;
 
     @Column(name = "sunset_date")
@@ -134,6 +127,9 @@ public class EntityTypeEntity {
 
     @Column(name = "deprecation_date")
     private String deprecationDate;
+
+    @Column(name = "version_value", nullable = false)
+    private String version;
 
     @ElementCollection
     @CollectionTable(name = "ord_tags_entity_types", joinColumns = @JoinColumn(name = "entity_type_id", referencedColumnName = "id"))

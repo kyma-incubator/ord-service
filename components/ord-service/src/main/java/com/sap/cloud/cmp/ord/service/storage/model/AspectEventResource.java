@@ -43,7 +43,7 @@ public class AspectEventResource {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID formationID;
 
-    @Column(name = "ord_id", length = Integer.MAX_VALUE)
+    @Column(name = "ord_id", length = Integer.MAX_VALUE, nullable = false)
     private String ordId;
 
     @Column(name = "min_version", length = Integer.MAX_VALUE)

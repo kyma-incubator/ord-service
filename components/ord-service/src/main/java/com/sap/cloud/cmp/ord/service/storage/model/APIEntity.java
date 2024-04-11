@@ -20,7 +20,7 @@ public class APIEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
 
-    @Column(name = "ord_id", length = 256)
+    @Column(name = "ord_id", length = 256, nullable = false)
     private String ordId;
 
     @ElementCollection
@@ -30,21 +30,20 @@ public class APIEntity {
     @Column(name = "local_tenant_id", length = 256)
     private String localId;
 
-    @Column(name = "name", length = 256)
-    @NotNull
+    @Column(name = "name", length = 256, nullable = false)
     private String title;
 
-    @Column(name = "short_description", length = 256)
+    @Column(name = "short_description", length = 256, nullable = false)
     private String shortDescription;
 
-    @Column(name = "description", length = Integer.MAX_VALUE)
+    @Column(name = "description", length = Integer.MAX_VALUE, nullable = false)
     private String description;
 
-    @Column(name = "version_value")
+    @Column(name = "version_value", nullable = false)
     private String version;
 
     @EdmProtectedBy(name = "visibility_scope")
-    @Column(name = "visibility")
+    @Column(name = "visibility", nullable = false)
     private String visibility;
 
     @Column(name = "disabled")
@@ -59,17 +58,16 @@ public class APIEntity {
     @Column(name = "custom_policy_level", length = 256)
     private String customPolicyLevel;
 
-    @Column(name = "package_id")
+    @Column(name = "package_id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    @NotNull
     private UUID partOfPackage;
 
     @ElementCollection
     @CollectionTable(name = "api_bundle_reference", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ConsumptionBundleReference> partOfConsumptionBundles;
 
-    @Column(name = "api_protocol")
+    @Column(name = "api_protocol", nullable = false)
     private String apiProtocol;
 
     @EdmProtectedBy(name = "tenant_id")
@@ -121,8 +119,7 @@ public class APIEntity {
     @CollectionTable(name = "api_resource_links", joinColumns = @JoinColumn(name = "api_definition_id"))
     private List<ResourceLink> apiResourceLinks;
 
-    @Column(name = "release_status")
-    @NotNull
+    @Column(name = "release_status", nullable = false)
     private String releaseStatus;
 
     @Column(name = "sunset_date")

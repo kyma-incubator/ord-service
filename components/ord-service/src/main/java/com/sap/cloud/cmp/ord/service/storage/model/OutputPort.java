@@ -5,6 +5,6 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class OutputPort {
-    @Column(name = "ord_id", length = Integer.MAX_VALUE)
+    @Column(name = "ord_id", length = Integer.MAX_VALUE, nullable = false)
     private String ordId;
 }

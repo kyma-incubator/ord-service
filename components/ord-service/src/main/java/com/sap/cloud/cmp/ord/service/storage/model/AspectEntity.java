@@ -63,14 +63,13 @@ public class AspectEntity {
     })
     private IntegrationDependencyEntity integrationDependency;
 
-    @Column(name = "title")
+    @Column(name = "title", nullable = false)
     private String title;
 
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @Column(name = "mandatory")
-    @NotNull
+    @Column(name = "mandatory", nullable = false)
     private boolean mandatory;
 
     @Column(name = "support_multiple_providers")

@@ -59,7 +59,7 @@ public class IntegrationDependencyEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID formationID;
 
-    @Column(name = "ord_id", length = 256)
+    @Column(name = "ord_id", length = 256, nullable = false)
     private String ordId;
 
     @Column(name = "local_tenant_id", length = 256)
@@ -69,7 +69,7 @@ public class IntegrationDependencyEntity {
     @CollectionTable(name = "correlation_ids_integration_dependencies", joinColumns = @JoinColumn(name = "integration_dependency_id", referencedColumnName= "id"))
     private List<ArrayElement> correlationIds;
 
-    @Column(name = "title", length = 256)
+    @Column(name = "title", length = 256, nullable = false)
     private String title;
 
     @Column(name = "short_description", length = 256)
@@ -78,10 +78,9 @@ public class IntegrationDependencyEntity {
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @Column(name = "package_id")
+    @Column(name = "package_id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    @NotNull
     private UUID partOfPackage;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -95,11 +94,10 @@ public class IntegrationDependencyEntity {
     private String lastUpdate;
 
     @EdmProtectedBy(name = "visibility_scope")
-    @Column(name = "visibility")
+    @Column(name = "visibility", nullable = false)
     private String visibility;
 
-    @Column(name = "release_status")
-    @NotNull
+    @Column(name = "release_status", nullable = false)
     private String releaseStatus;
 
     @Column(name = "sunset_date")
@@ -109,8 +107,7 @@ public class IntegrationDependencyEntity {
     @CollectionTable(name = "integration_dependencies_successors", joinColumns = @JoinColumn(name = "integration_dependency_id"))
     private List<ArrayElement> successors;
 
-    @Column(name = "mandatory")
-    @NotNull
+    @Column(name = "mandatory", nullable = false)
     private boolean mandatory;
 
     @ElementCollection
@@ -133,7 +130,7 @@ public class IntegrationDependencyEntity {
     @CollectionTable(name = "ord_documentation_labels_integration_dependencies", joinColumns = @JoinColumn(name = "integration_dependency_id"))
     private List<Label> documentationLabels;
 
-    @Column(name = "version_value")
+    @Column(name = "version_value", nullable = false)
     private String version;
 
     @OneToMany(mappedBy = "integrationDependency", fetch = FetchType.LAZY)

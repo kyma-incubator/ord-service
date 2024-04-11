@@ -34,29 +34,25 @@ public class PackageEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
 
-    @Column(name = "ord_id", length = 256)
-    @NotNull
+    @Column(name = "ord_id", length = 256, nullable = false)
     private String ordId;
 
-    @Column(name = "title", length = 256)
-    @NotNull
+    @Column(name = "title", length = 256, nullable = false)
     private String title;
 
-    @Column(name = "short_description", length = 256)
-    @NotNull
+    @Column(name = "short_description", length = 256, nullable = false)
     private String shortDescription;
 
     @Column(name = "policy_level", length = 256)
-    @NotNull
     private String policyLevel;
 
     @Column(name = "custom_policy_level", length = 256)
     private String customPolicyLevel;
 
-    @Column(name = "description", length = Integer.MAX_VALUE)
+    @Column(name = "description", length = Integer.MAX_VALUE, nullable = false)
     private String description;
 
-    @Column(name = "version")
+    @Column(name = "version", nullable = false)
     private String version;
 
     @EdmProtectedBy(name = "tenant_id")
@@ -87,11 +83,11 @@ public class PackageEntity {
     @Column(name = "support_info", length = Integer.MAX_VALUE)
     private String supportInfo;
 
-    @Column(name = "vendor")
+    @Column(name = "vendor", nullable = false)
     @EdmIgnore
     private String vendorReference;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumns({
             @JoinColumn(name = "vendor", referencedColumnName = "ord_id", insertable = false, updatable = false),
             @JoinColumn(name = "formation_id", referencedColumnName = "formation_id", insertable = false, updatable = false),

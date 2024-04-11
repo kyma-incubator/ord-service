@@ -30,24 +30,21 @@ public class CapabilityEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
 
-    @Column(name = "package_id")
+    @Column(name = "package_id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
-    @NotNull
     private UUID partOfPackage;
 
-    @Column(name = "name", length = 256)
-    @NotNull
+    @Column(name = "name", length = 256, nullable = false)
     private String title;
 
     @Column(name = "description", length = Integer.MAX_VALUE)
     private String description;
 
-    @Column(name = "ord_id", length = 256)
+    @Column(name = "ord_id", length = 256, nullable = false)
     private String ordId;
 
-    @Column(name = "type", length = 256)
-    @NotNull
+    @Column(name = "type", length = 256, nullable = false)
     private String type;
 
     @Column(name = "custom_type", length = Integer.MAX_VALUE)
@@ -74,16 +71,18 @@ public class CapabilityEntity {
     @CollectionTable(name = "links_capabilities", joinColumns = @JoinColumn(name = "capability_id"))
     private List<Link> links;
 
-    @Column(name = "release_status")
-    @NotNull
+    @Column(name = "release_status", nullable = false)
     private String releaseStatus;
+
+    @Column(name = "version_value", nullable = false)
+    private String version;
 
     @ElementCollection
     @CollectionTable(name = "ord_labels_capabilities", joinColumns = @JoinColumn(name = "capability_id"))
     private List<Label> labels;
 
     @EdmProtectedBy(name = "visibility_scope")
-    @Column(name = "visibility")
+    @Column(name = "visibility", nullable = false)
     private String visibility;
 
     @ElementCollection

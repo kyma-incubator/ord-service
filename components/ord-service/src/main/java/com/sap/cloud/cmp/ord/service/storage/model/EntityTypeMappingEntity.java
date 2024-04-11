@@ -53,6 +53,7 @@ public class EntityTypeMappingEntity {
 
     @ElementCollection
     @CollectionTable(name = "entity_type_targets_entity_type_mappings", joinColumns = @JoinColumn(name = "entity_type_mapping_id", referencedColumnName = "id"))
+    @Column(name = "entity_type_targets", nullable = false)
     private List<EntityTypeTarget> entityTypeTargets;
 
     @EdmProtectedBy(name = "formation_scope")

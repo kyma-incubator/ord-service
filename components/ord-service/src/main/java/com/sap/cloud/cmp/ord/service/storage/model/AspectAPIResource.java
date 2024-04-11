@@ -20,7 +20,7 @@ import java.util.UUID;
 @Table(name = "aspect_api_resources")
 public class AspectAPIResource {
     @Id
-    @Column(name = "ord_id", length = Integer.MAX_VALUE)
+    @Column(name = "ord_id", length = Integer.MAX_VALUE, nullable = false)
     private String ordId;
 
     @Column(name = "min_version", length = Integer.MAX_VALUE)

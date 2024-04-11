@@ -28,11 +28,9 @@ public class TombstoneEntity {
 
     @Id
     @Column(name = "ord_id", length = 256)
-    @NotNull
     private String ordId;
 
-    @Column(name = "removal_date", length = 256)
-    @NotNull
+    @Column(name = "removal_date", length = 256, nullable = false)
     private String removalDate;
 
     @Column(name = "description", length = Integer.MAX_VALUE)
