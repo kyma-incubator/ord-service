@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class Extensible {
-    @Column(name = "extensible_supported", nullable = false)
+    @Column(name = "extensible_supported")
     private String supported;
 
     @Column(name = "extensible_description", length = Integer.MAX_VALUE)
