@@ -1,6 +1,7 @@
 package com.sap.cloud.cmp.ord.service.storage.model.converter;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestAttributes;
@@ -25,16 +26,14 @@ public class UrlConverter implements AttributeConverter<String, String> {
     }
 
     public String convertToEntityAttribute(String s) {
+        String protocol = env.getProperty("specification.protocol");
+
         RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         HttpServletRequest req = ((ServletRequestAttributes) requestAttributes).getRequest();
         String baseURL = req.getRequestURL().toString().replace(req.getRequestURI(), "");
 
         String externalHost = req.getHeader(EXTERNAL_HOST_HEADER);
         if (externalHost != null && !externalHost.isEmpty()) { // ORD Service is behind a reverse proxy (istio ingressgateway when running in cluster)
-            String protocol = req.getHeader(PROTOCOL_HEADER);
-            if (protocol == null || protocol.isEmpty()) {
-                protocol = "https";
-            }
             baseURL = protocol + "://" + externalHost;
         }
 

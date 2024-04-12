@@ -68,3 +68,5 @@ destination_fetcher:
   sensitive_data_query_param: name
   auth_token_path: /tmp/ord-service-account.txt
   skip_ssl_validation: false
+specification:
+  protocol: "http"
