@@ -5,12 +5,12 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class PackageLink {
-    @Column(name = "type", length = Integer.MAX_VALUE)
+    @Column(name = "type", length = Integer.MAX_VALUE, nullable = false)
     private String type;
 
     @Column(name = "custom_type", length = Integer.MAX_VALUE)
     private String customType;
 
-    @Column(name = "url", length = Integer.MAX_VALUE)
+    @Column(name = "url", length = Integer.MAX_VALUE, nullable = false)
     private String url;
 }

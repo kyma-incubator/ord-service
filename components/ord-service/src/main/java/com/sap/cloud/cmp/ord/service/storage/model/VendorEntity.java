@@ -32,12 +32,10 @@ public class VendorEntity {
     private UUID Id;
 
     @Id
-    @Column(name = "ord_id", length = 256)
-    @NotNull
+    @Column(name = "ord_id", length = 256, nullable = false)
     private String ordId;
 
-    @Column(name = "title", length = 256)
-    @NotNull
+    @Column(name = "title", length = 256, nullable = false)
     private String title;
 
     @ElementCollection

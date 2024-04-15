@@ -9,16 +9,16 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class CapabilityDefinition {
-    @Column(name = "type", length = Integer.MAX_VALUE)
+    @Column(name = "type", length = Integer.MAX_VALUE, nullable = false)
     private String type;
 
     @Column(name = "custom_type", length = Integer.MAX_VALUE)
     private String customType;
 
-    @Column(name = "media_type", length = Integer.MAX_VALUE)
+    @Column(name = "media_type", length = Integer.MAX_VALUE, nullable = false)
     private String mediaType;
 
     @Convert(converter = UrlConverter.class)
-    @Column(name = "url", length = Integer.MAX_VALUE)
+    @Column(name = "url", length = Integer.MAX_VALUE, nullable = false)
     private String url;
 }

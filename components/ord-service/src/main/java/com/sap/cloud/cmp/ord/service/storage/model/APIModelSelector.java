@@ -7,10 +7,9 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class APIModelSelector implements Serializable {
-
     private static final long serialVersionUID = -8149719418262015740L;
 
-    @Column(name = "type", length = Integer.MAX_VALUE)
+    @Column(name = "type", length = Integer.MAX_VALUE, nullable = false)
     private String type;
 
     @Column(name = "entity_set_name", length = Integer.MAX_VALUE)

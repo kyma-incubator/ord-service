@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable;
 
 @Embeddable
 public class CredentialExchangeStrategy {
-    @Column(name = "type", length = Integer.MAX_VALUE)
+    @Column(name = "type", length = Integer.MAX_VALUE, nullable = false)
     private String type;
 
     @Column(name = "custom_type", length = Integer.MAX_VALUE)

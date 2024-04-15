@@ -31,12 +31,10 @@ public class BundleEntity {
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
 
-    @Column(name = "ord_id", length = 256)
-    @NotNull
+    @Column(name = "ord_id", length = 256, nullable = false)
     private String ordId;
 
-    @Column(name = "name", length = 256)
-    @NotNull
+    @Column(name = "name", length = 256, nullable = false)
     private String title;
 
     @Column(name = "short_description", length = 256)
