@@ -29,7 +29,7 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "tenants_entity_types")
 public class EntityTypeEntity {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;

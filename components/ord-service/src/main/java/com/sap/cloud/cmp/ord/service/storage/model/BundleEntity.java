@@ -26,7 +26,7 @@ import jakarta.validation.constraints.NotNull;
 @Table(name = "tenants_bundles")
 public class BundleEntity {
     @jakarta.persistence.Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;

@@ -24,7 +24,7 @@ import java.util.UUID;
 public class AspectEventResource {
     // omit @EdmIgnore annotation so that the expanding between `aspects` and `aspectEventResource` can work (in both directions)
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;

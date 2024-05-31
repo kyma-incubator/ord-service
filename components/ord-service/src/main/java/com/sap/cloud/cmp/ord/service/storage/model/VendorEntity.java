@@ -26,7 +26,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity(name = "vendor")
 @Table(name = "tenants_vendors")
 public class VendorEntity {
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
