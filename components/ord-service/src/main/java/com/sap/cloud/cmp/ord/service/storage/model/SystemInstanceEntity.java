@@ -15,7 +15,7 @@ import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 @Table(name = "tenants_apps")
 public class SystemInstanceEntity {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;

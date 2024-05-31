@@ -15,7 +15,7 @@ import java.util.UUID;
 @Table(name = "tenants_data_products")
 public class DataProductEntity {
     @jakarta.persistence.Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;

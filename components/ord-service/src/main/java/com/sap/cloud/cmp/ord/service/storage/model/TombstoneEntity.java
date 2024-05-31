@@ -21,7 +21,7 @@ import jakarta.validation.constraints.NotNull;
 @Entity(name = "tombstone")
 @Table(name = "tenants_tombstones")
 public class TombstoneEntity {
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;

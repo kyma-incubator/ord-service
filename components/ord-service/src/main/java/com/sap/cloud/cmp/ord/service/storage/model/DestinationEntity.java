@@ -22,7 +22,7 @@ import jakarta.persistence.Table;
 @Table(name = "tenants_destinations")
 public class DestinationEntity {
     @Id
-    @Column(name = "id")
+    @Column(name = "id", nullable = false)
     @Convert("uuidConverter")
     @TypeConverter(name = "uuidConverter", dataType = Object.class, objectType = UUID.class)
     private UUID Id;
