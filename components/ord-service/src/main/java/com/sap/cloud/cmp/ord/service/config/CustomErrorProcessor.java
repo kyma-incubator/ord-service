@@ -1,6 +1,6 @@
 package com.sap.cloud.cmp.ord.service.config;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
 import org.apache.olingo.server.api.ODataRequest;
 import org.apache.olingo.server.api.ODataServerError;
