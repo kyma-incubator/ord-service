@@ -23,8 +23,6 @@ import org.eclipse.persistence.annotations.TypeConverter;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmIgnore;
 import com.sap.olingo.jpa.metadata.core.edm.annotation.EdmProtectedBy;
 
-import jakarta.validation.constraints.NotNull;
-
 @Entity(name = "entityType")
 @Table(name = "tenants_entity_types")
 public class EntityTypeEntity {
