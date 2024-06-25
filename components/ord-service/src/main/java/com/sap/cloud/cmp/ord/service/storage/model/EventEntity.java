@@ -103,6 +103,9 @@ public class EventEntity {
     @OneToMany(mappedBy = "eventResource", fetch = FetchType.LAZY)
     private Set<EntityTypeMappingEntity> entityTypeMappings;
 
+    @OneToMany(mappedBy = "eventResource", fetch = FetchType.LAZY)
+    private Set<EventEntityType> eventEntityTypes;
+
     @ElementCollection
     @CollectionTable(name = "changelog_entries_event_definitions", joinColumns = @JoinColumn(name = "event_definition_id"))
     private List<ChangelogEntry> changelogEntries;

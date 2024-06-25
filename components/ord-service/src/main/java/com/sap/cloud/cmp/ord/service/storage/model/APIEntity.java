@@ -85,6 +85,9 @@ public class APIEntity {
     private UUID formationID;
 
     @OneToMany(mappedBy = "apiResource", fetch = FetchType.LAZY)
+    private Set<APIEntityType> apiEntityTypes;
+
+    @OneToMany(mappedBy = "apiResource", fetch = FetchType.LAZY)
     private Set<EntityTypeMappingEntity> entityTypeMappings;
 
     @ElementCollection
